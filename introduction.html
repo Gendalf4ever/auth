@@ -35,6 +35,7 @@
                 <span class="step active" data-step="1">Стоматология</span>
                 <span class="step" data-step="2">CAD/CAM</span>
                 <span class="step" data-step="3">Этапы работы</span>
+                <span class="step" data-step="4">3D принтер</span>
             </div>
         </div>
 
@@ -254,12 +255,454 @@
                                     </div>
                                 </div>
                                 
+                                <div class="navigation-buttons">
+                                    <button class="btn btn-outline-secondary" onclick="prevPage()">
+                                        <i class="fas fa-arrow-left me-2"></i>Назад
+                                    </button>
+                                    <button class="btn btn-outline-secondary" onclick="skipIntroduction()">
+                                        <i class="fas fa-forward me-2"></i>Пропустить
+                                    </button>
+                                    <button class="btn btn-primary" onclick="nextPage()">
+                                        Далее <i class="fas fa-arrow-right ms-2"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Страница 4: Принцип работы 3D принтера -->
+        <div class="introduction-page" id="page-4">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-lg-10">
+                        <div class="card introduction-card">
+                            <div class="card-body">
+                                <h2 class="card-title text-center mb-4">
+                                    <i class="fas fa-print me-2"></i>Принцип работы 3D принтера
+                                </h2>
+                                <p class="text-center lead mb-5">Технология послойного создания физических объектов на основе цифровых моделей</p>
+                                
+                                <div class="printing-process">
+                                    <!-- Этап 1: Цифровое моделирование -->
+                                    <div class="process-step">
+                                        <div class="step-header">
+                                            <div class="step-number">1</div>
+                                            <div class="step-title">
+                                                <h4>Цифровое моделирование CAD</h4>
+                                                <p>Создание трехмерной модели будущего объекта</p>
+                                            </div>
+                                        </div>
+                                        <div class="step-content">
+                                            <div class="row align-items-center">
+                                                <div class="col-md-6">
+                                                    <div class="process-details">
+                                                        <h5>Нарезка модели</h5>
+                                                        <p>Цифровая модель нарезается на множество слоев с помощью программного обеспечения для нарезки. Это ПО генерирует необходимые опорные конструкции и рассчитывает оптимальную траекторию печати.</p>
+                                                        <div class="software-features">
+                                                            <div class="feature">
+                                                                <i class="fas fa-layer-group"></i>
+                                                                <span>Слоистая структура</span>
+                                                            </div>
+                                                            <div class="feature">
+                                                                <i class="fas fa-braille"></i>
+                                                                <span>Опорные конструкции</span>
+                                                            </div>
+                                                            <div class="feature">
+                                                                <i class="fas fa-route"></i>
+                                                                <span>Оптимальная траектория</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="process-visual">
+                                                        <div class="slicing-animation">
+                                                            <div class="model-3d">
+                                                                <i class="fas fa-cube"></i>
+                                                                <span>3D модель</span>
+                                                            </div>
+                                                            <div class="slicing-arrow">
+                                                                <i class="fas fa-arrow-down"></i>
+                                                            </div>
+                                                            <div class="sliced-layers">
+                                                                <div class="layer"></div>
+                                                                <div class="layer"></div>
+                                                                <div class="layer"></div>
+                                                                <div class="layer"></div>
+                                                                <div class="layer"></div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Этап 2: Печать -->
+                                    <div class="process-step">
+                                        <div class="step-header">
+                                            <div class="step-number">2</div>
+                                            <div class="step-title">
+                                                <h4>Печать</h4>
+                                                <p>Послойное создание физического объекта</p>
+                                            </div>
+                                        </div>
+                                        <div class="step-content">
+                                            <div class="row align-items-center">
+                                                <div class="col-md-6">
+                                                    <div class="process-details">
+                                                        <h5>Процесс печати</h5>
+                                                        <p>3D принтер послойно накладывает материал в соответствии с нарезанной моделью. Материал обычно находится в жидкой форме или в порошковой.</p>
+                                                        
+                                                        <div class="materials-info">
+                                                            <h6>Используемые материалы:</h6>
+                                                            <div class="materials-grid">
+                                                                <div class="material-type">
+                                                                    <i class="fas fa-tint"></i>
+                                                                    <div>
+                                                                        <strong>Жидкие материалы</strong>
+                                                                        <span>Фотополимерные смолы</span>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="material-type">
+                                                                    <i class="fas fa-cloud"></i>
+                                                                    <div>
+                                                                        <strong>Порошковые материалы</strong>
+                                                                        <span>Нейлон, металлические порошки</span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="process-visual">
+                                                        <div class="printing-animation">
+                                                            <div class="printer">
+                                                                <div class="printer-head">
+                                                                    <i class="fas fa-print"></i>
+                                                                </div>
+                                                                <div class="printer-bed">
+                                                                    <div class="printed-object">
+                                                                        <div class="layer printed"></div>
+                                                                        <div class="layer printed"></div>
+                                                                        <div class="layer printing"></div>
+                                                                        <div class="layer"></div>
+                                                                        <div class="layer"></div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Технологии затвердевания -->
+                                    <div class="curing-technologies">
+                                        <h4 class="text-center mb-4">
+                                            <i class="fas fa-snowflake me-2"></i>Технологии затвердевания
+                                        </h4>
+                                        <p class="text-center mb-5">Различные методы отверждения материалов в процессе 3D печати</p>
+                                        
+                                        <div class="technologies-grid">
+                                            <!-- SLA технология -->
+                                            <div class="technology-card">
+                                                <div class="tech-header">
+                                                    <div class="tech-icon">
+                                                        <i class="fas fa-laser"></i>
+                                                    </div>
+                                                    <div class="tech-title">
+                                                        <h5 class="technology-name" data-tech="sla">
+                                                            Стереолитография (SLA/SL)
+                                                            <i class="fas fa-info-circle info-icon"></i>
+                                                        </h5>
+                                                    </div>
+                                                </div>
+                                                
+                                                <!-- Всплывающая подсказка -->
+                                                <div class="tech-tooltip" id="sla-tooltip">
+                                                    <div class="tooltip-content">
+                                                        <button class="tooltip-close" onclick="closeTooltip('sla')">
+                                                            <i class="fas fa-times"></i>
+                                                        </button>
+                                                        <h6>Стереолитография (SLA/SL)</h6>
+                                                        <div class="tech-description">
+                                                            <p>При использовании этой технологии лазерный луч избирательно воздействует на ёмкость с жидкой смолой через область печати. Таким образом, смола послойно затвердевает в конкретных местах и образует трёхмерную фигуру.</p>
+                                                            
+                                                            <p>Стереолитография даёт наилучшее качество поверхности деталей и наиболее часто используется в современных моделях 3D-принтеров. SLA аппараты обеспечивают большую область построения реставрации и работают с широким спектром материалов, предназначенных для разнообразных задач.</p>
+                                                            
+                                                            <p>Чтобы переключиться с одним материалом на другой, достаточно заменить картридж и ёмкость с полимерной смолой.</p>
+                                                            
+                                                            <div class="tech-pros-cons">
+                                                                <div class="pros">
+                                                                    <h7><i class="fas fa-check-circle me-2"></i>Преимущества:</h7>
+                                                                    <ul>
+                                                                        <li><i class="fas fa-star me-2"></i>Большая область печати</li>
+                                                                        <li><i class="fas fa-star me-2"></i>Высокая точность</li>
+                                                                        <li><i class="fas fa-star me-2"></i>Большой выбор материалов</li>
+                                                                        <li><i class="fas fa-star me-2"></i>Простота использования</li>
+                                                                    </ul>
+                                                                </div>
+                                                                <div class="cons">
+                                                                    <h7><i class="fas fa-times-circle me-2"></i>Недостатки:</h7>
+                                                                    <ul>
+                                                                        <li><i class="fas fa-times me-2"></i>Невысокая скорость печати одного изделия</li>
+                                                                    </ul>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="tech-preview">
+                                                    <p>Лазерное отверждение жидкой смолы с высочайшей точностью</p>
+                                                    <div class="tech-stats">
+                                                        <span class="stat">
+                                                            <i class="fas fa-bullseye"></i>
+                                                            Высокая точность
+                                                        </span>
+                                                        <span class="stat">
+                                                            <i class="fas fa-tachometer-alt"></i>
+                                                            Средняя скорость
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- DLP технология -->
+                                            <div class="technology-card">
+                                                <div class="tech-header">
+                                                    <div class="tech-icon">
+                                                        <i class="fas fa-sun"></i>
+                                                    </div>
+                                                    <div class="tech-title">
+                                                        <h5 class="technology-name" data-tech="dlp">
+                                                            DLP технология
+                                                            <i class="fas fa-info-circle info-icon"></i>
+                                                        </h5>
+                                                    </div>
+                                                </div>
+                                                
+                                                <div class="tech-tooltip" id="dlp-tooltip">
+                                                    <div class="tooltip-content">
+                                                        <button class="tooltip-close" onclick="closeTooltip('dlp')">
+                                                            <i class="fas fa-times"></i>
+                                                        </button>
+                                                        <h6>DLP технология (Digital Light Processing)</h6>
+                                                        <div class="tech-description">
+                                                            <p>Технология цифровой обработки света использует проектор для отверждения целого слоя фотополимерной смолы одновременно. Это обеспечивает высокую скорость печати по сравнению с SLA.</p>
+                                                            
+                                                            <p>DLP принтеры идеально подходят для создания детализированных моделей с гладкой поверхностью. Технология широко используется в стоматологии для изготовления хирургических шаблонов и временных реставраций.</p>
+                                                            
+                                                            <div class="tech-pros-cons">
+                                                                <div class="pros">
+                                                                    <h7><i class="fas fa-check-circle me-2"></i>Преимущества:</h7>
+                                                                    <ul>
+                                                                        <li><i class="fas fa-star me-2"></i>Высокая скорость печати</li>
+                                                                        <li><i class="fas fa-star me-2"></i>Отличное качество поверхности</li>
+                                                                        <li><i class="fas fa-star me-2"></i>Экономичность</li>
+                                                                        <li><i class="fas fa-star me-2"></i>Подходит для серийного производства</li>
+                                                                    </ul>
+                                                                </div>
+                                                                <div class="cons">
+                                                                    <h7><i class="fas fa-times-circle me-2"></i>Недостатки:</h7>
+                                                                    <ul>
+                                                                        <li><i class="fas fa-times me-2"></i>Ограниченный размер области печати</li>
+                                                                        <li><i class="fas fa-times me-2"></i>Требуется регулярная замена проектора</li>
+                                                                    </ul>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="tech-preview">
+                                                    <p>Цифровая проекция для одновременного отверждения целого слоя</p>
+                                                    <div class="tech-stats">
+                                                        <span class="stat">
+                                                            <i class="fas fa-bolt"></i>
+                                                            Высокая скорость
+                                                        </span>
+                                                        <span class="stat">
+                                                            <i class="fas fa-expand"></i>
+                                                            Большая площадь
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- SLS технология -->
+                                            <div class="technology-card">
+                                                <div class="tech-header">
+                                                    <div class="tech-icon">
+                                                        <i class="fas fa-fire"></i>
+                                                    </div>
+                                                    <div class="tech-title">
+                                                        <h5 class="technology-name" data-tech="sls">
+                                                            SLS технология
+                                                            <i class="fas fa-info-circle info-icon"></i>
+                                                        </h5>
+                                                    </div>
+                                                </div>
+                                                
+                                                <div class="tech-tooltip" id="sls-tooltip">
+                                                    <div class="tooltip-content">
+                                                        <button class="tooltip-close" onclick="closeTooltip('sls')">
+                                                            <i class="fas fa-times"></i>
+                                                        </button>
+                                                        <h6>SLS технология (Selective Laser Sintering)</h6>
+                                                        <div class="tech-description">
+                                                            <p>Технология селективного лазерного спекания использует лазер для сплавления частиц порошкообразного материала. Порошок наносится тонким слоем, после чего лазер спекает частицы в соответствии с цифровой моделью.</p>
+                                                            
+                                                            <p>SLS идеально подходит для создания функциональных прототипов и конечных изделий, требующих высокой прочности и термостойкости. В стоматологии используется для изготовления металлических каркасов и сложных конструкций.</p>
+                                                            
+                                                            <div class="tech-pros-cons">
+                                                                <div class="pros">
+                                                                    <h7><i class="fas fa-check-circle me-2"></i>Преимущества:</h7>
+                                                                    <ul>
+                                                                        <li><i class="fas fa-star me-2"></i>Высокая прочность изделий</li>
+                                                                        <li><i class="fas fa-star me-2"></i>Не требует опорных структур</li>
+                                                                        <li><i class="fas fa-star me-2"></i>Широкий выбор материалов</li>
+                                                                        <li><i class="fas fa-star me-2"></i>Возможность создания сложных геометрий</li>
+                                                                    </ul>
+                                                                </div>
+                                                                <div class="cons">
+                                                                    <h7><i class="fas fa-times-circle me-2"></i>Недостатки:</h7>
+                                                                    <ul>
+                                                                        <li><i class="fas fa-times me-2"></i>Высокая стоимость оборудования</li>
+                                                                        <li><i class="fas fa-times me-2"></i>Шероховатая поверхность изделий</li>
+                                                                        <li><i class="fas fa-times me-2"></i>Сложность постобработки</li>
+                                                                    </ul>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="tech-preview">
+                                                    <p>Лазерное спекание порошковых материалов</p>
+                                                    <div class="tech-stats">
+                                                        <span class="stat">
+                                                            <i class="fas fa-cube"></i>
+                                                            Прочные детали
+                                                        </span>
+                                                        <span class="stat">
+                                                            <i class="fas fa-shapes"></i>
+                                                            Сложные формы
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Преимущества 3D печати -->
+                                    <div class="advantages-section">
+                                        <h4 class="text-center mb-4">Преимущества 3D печати в стоматологии</h4>
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="advantage-card">
+                                                    <div class="advantage-icon">
+                                                        <i class="fas fa-bullseye"></i>
+                                                    </div>
+                                                    <h5>Высокая точность</h5>
+                                                    <p>Точное воспроизведение сложных анатомических форм с разрешением до 25 микрон</p>
+                                                    <div class="advantage-badge">
+                                                        <i class="fas fa-check-circle me-1"></i>Преимущество
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="advantage-card">
+                                                    <div class="advantage-icon">
+                                                        <i class="fas fa-clock"></i>
+                                                    </div>
+                                                    <h5>Экономия времени</h5>
+                                                    <p>Сокращение времени изготовления моделей и протезов с нескольких дней до нескольких часов</p>
+                                                    <div class="advantage-badge">
+                                                        <i class="fas fa-check-circle me-1"></i>Преимущество
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="advantage-card">
+                                                    <div class="advantage-icon">
+                                                        <i class="fas fa-money-bill-wave"></i>
+                                                    </div>
+                                                    <h5>Экономичность</h5>
+                                                    <p>Снижение затрат на материалы и производство до 40% по сравнению с традиционными методами</p>
+                                                    <div class="advantage-badge">
+                                                        <i class="fas fa-check-circle me-1"></i>Преимущество
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row mt-4">
+                                            <div class="col-md-4">
+                                                <div class="advantage-card">
+                                                    <div class="advantage-icon">
+                                                        <i class="fas fa-user-cog"></i>
+                                                    </div>
+                                                    <h5>Индивидуализация</h5>
+                                                    <p>Возможность создания полностью персонализированных реставраций для каждого пациента</p>
+                                                    <div class="advantage-badge">
+                                                        <i class="fas fa-check-circle me-1"></i>Преимущество
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="advantage-card">
+                                                    <div class="advantage-icon">
+                                                        <i class="fas fa-recycle"></i>
+                                                    </div>
+                                                    <h5>Экологичность</h5>
+                                                    <p>Минимизация отходов материала и энергопотребления в процессе производства</p>
+                                                    <div class="advantage-badge">
+                                                        <i class="fas fa-check-circle me-1"></i>Преимущество
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="advantage-card">
+                                                    <div class="advantage-icon">
+                                                        <i class="fas fa-sync-alt"></i>
+                                                    </div>
+                                                    <h5>Повторяемость</h5>
+                                                    <p>Возможность точного воспроизведения идентичных изделий при необходимости</p>
+                                                    <div class="advantage-badge">
+                                                        <i class="fas fa-check-circle me-1"></i>Преимущество
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
                                 <div class="completion-section text-center mt-5">
                                     <div class="completion-icon">
                                         <i class="fas fa-check-circle"></i>
                                     </div>
                                     <h4>Введение завершено!</h4>
-                                    <p>Теперь вы знакомы с основными принципами современной стоматологии и CAD/CAM технологий</p>
+                                    <p>Теперь вы знакомы с основными принципами современной стоматологии, CAD/CAM технологий и 3D печати. Вы можете приступить к изучению курсов или вернуться к этому материалу в любое время.</p>
+                                    <div class="completion-stats">
+                                        <div class="stat-item">
+                                            <strong>4</strong>
+                                            <span>раздела изучено</span>
+                                        </div>
+                                        <div class="stat-item">
+                                            <strong>6</strong>
+                                            <span>технологий рассмотрено</span>
+                                        </div>
+                                        <div class="stat-item">
+                                            <strong>3</strong>
+                                            <span>метода печати</span>
+                                        </div>
+                                    </div>
                                 </div>
                                 
                                 <div class="navigation-buttons">
