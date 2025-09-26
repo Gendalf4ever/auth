@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Введение - Образовательная платформа</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/introduction.css">
+</head>
+<body>
+    <!-- Навигационная панель для introduction -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <i class="fas fa-graduation-cap me-2"></i>Образовательная платформа
+            </a>
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link" href="index.html">
+                    <i class="fas fa-arrow-left me-2"></i>Вернуться на главную
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Контейнер для вводных материалов -->
+    <div class="introduction-container">
+        <!-- Прогресс-бар -->
+        <div class="progress-container">
+            <div class="progress">
+                <div class="progress-bar" id="introduction-progress" role="progressbar" style="width: 0%"></div>
+            </div>
+            <div class="progress-steps">
+                <span class="step active" data-step="1">Стоматология</span>
+                <span class="step" data-step="2">CAD/CAM</span>
+                <span class="step" data-step="3">Этапы работы</span>
+            </div>
+        </div>
+
+        <!-- Страница 1: Современная стоматология -->
+        <div class="introduction-page active" id="page-1">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-lg-10">
+                        <div class="card introduction-card">
+                            <div class="card-body">
+                                <h2 class="card-title text-center mb-4">
+                                    <i class="fas fa-tooth me-2"></i>Современная стоматология
+                                </h2>
+                                
+                                <div class="content-section">
+                                    <p class="lead text-center">Современная стоматология — динамичная и быстро развивающаяся область медицины, которая основана на передовых научных исследованиях и технологических достижениях.</p>
+                                </div>
+                                
+                                <div class="content-section mt-4">
+                                    <h4 class="text-center mb-4">Основные особенности современной стоматологии:</h4>
+                                    <div class="features-grid">
+                                        <div class="feature-item">
+                                            <div class="feature-icon">
+                                                <i class="fas fa-laptop-medical"></i>
+                                            </div>
+                                            <div class="feature-content">
+                                                <h5>Цифровые технологии</h5>
+                                                <p>Компьютерная томография, цифровые отпечатки зубов и 3D-печать позволяют создавать точные модели зубов и челюстей</p>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="feature-item">
+                                            <div class="feature-icon">
+                                                <i class="fas fa-teeth"></i>
+                                            </div>
+                                            <div class="feature-content">
+                                                <h5>Имплантология</h5>
+                                                <p>Современные импланты из биосовместимых материалов обеспечивают надёжное крепление протезов</p>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="feature-item">
+                                            <div class="feature-icon">
+                                                <i class="fas fa-smile"></i>
+                                            </div>
+                                            <div class="feature-content">
+                                                <h5>Эстетическая стоматология</h5>
+                                                <p>Виниры, коронки, брекеты и элайнеры для создания идеальной улыбки</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="navigation-buttons">
+                                    <button class="btn btn-outline-secondary" onclick="skipIntroduction()">
+                                        <i class="fas fa-forward me-2"></i>Пропустить введение
+                                    </button>
+                                    <button class="btn btn-primary" onclick="nextPage()">
+                                        Далее <i class="fas fa-arrow-right ms-2"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Страница 2: CAD/CAM система -->
+        <div class="introduction-page" id="page-2">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-lg-10">
+                        <div class="card introduction-card">
+                            <div class="card-body">
+                                <h2 class="card-title text-center mb-4">
+                                    <i class="fas fa-cube me-2"></i>CAD/CAM система
+                                </h2>
+                                
+                                <div class="content-section">
+                                    <div class="row g-4">
+                                        <div class="col-md-6">
+                                            <div class="tech-card cad-card">
+                                                <div class="tech-icon">
+                                                    <i class="fas fa-drafting-compass"></i>
+                                                </div>
+                                                <h4>CAD</h4>
+                                                <p class="tech-subtitle">Computer Aided Design</p>
+                                                <p class="tech-description">Компьютерное проектирование для создания индивидуальных проектов, соответствующих анатомическому виду зубов пациента</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="tech-card cam-card">
+                                                <div class="tech-icon">
+                                                    <i class="fas fa-industry"></i>
+                                                </div>
+                                                <h4>CAM</h4>
+                                                <p class="tech-subtitle">Computer Aided Manufacturing</p>
+                                                <p class="tech-description">Компьютерное моделирование для создания физических изделий на основе цифровых чертежей</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="content-section mt-4">
+                                    <div class="lab-info">
+                                        <div class="lab-icon">
+                                            <i class="fas fa-flask"></i>
+                                        </div>
+                                        <div class="lab-content">
+                                            <h4>CAD/CAM лаборатория</h4>
+                                            <p>Высокотехнологичное оборудование для проектирования и создания стоматологических реставраций: коронки, мосты, виниры, хирургические шаблоны для имплантаций и других конструкций.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="navigation-buttons">
+                                    <button class="btn btn-outline-secondary" onclick="prevPage()">
+                                        <i class="fas fa-arrow-left me-2"></i>Назад
+                                    </button>
+                                    <button class="btn btn-outline-secondary" onclick="skipIntroduction()">
+                                        <i class="fas fa-forward me-2"></i>Пропустить
+                                    </button>
+                                    <button class="btn btn-primary" onclick="nextPage()">
+                                        Далее <i class="fas fa-arrow-right ms-2"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Страница 3: Этапы использования системы -->
+        <div class="introduction-page" id="page-3">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-lg-10">
+                        <div class="card introduction-card">
+                            <div class="card-body">
+                                <h2 class="card-title text-center mb-4">
+                                    <i class="fas fa-cogs me-2"></i>Этапы работы с CAD/CAM системой
+                                </h2>
+                                <p class="text-center lead mb-5">Процесс создания стоматологических реставраций с использованием современных технологий</p>
+                                
+                                <div class="stages-container">
+                                    <!-- Этап 1 -->
+                                    <div class="stage-item">
+                                        <div class="stage-number">1</div>
+                                        <div class="stage-content">
+                                            <h5>Виртуальный оттиск</h5>
+                                            <p>С помощью интраорального сканера ортопед создает 3D модель полости рта пациента</p>
+                                            <div class="stage-features">
+                                                <span class="feature-tag">Точное сканирование</span>
+                                                <span class="feature-tag">Цифровая модель</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Этап 2 -->
+                                    <div class="stage-item">
+                                        <div class="stage-number">2</div>
+                                        <div class="stage-content">
+                                            <h5>Моделирование</h5>
+                                            <p>Специалист работает с виртуальной 3D моделью, создавая разные варианты реставраций с учетом анатомических особенностей пациента и его эстетических пожеланий</p>
+                                            <div class="stage-features">
+                                                <span class="feature-tag">3D моделирование</span>
+                                                <span class="feature-tag">Индивидуальный подход</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Этап 3 -->
+                                    <div class="stage-item">
+                                        <div class="stage-number">3</div>
+                                        <div class="stage-content">
+                                            <h5>Фрезерование</h5>
+                                            <p>3D модель отправляется на фрезерный станок с ЧПУ (числовое программное управление), который вытачивает протез из блока материалов</p>
+                                            <div class="materials-list">
+                                                <h6>Используемые материалы:</h6>
+                                                <ul>
+                                                    <li><strong>Диоксид циркония (ZrO₂)</strong> - для постоянных конструкций</li>
+                                                    <li><strong>Стеклокерамика</strong> - для эстетических реставраций</li>
+                                                    <li><strong>PMMA</strong> - для временных конструкций</li>
+                                                    <li><strong>Титан (Ti)</strong> - для абатментов имплантов</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Этап 4 -->
+                                    <div class="stage-item">
+                                        <div class="stage-number">4</div>
+                                        <div class="stage-content">
+                                            <h5>3D-печать</h5>
+                                            <p>Послойное воссоздание физических объектов на основе цифровой 3D-модели. В отличие от традиционных методов, 3D-печать добавляет материал только там, где он нужен</p>
+                                        </div>
+                                    </div>
+
+                                    <!-- Этап 5 -->
+                                    <div class="stage-item">
+                                        <div class="stage-number">5</div>
+                                        <div class="stage-content">
+                                            <h5>Полировка и шлифовка</h5>
+                                            <p>Готовый протез проходит полировку и шлифовку для получения гладкой поверхности. Специалист проводит примерку и при необходимости вносит коррективы</p>
+                                        </div>
+                                    </div>
+
+                                    <!-- Этап 6 -->
+                                    <div class="stage-item">
+                                        <div class="stage-number">6</div>
+                                        <div class="stage-content">
+                                            <h5>Пост-обработка (для 3D печати)</h5>
+                                            <p>Модель промывается от смолы, подвергается УФ-отверждению, удаляются поддерживающие структуры, проводится шлифовка и полировка для достижения необходимой прочности и биосовместимости</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="completion-section text-center mt-5">
+                                    <div class="completion-icon">
+                                        <i class="fas fa-check-circle"></i>
+                                    </div>
+                                    <h4>Введение завершено!</h4>
+                                    <p>Теперь вы знакомы с основными принципами современной стоматологии и CAD/CAM технологий</p>
+                                </div>
+                                
+                                <div class="navigation-buttons">
+                                    <button class="btn btn-outline-secondary" onclick="prevPage()">
+                                        <i class="fas fa-arrow-left me-2"></i>Назад
+                                    </button>
+                                    <button class="btn btn-success" onclick="completeIntroduction()">
+                                        <i class="fas fa-check me-2"></i>Завершить введение
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/introduction.js"></script>
+</body>
+</html>
