@@ -681,6 +681,273 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <!-- Технологии затвердевания -->
+<div class="curing-technologies">
+    <h4 class="text-center mb-4">
+        <i class="fas fa-snowflake me-2"></i>Технологии затвердевания
+    </h4>
+    <p class="text-center mb-5">Различные методы отверждения материалов в процессе 3D печати</p>
+    
+    <div class="technologies-grid">
+        <!-- SLA технология -->
+        <div class="technology-card">
+            <div class="tech-header">
+                <div class="tech-icon">
+                    <i class="fas fa-laser"></i>
+                </div>
+                <div class="tech-title">
+                    <h5 class="technology-name" data-tech="sla">
+                        Стереолитография (SLA/SL)
+                        <i class="fas fa-info-circle info-icon"></i>
+                    </h5>
+                </div>
+            </div>
+            
+            <!-- Всплывающая подсказка -->
+            <div class="tech-tooltip" id="sla-tooltip">
+                <div class="tooltip-content">
+                    <button class="tooltip-close" onclick="closeTooltip('sla')">
+                        <i class="fas fa-times"></i>
+                    </button>
+                    <h6>Стереолитография (SLA/SL)</h6>
+                    <div class="tech-description">
+                        <p>При использовании этой технологии лазерный луч избирательно воздействует на ёмкость с жидкой смолой через область печати. Таким образом, смола послойно затвердевает в конкретных местах и образует трёхмерную фигуру.</p>
+                        
+                        <p>Стереолитография даёт наилучшее качество поверхности деталей и наиболее часто используется в современных моделях 3D-принтеров. SLA аппараты обеспечивают большую область построения реставрации и работают с широким спектром материалов, предназначенных для разнообразных задач.</p>
+                        
+                        <p>Чтобы переключиться с одним материалом на другой, достаточно заменить картридж и ёмкость с полимерной смолой.</p>
+                        
+                        <div class="tech-pros-cons">
+                            <div class="pros">
+                                <h7><i class="fas fa-check-circle me-2"></i>Преимущества:</h7>
+                                <ul>
+                                    <li><i class="fas fa-star me-2"></i>Большая область печати</li>
+                                    <li><i class="fas fa-star me-2"></i>Высокая точность</li>
+                                    <li><i class="fas fa-star me-2"></i>Большой выбор материалов</li>
+                                    <li><i class="fas fa-star me-2"></i>Простота использования</li>
+                                </ul>
+                            </div>
+                            <div class="cons">
+                                <h7><i class="fas fa-times-circle me-2"></i>Недостатки:</h7>
+                                <ul>
+                                    <li><i class="fas fa-times me-2"></i>Невысокая скорость печати одного изделия</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tech-preview">
+                <p>Лазерное отверждение жидкой смолы с высочайшей точностью</p>
+                <div class="tech-stats">
+                    <span class="stat">
+                        <i class="fas fa-bullseye"></i>
+                        Высокая точность
+                    </span>
+                    <span class="stat">
+                        <i class="fas fa-tachometer-alt"></i>
+                        Средняя скорость
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- DLP технология -->
+        <div class="technology-card">
+            <div class="tech-header">
+                <div class="tech-icon">
+                    <i class="fas fa-sun"></i>
+                </div>
+                <div class="tech-title">
+                    <h5 class="technology-name" data-tech="dlp">
+                        DLP технология
+                        <i class="fas fa-info-circle info-icon"></i>
+                    </h5>
+                </div>
+            </div>
+            
+            <div class="tech-tooltip" id="dlp-tooltip">
+                <div class="tooltip-content">
+                    <button class="tooltip-close" onclick="closeTooltip('dlp')">
+                        <i class="fas fa-times"></i>
+                    </button>
+                    <h6>DLP технология (Digital Light Processing)</h6>
+                    <div class="tech-description">
+                        <p>Технология цифровой обработки света использует проектор для отверждения целого слоя фотополимерной смолы одновременно. Это обеспечивает высокую скорость печати по сравнению с SLA.</p>
+                        
+                        <p>DLP принтеры идеально подходят для создания детализированных моделей с гладкой поверхностью. Технология широко используется в стоматологии для изготовления хирургических шаблонов и временных реставраций.</p>
+                        
+                        <div class="tech-pros-cons">
+                            <div class="pros">
+                                <h7><i class="fas fa-check-circle me-2"></i>Преимущества:</h7>
+                                <ul>
+                                    <li><i class="fas fa-star me-2"></i>Высокая скорость печати</li>
+                                    <li><i class="fas fa-star me-2"></i>Отличное качество поверхности</li>
+                                    <li><i class="fas fa-star me-2"></i>Экономичность</li>
+                                    <li><i class="fas fa-star me-2"></i>Подходит для серийного производства</li>
+                                </ul>
+                            </div>
+                            <div class="cons">
+                                <h7><i class="fas fa-times-circle me-2"></i>Недостатки:</h7>
+                                <ul>
+                                    <li><i class="fas fa-times me-2"></i>Ограниченный размер области печати</li>
+                                    <li><i class="fas fa-times me-2"></i>Требуется регулярная замена проектора</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tech-preview">
+                <p>Цифровая проекция для одновременного отверждения целого слоя</p>
+                <div class="tech-stats">
+                    <span class="stat">
+                        <i class="fas fa-bolt"></i>
+                        Высокая скорость
+                    </span>
+                    <span class="stat">
+                        <i class="fas fa-expand"></i>
+                        Большая площадь
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLS технология -->
+        <div class="technology-card">
+            <div class="tech-header">
+                <div class="tech-icon">
+                    <i class="fas fa-fire"></i>
+                </div>
+                <div class="tech-title">
+                    <h5 class="technology-name" data-tech="sls">
+                        SLS технология
+                        <i class="fas fa-info-circle info-icon"></i>
+                    </h5>
+                </div>
+            </div>
+            
+            <div class="tech-tooltip" id="sls-tooltip">
+                <div class="tooltip-content">
+                    <button class="tooltip-close" onclick="closeTooltip('sls')">
+                        <i class="fas fa-times"></i>
+                    </button>
+                    <h6>SLS технология (Selective Laser Sintering)</h6>
+                    <div class="tech-description">
+                        <p>Технология селективного лазерного спекания использует лазер для сплавления частиц порошкообразного материала. Порошок наносится тонким слоем, после чего лазер спекает частицы в соответствии с цифровой моделью.</p>
+                        
+                        <p>SLS идеально подходит для создания функциональных прототипов и конечных изделий, требующих высокой прочности и термостойкости. В стоматологии используется для изготовления металлических каркасов и сложных конструкций.</p>
+                        
+                        <div class="tech-pros-cons">
+                            <div class="pros">
+                                <h7><i class="fas fa-check-circle me-2"></i>Преимущества:</h7>
+                                <ul>
+                                    <li><i class="fas fa-star me-2"></i>Высокая прочность изделий</li>
+                                    <li><i class="fas fa-star me-2"></i>Не требует опорных структур</li>
+                                    <li><i class="fas fa-star me-2"></i>Широкий выбор материалов</li>
+                                    <li><i class="fas fa-star me-2"></i>Возможность создания сложных геометрий</li>
+                                </ul>
+                            </div>
+                            <div class="cons">
+                                <h7><i class="fas fa-times-circle me-2"></i>Недостатки:</h7>
+                                <ul>
+                                    <li><i class="fas fa-times me-2"></i>Высокая стоимость оборудования</li>
+                                    <li><i class="fas fa-times me-2"></i>Шероховатая поверхность изделий</li>
+                                    <li><i class="fas fa-times me-2"></i>Сложность постобработки</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tech-preview">
+                <p>Лазерное спекание порошковых материалов</p>
+                <div class="tech-stats">
+                    <span class="stat">
+                        <i class="fas fa-cube"></i>
+                        Прочные детали
+                    </span>
+                    <span class="stat">
+                        <i class="fas fa-shapes"></i>
+                        Сложные формы
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- PolyJet технология -->
+        <div class="technology-card">
+            <div class="tech-header">
+                <div class="tech-icon">
+                    <i class="fas fa-print"></i>
+                </div>
+                <div class="tech-title">
+                    <h5 class="technology-name" data-tech="polyjet">
+                        PolyJet технология
+                        <i class="fas fa-info-circle info-icon"></i>
+                    </h5>
+                </div>
+            </div>
+            
+            <div class="tech-tooltip" id="polyjet-tooltip">
+                <div class="tooltip-content">
+                    <button class="tooltip-close" onclick="closeTooltip('polyjet')">
+                        <i class="fas fa-times"></i>
+                    </button>
+                    <h6>PolyJet технология</h6>
+                    <div class="tech-description">
+                        <p>Процесс напоминает работу обычного струйного принтера, но вместо струйных чернильных капель на бумаге 3D-принтер выдувает слои жидкой смолы на область печати. Слои затвердевают под воздействием света.</p>
+                        
+                        <p>Когда-то PolyJet набирала популярность в стоматологической отрасли, но её развитие затормозили два фактора: высокая стоимость оборудования и внушительные габариты аппаратов. Модели, изготовленные по технологии PolyJet, требуют длительной постобработки и в плане качества поверхностей опять же уступают SLA.</p>
+                        
+                        <p>Системы PolyJet изготавливают детали очень быстро, но применимы для ограниченного круга изделий из-за дорогих запатентованных расходников. Поэтому в контексте нашей отрасли лучше купить 3D-принтер для стоматологии с SLA технологией.</p>
+                        
+                        <div class="tech-pros-cons">
+                            <div class="pros">
+                                <h7><i class="fas fa-check-circle me-2"></i>Преимущества:</h7>
+                                <ul>
+                                    <li><i class="fas fa-star me-2"></i>Высокая точность</li>
+                                    <li><i class="fas fa-star me-2"></i>Высокая пропускная способность</li>
+                                    <li><i class="fas fa-star me-2"></i>Быстрое изготовление деталей</li>
+                                </ul>
+                            </div>
+                            <div class="cons">
+                                <h7><i class="fas fa-times-circle me-2"></i>Недостатки:</h7>
+                                <ul>
+                                    <li><i class="fas fa-times me-2"></i>Дорогая техника</li>
+                                    <li><i class="fas fa-times me-2"></i>Дорогие материалы</li>
+                                    <li><i class="fas fa-times me-2"></i>Ограниченные варианты материалов</li>
+                                    <li><i class="fas fa-times me-2"></i>Дорогостоящее обслуживание</li>
+                                    <li><i class="fas fa-times me-2"></i>Большие габариты аппаратов</li>
+                                    <li><i class="fas fa-times me-2"></i>Длительная постобработка</li>
+                                    <li><i class="fas fa-times me-2"></i>Качество поверхностей уступает SLA</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+                            <div class="tech-preview">
+                                <p>Струйная печать жидкой смолой с УФ-отверждением</p>
+                                <div class="tech-stats">
+                                <span class="stat">
+                                  <i class="fas fa-tachometer-alt"></i>
+                                    Высокая скорость
+                                 </span>
+                               <span class="stat">
+                              <i class="fas fa-ruler-combined"></i>
+                                 Высокая точность
+                                  </span>
+                                </div>
+                                </div>
+                                  </div>
+                                 </div>
+                    </div>
+
                                 </div>
                                 
                                 <div class="completion-section text-center mt-5">
@@ -689,19 +956,19 @@
                                     </div>
                                     <h4>Введение завершено!</h4>
                                     <p>Теперь вы знакомы с основными принципами современной стоматологии, CAD/CAM технологий и 3D печати. Вы можете приступить к изучению курсов или вернуться к этому материалу в любое время.</p>
-                                    <div class="completion-stats">
-                                        <div class="stat-item">
-                                            <strong>4</strong>
-                                            <span>раздела изучено</span>
-                                        </div>
-                                        <div class="stat-item">
-                                            <strong>6</strong>
-                                            <span>технологий рассмотрено</span>
-                                        </div>
-                                        <div class="stat-item">
-                                            <strong>3</strong>
-                                            <span>метода печати</span>
-                                        </div>
+                                 <div class="completion-stats">
+                                     <div class="stat-item">
+                                       <strong>4</strong>
+                                          <span>раздела изучено</span>
+                                     </div>
+                                     <div class="stat-item">
+                                     <strong>7</strong>
+                                      <span>технологий рассмотрено</span>
+                                      </div>
+                                     <div class="stat-item">
+                                       <strong>4</strong>
+                                      <span>метода печати</span>
+                                     </div>
                                     </div>
                                 </div>
                                 

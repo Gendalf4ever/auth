@@ -20,6 +20,8 @@ function loadAdminData() {
 
 // Загрузка курсов для администрирования
 function loadAdminCourses() {
+    if (!adminCoursesList) return;
+    
     adminCoursesList.innerHTML = '';
     
     // В реальном приложении: загрузка из Firestore
@@ -56,6 +58,8 @@ function loadAdminCourses() {
 
 // Загрузка пользователей для администрирования
 function loadAdminUsers() {
+    if (!adminUsersList) return;
+    
     adminUsersList.innerHTML = '';
     
     // В реальном приложении: загрузка из Firestore
@@ -106,9 +110,11 @@ function loadAdminUsers() {
 }
 
 // Обработчики для админ-панели
-addCourseBtn.addEventListener('click', () => {
-    showAddCourseModal();
-});
+if (addCourseBtn) {
+    addCourseBtn.addEventListener('click', () => {
+        showAddCourseModal();
+    });
+}
 
 function editCourse(courseId) {
     const course = sampleCourses.find(c => c.id == courseId);
@@ -159,236 +165,6 @@ function updateUserRole(userId, newRole) {
     showNotification(`Роль пользователя изменена на "${newRole}"`, 'success');
 }
 
-// Модальное окно добавления курса
-function showAddCourseModal() {
-    const modalHtml = `
-        <div class="modal fade" id="addCourseModal" tabindex="-1">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Добавить новый курс</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                    </div>
-                    <div class="modal-body">
-                        <form id="add-course-form">
-                            <div class="mb-3">
-                                <label for="course-title" class="form-label">Название курса</label>
-                                <input type="text" class="form-control" id="course-title" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="course-description" class="form-label">Описание</label>
-                                <textarea class="form-control" id="course-description" rows="3" required></textarea>
-                            </div>
-                            <div class="mb-3">
-                                <label for="course-thumbnail" class="form-label">URL обложки</label>
-                                <input type="url" class="form-control" id="course-thumbnail">
-                            </div>
-                        </form>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
-                        <button type="button" class="btn btn-primary" id="save-course-btn">Сохранить</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    `;
-    
-    // Добавить модальное окно в DOM
-    document.body.insertAdjacentHTML('beforeend', modalHtml);
-    
-    const modal = new bootstrap.Modal(document.getElementById('addCourseModal'));
-    modal.show();
-    
-    // Обработчик сохранения
-    document.getElementById('save-course-btn').addEventListener('click', saveNewCourse);
-    
-    // Удалить модальное окно после закрытия
-    document.getElementById('addCourseModal').addEventListener('hidden.bs.modal', function() {
-        this.remove();
-    });
-}
-
-function saveNewCourse() {
-    const title = document.getElementById('course-title').value;
-    const description = document.getElementById('course-description').value;
-    const thumbnail = document.getElementById('course-thumbnail').value;
-    
-    if (!title || !description) {
-        showNotification('Заполните все обязательные поля', 'error');
-        return;
-    }
-    
-    // Создать новый курс
-    const newCourse = {
-        id: Math.max(...sampleCourses.map(c => c.id)) + 1,
-        title: title,
-        description: description,
-        thumbnail: thumbnail || 'default.jpg',
-        videos: []
-    };
-    
-    // В реальном приложении: сохранение в Firestore
-    // firebase.firestore().collection('courses').add(newCourse)...
-    
-    sampleCourses.push(newCourse);
-    
-    // Закрыть модальное окно
-    bootstrap.Modal.getInstance(document.getElementById('addCourseModal')).hide();
-    
-    // Обновить интерфейс
-    loadAdminCourses();
-    showNotification('Курс успешно добавлен', 'success');
-}
-
-// Модальное окно редактирования курса
-function showEditCourseModal(course) {
-    const modalHtml = `
-        <div class="modal fade" id="editCourseModal" tabindex="-1">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Редактировать курс</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                    </div>
-                    <div class="modal-body">
-                        <form id="edit-course-form">
-                            <div class="mb-3">
-                                <label for="edit-course-title" class="form-label">Название курса</label>
-                                <input type="text" class="form-control" id="edit-course-title" value="${course.title}" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="edit-course-description" class="form-label">Описание</label>
-                                <textarea class="form-control" id="edit-course-description" rows="3" required>${course.description}</textarea>
-                            </div>
-                            <div class="mb-3">
-                                <label for="edit-course-thumbnail" class="form-label">URL обложки</label>
-                                <input type="url" class="form-control" id="edit-course-thumbnail" value="${course.thumbnail}">
-                            </div>
-                        </form>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
-                        <button type="button" class="btn btn-primary" id="update-course-btn" data-course-id="${course.id}">Обновить</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    `;
-    
-    document.body.insertAdjacentHTML('beforeend', modalHtml);
-    
-    const modal = new bootstrap.Modal(document.getElementById('editCourseModal'));
-    modal.show();
-    
-    document.getElementById('update-course-btn').addEventListener('click', updateCourse);
-    
-    document.getElementById('editCourseModal').addEventListener('hidden.bs.modal', function() {
-        this.remove();
-    });
-}
-
-function updateCourse() {
-    const courseId = document.getElementById('update-course-btn').getAttribute('data-course-id');
-    const title = document.getElementById('edit-course-title').value;
-    const description = document.getElementById('edit-course-description').value;
-    const thumbnail = document.getElementById('edit-course-thumbnail').value;
-    
-    if (!title || !description) {
-        showNotification('Заполните все обязательные поля', 'error');
-        return;
-    }
-    
-    // Обновить курс
-    const courseIndex = sampleCourses.findIndex(c => c.id == courseId);
-    if (courseIndex !== -1) {
-        sampleCourses[courseIndex].title = title;
-        sampleCourses[courseIndex].description = description;
-        sampleCourses[courseIndex].thumbnail = thumbnail;
-        
-        // В реальном приложении: обновление в Firestore
-        // firebase.firestore().collection('courses').doc(courseId).update({...})
-    }
-    
-    bootstrap.Modal.getInstance(document.getElementById('editCourseModal')).hide();
-    loadAdminCourses();
-    showNotification('Курс успешно обновлен', 'success');
-}
-
-// Модальное окно редактирования пользователя
-function showEditUserModal(user) {
-    const modalHtml = `
-        <div class="modal fade" id="editUserModal" tabindex="-1">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Редактировать пользователя</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                    </div>
-                    <div class="modal-body">
-                        <form id="edit-user-form">
-                            <div class="mb-3">
-                                <label for="edit-user-name" class="form-label">Имя</label>
-                                <input type="text" class="form-control" id="edit-user-name" value="${user.name}" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="edit-user-email" class="form-label">Email</label>
-                                <input type="email" class="form-control" id="edit-user-email" value="${user.email}" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="edit-user-role" class="form-label">Роль</label>
-                                <select class="form-select" id="edit-user-role">
-                                    <option value="user" ${user.role === 'user' ? 'selected' : ''}>Пользователь</option>
-                                    <option value="admin" ${user.role === 'admin' ? 'selected' : ''}>Администратор</option>
-                                </select>
-                            </div>
-                        </form>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
-                        <button type="button" class="btn btn-primary" id="update-user-btn" data-user-id="${user.id}">Обновить</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    `;
-    
-    document.body.insertAdjacentHTML('beforeend', modalHtml);
-    
-    const modal = new bootstrap.Modal(document.getElementById('editUserModal'));
-    modal.show();
-    
-    document.getElementById('update-user-btn').addEventListener('click', updateUser);
-    
-    document.getElementById('editUserModal').addEventListener('hidden.bs.modal', function() {
-        this.remove();
-    });
-}
-
-function updateUser() {
-    const userId = document.getElementById('update-user-btn').getAttribute('data-user-id');
-    const name = document.getElementById('edit-user-name').value;
-    const email = document.getElementById('edit-user-email').value;
-    const role = document.getElementById('edit-user-role').value;
-    
-    if (!name || !email) {
-        showNotification('Заполните все обязательные поля', 'error');
-        return;
-    }
-    
-    // Обновить пользователя
-    const userIndex = sampleUsers.findIndex(u => u.id == userId);
-    if (userIndex !== -1) {
-        sampleUsers[userIndex].name = name;
-        sampleUsers[userIndex].email = email;
-        sampleUsers[userIndex].role = role;
-    }
-    
-    bootstrap.Modal.getInstance(document.getElementById('editUserModal')).hide();
-    loadAdminUsers();
-    showNotification('Пользователь успешно обновлен', 'success');
-}
-
 // Функция показа уведомлений
 function showNotification(message, type = 'info') {
     // Создать уведомление
@@ -416,54 +192,15 @@ function showNotification(message, type = 'info') {
     }, 5000);
 }
 
-// Функция для управления видео в курсах (дополнительный функционал)
-function manageCourseVideos(courseId) {
-    const course = sampleCourses.find(c => c.id == courseId);
-    if (!course) return;
-    
-    const modalHtml = `
-        <div class="modal fade" id="manageVideosModal" tabindex="-1">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Управление видео курса: ${course.title}</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="d-flex justify-content-between align-items-center mb-3">
-                            <h6>Видео курса</h6>
-                            <button class="btn btn-sm btn-success" id="add-video-btn">Добавить видео</button>
-                        </div>
-                        <div id="videos-list">
-                            ${course.videos.map((video, index) => `
-                                <div class="card mb-2">
-                                    <div class="card-body">
-                                        <h6>${index + 1}. ${video.title}</h6>
-                                        <p class="mb-1">Длительность: ${video.duration}</p>
-                                        <p class="mb-2">URL: ${video.url}</p>
-                                        <div class="btn-group btn-group-sm">
-                                            <button class="btn btn-outline-primary edit-video-btn" data-video-id="${video.id}">Редактировать</button>
-                                            <button class="btn btn-outline-danger delete-video-btn" data-video-id="${video.id}">Удалить</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            `).join('')}
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    `;
-    
-    document.body.insertAdjacentHTML('beforeend', modalHtml);
-    
-    const modal = new bootstrap.Modal(document.getElementById('manageVideosModal'));
-    modal.show();
-    
-    document.getElementById('manageVideosModal').addEventListener('hidden.bs.modal', function() {
-        this.remove();
-    });
+// Модальные окна (упрощенные версии)
+function showAddCourseModal() {
+    alert('Функция добавления курса будет реализована в полной версии');
+}
+
+function showEditCourseModal(course) {
+    alert(`Редактирование курса "${course.title}" будет реализовано в полной версии`);
+}
+
+function showEditUserModal(user) {
+    alert(`Редактирование пользователя "${user.name}" будет реализовано в полной версии`);
 }

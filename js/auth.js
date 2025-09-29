@@ -19,7 +19,10 @@ const backToLoginLink = document.getElementById('back-to-login-link');
 
 // Инициализация Firebase
 function initializeFirebase() {
-    firebase.initializeApp(firebaseConfig);
+    // Проверяем, не инициализирован ли Firebase уже
+    if (!firebase.apps.length) {
+        firebase.initializeApp(firebaseConfig);
+    }
 }
 
 // Проверка роли пользователя
@@ -43,70 +46,78 @@ function checkUserRole(uid) {
 }
 
 // Обработчики форм аутентификации
-loginForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const email = document.getElementById('email').value;
-    const password = document.getElementById('password').value;
-    
-    firebase.auth().signInWithEmailAndPassword(email, password)
-        .then((userCredential) => {
-            // Вход успешен
-            const user = userCredential.user;
-            console.log('Пользователь вошел:', user);
-        })
-        .catch((error) => {
-            const errorCode = error.code;
-            const errorMessage = error.message;
-            alert(`Ошибка входа: ${errorMessage}`);
-        });
-});
-
-registerForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const name = document.getElementById('reg-name').value;
-    const email = document.getElementById('reg-email').value;
-    const password = document.getElementById('reg-password').value;
-    const confirmPassword = document.getElementById('reg-confirm-password').value;
-    
-    if (password !== confirmPassword) {
-        alert('Пароли не совпадают');
-        return;
-    }
-    
-    firebase.auth().createUserWithEmailAndPassword(email, password)
-        .then((userCredential) => {
-            // Регистрация успешна
-            const user = userCredential.user;
-            
-            // Обновить профиль пользователя
-            return user.updateProfile({
-                displayName: name
-            }).then(() => {
-                // Создать запись пользователя в Firestore
-                return firebase.firestore().collection('users').doc(user.uid).set({
-                    displayName: name,
-                    email: email,
-                    role: 'user',
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                });
+if (loginForm) {
+    loginForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        
+        firebase.auth().signInWithEmailAndPassword(email, password)
+            .then((userCredential) => {
+                // Вход успешен
+                const user = userCredential.user;
+                console.log('Пользователь вошел:', user);
+            })
+            .catch((error) => {
+                const errorCode = error.code;
+                const errorMessage = error.message;
+                alert(`Ошибка входа: ${errorMessage}`);
             });
-        })
-        .then(() => {
-            console.log('Пользователь зарегистрирован');
-        })
-        .catch((error) => {
-            const errorCode = error.code;
-            const errorMessage = error.message;
-            alert(`Ошибка регистрации: ${errorMessage}`);
-        });
-});
+    });
+}
 
-registerLink.addEventListener('click', (e) => {
-    e.preventDefault();
-    showPage(registerPage);
-});
+if (registerForm) {
+    registerForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const name = document.getElementById('reg-name').value;
+        const email = document.getElementById('reg-email').value;
+        const password = document.getElementById('reg-password').value;
+        const confirmPassword = document.getElementById('reg-confirm-password').value;
+        
+        if (password !== confirmPassword) {
+            alert('Пароли не совпадают');
+            return;
+        }
+        
+        firebase.auth().createUserWithEmailAndPassword(email, password)
+            .then((userCredential) => {
+                // Регистрация успешна
+                const user = userCredential.user;
+                
+                // Обновить профиль пользователя
+                return user.updateProfile({
+                    displayName: name
+                }).then(() => {
+                    // Создать запись пользователя в Firestore
+                    return firebase.firestore().collection('users').doc(user.uid).set({
+                        displayName: name,
+                        email: email,
+                        role: 'user',
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                });
+            })
+            .then(() => {
+                console.log('Пользователь зарегистрирован');
+            })
+            .catch((error) => {
+                const errorCode = error.code;
+                const errorMessage = error.message;
+                alert(`Ошибка регистрации: ${errorMessage}`);
+            });
+    });
+}
 
-backToLoginLink.addEventListener('click', (e) => {
-    e.preventDefault();
-    showPage(loginPage);
-});
+if (registerLink) {
+    registerLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        showPage(registerPage);
+    });
+}
+
+if (backToLoginLink) {
+    backToLoginLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        showPage(loginPage);
+    });
+}
