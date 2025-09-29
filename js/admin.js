@@ -112,7 +112,11 @@ function loadAdminUsers() {
 // Обработчики для админ-панели
 if (addCourseBtn) {
     addCourseBtn.addEventListener('click', () => {
-        showAddCourseModal();
+        if (typeof showCreateCoursePage === 'function') {
+            showCreateCoursePage();
+        } else {
+            showAddCourseModal();
+        }
     });
 }
 

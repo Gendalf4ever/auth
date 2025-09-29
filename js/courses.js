@@ -247,6 +247,11 @@ function removeContentBlock(blockId) {
 // Обработчик отправки формы курса
 function handleCourseSubmit(e) {
     e.preventDefault();
+    // Разрешено только администраторам
+    if (!isAdmin) {
+        alert('Создание и редактирование курсов доступно только администраторам');
+        return;
+    }
     
     // Собираем данные из блоков контента
     const contentBlocksElements = document.querySelectorAll('.content-block');

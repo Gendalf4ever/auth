@@ -8,7 +8,7 @@ const backToLoginLink = document.getElementById('back-to-login-link');
 
   // Your web app's Firebase configuration
   const firebaseConfig = {
-    apiKey: "",
+    apiKey: "AIzaSyBPn3QTnKQ9a3s42A3OkumIR0IjXpIYKeE",
     authDomain: "codent-education.firebaseapp.com",
     projectId: "codent-education",
     storageBucket: "codent-education.firebasestorage.app",
@@ -22,6 +22,17 @@ function initializeFirebase() {
     // Проверяем, не инициализирован ли Firebase уже
     if (!firebase.apps.length) {
         firebase.initializeApp(firebaseConfig);
+        // Настройка Firestore для стабильной работы в ограниченных сетях
+        const db = firebase.firestore();
+        try {
+            db.settings({ experimentalForceLongPolling: true, useFetchStreams: false });
+        } catch (e) {
+            console.warn('Не удалось применить настройки Firestore:', e);
+        }
+        // Включаем офлайн-персистентность (грейсфулл-фолбэк при конфликте вкладок)
+        db.enablePersistence().catch((err) => {
+            console.warn('Persistence недоступна:', err && err.code ? err.code : err);
+        });
     }
 }
 
