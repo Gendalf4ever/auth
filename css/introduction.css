@@ -7,6 +7,40 @@
     display: block;
 }
 
+/* Номера шагов в кружках для процессов и этапов */
+.step-header,
+.stage-item .stage-content {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.step-number,
+.stage-number {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 18px;
+    line-height: 1;
+    flex-shrink: 0;
+    color: #fff;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+}
+
+.stage-item .stage-number {
+    background: linear-gradient(135deg, #0d6efd, #5a8dee);
+}
+
+.step-title h4,
+.stage-content h5 {
+    margin: 0;
+}
+
 /* Стили для преимуществ и недостатков */
 .tech-pros-cons {
     display: grid;
