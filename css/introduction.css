@@ -1,3 +1,12 @@
+/* Пошаговое отображение страниц введения */
+.introduction-page {
+    display: none;
+}
+
+.introduction-page.active {
+    display: block;
+}
+
 /* Стили для преимуществ и недостатков */
 .tech-pros-cons {
     display: grid;

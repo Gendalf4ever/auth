@@ -6,6 +6,7 @@ let activeTooltip = null;
 
 // Инициализация
 document.addEventListener('DOMContentLoaded', function() {
+    initPages();
     updateProgress();
     initTechnologyTooltips();
 });
@@ -31,6 +32,19 @@ function initTechnologyTooltips() {
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape' && activeTooltip) {
             closeActiveTooltip();
+        }
+    });
+}
+
+// Инициализация видимых страниц (показываем только первую)
+function initPages() {
+    currentPage = 1;
+    const pages = document.querySelectorAll('.introduction-page');
+    pages.forEach((p, idx) => {
+        if (idx === 0) {
+            p.classList.add('active');
+        } else {
+            p.classList.remove('active');
         }
     });
 }
