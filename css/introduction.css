@@ -7,6 +7,251 @@
     display: block;
 }
 
+/* Стили для новой структуры введения */
+.intro-section-card {
+    background: #f8f9fa;
+    border-radius: 10px;
+    padding: 1.5rem;
+    text-align: center;
+    transition: all 0.3s ease;
+    height: 100%;
+}
+
+.intro-section-card:hover {
+    background: #e9ecef;
+    transform: translateY(-2px);
+}
+
+.section-icon {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(45deg, var(--primary-color, #2c5aa0), var(--secondary-color, #f39c12));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem;
+    color: white;
+    font-size: 1.5rem;
+}
+
+.section-link {
+    text-decoration: none;
+    color: inherit;
+}
+
+.section-card {
+    background: white;
+    border-radius: 15px;
+    padding: 2rem;
+    text-align: center;
+    box-shadow: 0 5px 25px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    height: 100%;
+    position: relative;
+}
+
+.section-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+}
+
+.section-arrow {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    color: var(--primary-color, #2c5aa0);
+    font-size: 1.2rem;
+    opacity: 0;
+    transition: all 0.3s ease;
+}
+
+.section-card:hover .section-arrow {
+    opacity: 1;
+    transform: translateX(5px);
+}
+
+.table-container {
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 5px 25px rgba(0,0,0,0.1);
+}
+
+.completion-stats {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin: 2rem 0;
+}
+
+.stat-item {
+    text-align: center;
+}
+
+.stat-item strong {
+    display: block;
+    font-size: 2rem;
+    color: var(--primary-color, #2c5aa0);
+}
+
+.component-card, .advantage-card {
+    background: white;
+    border-radius: 15px;
+    padding: 1.5rem;
+    text-align: center;
+    box-shadow: 0 5px 25px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    height: 100%;
+}
+
+.component-card:hover, .advantage-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+}
+
+.component-icon, .advantage-icon {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(45deg, var(--primary-color, #2c5aa0), var(--secondary-color, #f39c12));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem;
+    color: white;
+    font-size: 1.5rem;
+}
+
+.materials-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.material-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+
+.material-icon {
+    color: var(--primary-color, #2c5aa0);
+    font-size: 1.2rem;
+}
+
+.material-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.material-info strong {
+    font-size: 0.9rem;
+}
+
+.material-info span {
+    font-size: 0.8rem;
+    color: #666;
+}
+
+.tech-comparison {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-top: 1rem;
+}
+
+.tech-item {
+    background: #e9ecef;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+}
+
+.post-processing-steps {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.step-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+
+.step-item i {
+    color: var(--primary-color, #2c5aa0);
+}
+
+.workflow-summary .summary-icon {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(45deg, var(--primary-color, #2c5aa0), var(--secondary-color, #f39c12));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem;
+    color: white;
+    font-size: 2rem;
+}
+
+.advantages-comparison {
+    background: #f8f9fa;
+    border-radius: 15px;
+    padding: 2rem;
+    margin-top: 2rem;
+}
+
+.traditional-method, .digital-method {
+    padding: 1.5rem;
+    border-radius: 10px;
+}
+
+.traditional-method {
+    background: rgba(220, 53, 69, 0.1);
+    border-left: 4px solid #dc3545;
+}
+
+.digital-method {
+    background: rgba(40, 167, 69, 0.1);
+    border-left: 4px solid #28a745;
+}
+
+.disadvantages-list li, .advantages-list li {
+    padding: 0.25rem 0;
+}
+
+.tech-details {
+    background: #f8f9fa;
+    border-radius: 10px;
+    padding: 1rem;
+    margin-top: 1rem;
+    text-align: left;
+}
+
+.tech-details h6 {
+    color: var(--primary-color, #2c5aa0);
+    margin-bottom: 0.5rem;
+}
+
+.tech-details ul {
+    margin-bottom: 0;
+}
+
+.tech-details li {
+    font-size: 0.9rem;
+    margin-bottom: 0.25rem;
+}
+
 /* Номера шагов в кружках для процессов и этапов */
 .step-header,
 .stage-item .stage-content {
