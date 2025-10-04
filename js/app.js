@@ -34,6 +34,9 @@ const coursesList = document.getElementById('courses-list');
 const categoryList = document.getElementById('category-list');
 const courseSearch = document.getElementById('course-search');
 
+// Элементы навигации
+const profileLink = document.getElementById('profile-link');
+
 // Функции навигации
 function showPage(page) {
     if (!page) return;
@@ -318,6 +321,7 @@ function loginUser(user, admin = false) {
     
     // Обновить интерфейс
     if (loginLink) loginLink.style.display = 'none';
+    if (profileLink) profileLink.style.display = 'block';
     if (logoutLink) logoutLink.style.display = 'block';
     if (userInfo) {
         userInfo.style.display = 'block';
@@ -348,6 +352,7 @@ function logoutUser() {
         
         // Обновить интерфейс
         if (loginLink) loginLink.style.display = 'block';
+        if (profileLink) profileLink.style.display = 'none';
         if (logoutLink) logoutLink.style.display = 'none';
         if (adminLink) adminLink.style.display = 'none';
         if (userInfo) userInfo.style.display = 'none';

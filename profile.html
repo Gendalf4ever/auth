@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Личный кабинет - Образовательная платформа</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/profile.css">
+</head>
+<body>
+    <!-- Навигационная панель -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <i class="fas fa-graduation-cap me-2"></i>Образовательная платформа
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">
+                            <i class="fas fa-home me-1"></i>Главная
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html#courses-page">
+                            <i class="fas fa-play-circle me-1"></i>Курсы
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="introduction/index.html">
+                            <i class="fas fa-book me-1"></i>Введение
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="team.html">
+                            <i class="fas fa-users me-1"></i>Команда
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="educational-catalog.html">
+                            <i class="fas fa-microscope me-1"></i>Оборудование
+                        </a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" id="login-link">
+                            <i class="fas fa-sign-in-alt me-1"></i>Войти
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" id="logout-link" style="display: none;">
+                            <i class="fas fa-sign-out-alt me-1"></i>Выйти
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <span class="nav-link" id="user-info" style="display: none;"></span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Основной контент -->
+    <div class="container py-5">
+        <!-- Проверка авторизации -->
+        <div id="auth-required" class="text-center py-5" style="display: none;">
+            <div class="card mx-auto" style="max-width: 400px;">
+                <div class="card-body">
+                    <i class="fas fa-lock fa-3x text-muted mb-3"></i>
+                    <h4>Требуется авторизация</h4>
+                    <p class="text-muted">Для доступа к личному кабинету необходимо войти в систему</p>
+                    <a href="index.html" class="btn btn-primary">
+                        <i class="fas fa-sign-in-alt me-2"></i>Войти
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Личный кабинет -->
+        <div id="profile-content" style="display: none;">
+            <div class="row">
+                <!-- Боковая панель -->
+                <div class="col-lg-3">
+                    <div class="card profile-sidebar">
+                        <div class="card-body text-center">
+                            <div class="profile-avatar mb-3">
+                                <i class="fas fa-user-circle fa-5x text-primary"></i>
+                            </div>
+                            <h5 id="user-display-name">Имя пользователя</h5>
+                            <p class="text-muted" id="user-email">email@example.com</p>
+                            <span class="badge bg-primary" id="user-role-badge">Пользователь</span>
+                        </div>
+                        <div class="list-group list-group-flush">
+                            <a href="#" class="list-group-item list-group-item-action active" data-tab="profile">
+                                <i class="fas fa-user me-2"></i>Профиль
+                            </a>
+                            <a href="#" class="list-group-item list-group-item-action" data-tab="courses">
+                                <i class="fas fa-play-circle me-2"></i>Мои курсы
+                            </a>
+                            <a href="#" class="list-group-item list-group-item-action" data-tab="progress">
+                                <i class="fas fa-chart-line me-2"></i>Прогресс
+                            </a>
+                            <a href="#" class="list-group-item list-group-item-action" data-tab="settings">
+                                <i class="fas fa-cog me-2"></i>Настройки
+                            </a>
+                            <!-- Админские вкладки (показываются только админам) -->
+                            <a href="#" class="list-group-item list-group-item-action admin-only" data-tab="admin-users" style="display: none;">
+                                <i class="fas fa-users me-2"></i>Управление пользователями
+                            </a>
+                            <a href="#" class="list-group-item list-group-item-action admin-only" data-tab="admin-courses" style="display: none;">
+                                <i class="fas fa-graduation-cap me-2"></i>Управление курсами
+                            </a>
+                            <a href="#" class="list-group-item list-group-item-action admin-only" data-tab="admin-products" style="display: none;">
+                                <i class="fas fa-shopping-cart me-2"></i>Управление товарами
+                            </a>
+                            <a href="#" class="list-group-item list-group-item-action admin-only" data-tab="admin-analytics" style="display: none;">
+                                <i class="fas fa-chart-bar me-2"></i>Аналитика
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Основной контент -->
+                <div class="col-lg-9">
+                    <!-- Вкладка профиля -->
+                    <div id="tab-profile" class="tab-content">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0"><i class="fas fa-user me-2"></i>Информация о профиле</h5>
+                            </div>
+                            <div class="card-body">
+                                <form id="profile-form">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label for="profile-name" class="form-label">Имя</label>
+                                                <input type="text" class="form-control" id="profile-name" required>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label for="profile-email" class="form-label">Email</label>
+                                                <input type="email" class="form-control" id="profile-email" readonly>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label for="profile-phone" class="form-label">Телефон</label>
+                                                <input type="tel" class="form-control" id="profile-phone">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label for="profile-specialization" class="form-label">Специализация</label>
+                                                <select class="form-select" id="profile-specialization">
+                                                    <option value="">Выберите специализацию</option>
+                                                    <option value="therapist">Терапевтическая стоматология</option>
+                                                    <option value="surgery">Хирургическая стоматология</option>
+                                                    <option value="orthodontics">Ортодонтия</option>
+                                                    <option value="prosthetics">Протезирование</option>
+                                                    <option value="implantology">Имплантология</option>
+                                                    <option value="other">Другое</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="profile-bio" class="form-label">О себе</label>
+                                        <textarea class="form-control" id="profile-bio" rows="3" placeholder="Расскажите о своем опыте и интересах"></textarea>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-save me-2"></i>Сохранить изменения
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Вкладка курсов -->
+                    <div id="tab-courses" class="tab-content" style="display: none;">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0"><i class="fas fa-play-circle me-2"></i>Мои курсы</h5>
+                            </div>
+                            <div class="card-body">
+                                <div id="user-courses-list">
+                                    <!-- Курсы пользователя будут загружены здесь -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Вкладка прогресса -->
+                    <div id="tab-progress" class="tab-content" style="display: none;">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0"><i class="fas fa-chart-line me-2"></i>Мой прогресс</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="stat-card">
+                                            <div class="stat-icon">
+                                                <i class="fas fa-play-circle"></i>
+                                            </div>
+                                            <div class="stat-content">
+                                                <h3 id="courses-started">0</h3>
+                                                <p>Курсов начато</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="stat-card">
+                                            <div class="stat-icon">
+                                                <i class="fas fa-check-circle"></i>
+                                            </div>
+                                            <div class="stat-content">
+                                                <h3 id="courses-completed">0</h3>
+                                                <p>Курсов завершено</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="stat-card">
+                                            <div class="stat-icon">
+                                                <i class="fas fa-clock"></i>
+                                            </div>
+                                            <div class="stat-content">
+                                                <h3 id="total-time">0ч</h3>
+                                                <p>Время обучения</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Вкладка настроек -->
+                    <div id="tab-settings" class="tab-content" style="display: none;">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0"><i class="fas fa-cog me-2"></i>Настройки</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <h6>Уведомления</h6>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="notifications-email">
+                                            <label class="form-check-label" for="notifications-email">
+                                                Email уведомления
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="notifications-courses">
+                                            <label class="form-check-label" for="notifications-courses">
+                                                Уведомления о новых курсах
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <h6>Безопасность</h6>
+                                        <button class="btn btn-outline-primary btn-sm" id="change-password-btn">
+                                            <i class="fas fa-key me-1"></i>Изменить пароль
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Админские вкладки -->
+                    <div id="tab-admin-users" class="tab-content admin-only" style="display: none;">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0"><i class="fas fa-users me-2"></i>Управление пользователями</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>Имя</th>
+                                                <th>Email</th>
+                                                <th>Роль</th>
+                                                <th>Дата регистрации</th>
+                                                <th>Действия</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="admin-users-list">
+                                            <!-- Пользователи будут загружены здесь -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="tab-admin-courses" class="tab-content admin-only" style="display: none;">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0"><i class="fas fa-graduation-cap me-2"></i>Управление курсами</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <h6>Все курсы</h6>
+                                    <button class="btn btn-primary" id="create-course-btn">
+                                        <i class="fas fa-plus me-1"></i>Создать курс
+                                    </button>
+                                </div>
+                                <div class="table-responsive">
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>Название</th>
+                                                <th>Категория</th>
+                                                <th>Уровень</th>
+                                                <th>Студентов</th>
+                                                <th>Действия</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="admin-courses-list">
+                                            <!-- Курсы будут загружены здесь -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="tab-admin-products" class="tab-content admin-only" style="display: none;">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0"><i class="fas fa-shopping-cart me-2"></i>Управление товарами</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <h6>Каталог товаров</h6>
+                                    <div>
+                                        <button class="btn btn-outline-primary me-2" id="sync-products-btn">
+                                            <i class="fas fa-sync me-1"></i>Синхронизировать с Google Sheets
+                                        </button>
+                                        <button class="btn btn-primary" id="add-product-btn">
+                                            <i class="fas fa-plus me-1"></i>Добавить товар
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="table-responsive">
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>Название</th>
+                                                <th>Цена</th>
+                                                <th>Категория</th>
+                                                <th>Действия</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="admin-products-list">
+                                            <!-- Товары будут загружены здесь -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="tab-admin-analytics" class="tab-content admin-only" style="display: none;">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0"><i class="fas fa-chart-bar me-2"></i>Аналитика</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <div class="stat-card">
+                                            <div class="stat-icon">
+                                                <i class="fas fa-users"></i>
+                                            </div>
+                                            <div class="stat-content">
+                                                <h3 id="total-users">0</h3>
+                                                <p>Всего пользователей</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="stat-card">
+                                            <div class="stat-icon">
+                                                <i class="fas fa-graduation-cap"></i>
+                                            </div>
+                                            <div class="stat-content">
+                                                <h3 id="total-courses">0</h3>
+                                                <p>Всего курсов</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="stat-card">
+                                            <div class="stat-icon">
+                                                <i class="fas fa-play-circle"></i>
+                                            </div>
+                                            <div class="stat-content">
+                                                <h3 id="active-courses">0</h3>
+                                                <p>Активных курсов</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="stat-card">
+                                            <div class="stat-icon">
+                                                <i class="fas fa-shopping-cart"></i>
+                                            </div>
+                                            <div class="stat-content">
+                                                <h3 id="total-products">0</h3>
+                                                <p>Товаров в каталоге</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Подвал -->
+    <footer class="bg-dark text-white py-4">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>Образовательная платформа</h5>
+                    <p>Современное обучение для стоматологов</p>
+                </div>
+                <div class="col-md-6 text-end">
+                    <p>&copy; 2024 Все права защищены</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Скрипты -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/profile.js"></script>
+</body>
+</html>
+

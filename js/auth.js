@@ -25,14 +25,26 @@ function initializeFirebase() {
         // Настройка Firestore для стабильной работы в ограниченных сетях
         const db = firebase.firestore();
         try {
-            db.settings({ experimentalForceLongPolling: true, useFetchStreams: false });
+            // Используем merge: true для избежания предупреждения о переопределении хоста
+            db.settings({ 
+                experimentalForceLongPolling: true, 
+                useFetchStreams: false,
+                merge: true
+            });
         } catch (e) {
             console.warn('Не удалось применить настройки Firestore:', e);
         }
-        // Включаем офлайн-персистентность (грейсфулл-фолбэк при конфликте вкладок)
-        db.enablePersistence().catch((err) => {
-            console.warn('Persistence недоступна:', err && err.code ? err.code : err);
-        });
+        // Используем новый API для кэширования вместо устаревшего enablePersistence
+        try {
+            // Включаем кэширование с настройками по умолчанию
+            db.settings({
+                cache: {
+                    sizeBytes: 40 * 1024 * 1024 // 40MB кэш
+                }
+            });
+        } catch (err) {
+            console.warn('Кэширование недоступно:', err);
+        }
     }
 }
 
