@@ -20,14 +20,7 @@ const sortEquipment = document.getElementById('sort-equipment');
 const refreshEquipmentBtn = document.getElementById('refresh-equipment');
 const equipmentPagination = document.getElementById('equipment-pagination');
 
-// CORS proxy для загрузки данных
-const CORS_PROXIES = [
-    'https://api.allorigins.win/raw?url=',
-    'https://cors-anywhere.herokuapp.com/',
-    'https://api.codetabs.com/v1/proxy?quest=',
-    'https://thingproxy.freeboard.io/fetch/',
-    'https://corsproxy.io/?'
-];
+// Прямая загрузка из Google Sheets (без proxy)
 
 // Инициализация при загрузке страницы
 document.addEventListener('DOMContentLoaded', () => {
@@ -38,16 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
 // Инициализация оборудования
 function initializeEquipment() {
     showLoading();
-    
-    // Добавляем таймаут для загрузки
-    const loadTimeout = setTimeout(() => {
-        console.warn('Таймаут загрузки, показываем демо-данные');
-        loadDemoEquipment();
-    }, 10000); // 10 секунд
-    
-    loadEquipmentFromGoogleSheets().finally(() => {
-        clearTimeout(loadTimeout);
-    });
+    loadEquipmentFromGoogleSheets();
 }
 
 // Настройка обработчиков событий
@@ -76,91 +60,118 @@ function setupEventListeners() {
     }
 }
 
-// Загрузка данных из Google Sheets
+// Загрузка данных из Google Sheets со всех листов
 async function loadEquipmentFromGoogleSheets() {
-    console.log('Начинаем загрузку оборудования...');
+    console.log('Начинаем загрузку оборудования со всех листов...');
     
     try {
-        // Получаем конфигурацию для текущей страницы
-        const config = window.sheetConfig.getCurrentConfig();
-        const exportUrl = window.sheetConfig.getExportUrl();
+        // Получаем все листы для обучающего каталога
+        const sheetsToLoad = [
+            '3d-printers',      // 3D принтеры
+            '3d-scaners',       // 3D сканеры
+            'milling',          // Фрезеровка
+            'frezy',            // Фрезы
+            'sinterising',      // Синтеризация
+            'zirkon',           // Циркониевые диски
+            'post-obrabotka',  // Пост-обработка
+            'photo-polymers',   // Фотополимеры
+            '3d-consumables',   // Прочее
+            'compressors'       // Компрессоры
+        ];
         
-        if (!exportUrl) {
-            throw new Error('Не удалось получить URL для загрузки данных');
-        }
+        let allEquipmentData = [];
+        let loadedSheets = 0;
         
-        console.log('URL для загрузки:', exportUrl);
-        
-        // Пробуем разные CORS proxy
-        for (let i = 0; i < CORS_PROXIES.length; i++) {
+        // Загружаем данные с каждого листа
+        for (const sheetId of sheetsToLoad) {
             try {
-                const proxyUrl = CORS_PROXIES[i];
-                const fullUrl = proxyUrl + encodeURIComponent(exportUrl);
+                console.log(`Загружаем данные с листа: ${sheetId}`);
+                const sheetData = await loadSheetData(sheetId);
                 
-                console.log(`Пробуем proxy ${i + 1}/${CORS_PROXIES.length}:`, proxyUrl);
-                
-                const response = await fetch(fullUrl, {
-                    method: 'GET',
-                    headers: {
-                        'Accept': 'text/csv,text/plain,*/*',
-                    },
-                    mode: 'cors'
-                });
-                
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
+                if (sheetData && sheetData.length > 0) {
+                    // Добавляем информацию о листе к каждому элементу
+                    const sheetDataWithSource = sheetData.map(item => ({
+                        ...item,
+                        sourceSheet: sheetId,
+                        sourceTitle: window.sheetConfig.pages[sheetId]?.title || sheetId
+                    }));
+                    
+                    allEquipmentData = allEquipmentData.concat(sheetDataWithSource);
+                    loadedSheets++;
+                    console.log(`Загружено ${sheetData.length} элементов с листа ${sheetId}`);
                 }
-                
-                const csvText = await response.text();
-                console.log('Получены данные CSV, длина:', csvText.length);
-                
-                if (csvText.length < 100) {
-                    throw new Error('Получены некорректные данные');
-                }
-                
-                equipmentData = parseCSV(csvText);
-                console.log('Распарсено оборудования:', equipmentData.length);
-                
-                if (equipmentData.length === 0) {
-                    throw new Error('Нет данных для отображения');
-                }
-                
-                // Преобразуем данные в формат для обучающего каталога
-                equipmentData = transformToEducationalFormat(equipmentData);
-                
-                filteredEquipment = [...equipmentData];
-                hideLoading();
-                renderEquipment();
-                
-                console.log('Оборудование успешно загружено и отображено');
-                return; // Успешно загружено, выходим из цикла
-                
             } catch (error) {
-                console.warn(`Proxy ${i + 1} не сработал:`, error.message);
-                
-                // Если это последний proxy, показываем демо-данные
-                if (i === CORS_PROXIES.length - 1) {
-                    console.error('Все proxy не сработали, показываем демо-данные');
-                    loadDemoEquipment();
-                    return;
-                }
+                console.warn(`Ошибка загрузки листа ${sheetId}:`, error.message);
+                // Продолжаем загрузку других листов
             }
         }
+        
+        if (allEquipmentData.length === 0) {
+            throw new Error('Не удалось загрузить данные ни с одного листа');
+        }
+        
+        console.log(`Успешно загружено ${allEquipmentData.length} элементов с ${loadedSheets} листов`);
+        
+        // Преобразуем данные в формат для обучающего каталога
+        equipmentData = transformToEducationalFormat(allEquipmentData);
+        
+        filteredEquipment = [...equipmentData];
+        hideLoading();
+        renderEquipment();
+        
+        console.log('Оборудование успешно загружено и отображено');
+        
     } catch (error) {
         console.error('Ошибка загрузки:', error);
-        showError('Не удалось загрузить данные из Google Sheets. Показываем демо-данные.');
-        loadDemoEquipment();
+        showError('Не удалось загрузить данные из Google Sheets. Проверьте подключение к интернету и настройки таблицы.');
+    }
+}
+
+// Загрузка данных с конкретного листа
+async function loadSheetData(sheetId) {
+    const exportUrl = window.sheetConfig.getExportUrl(sheetId);
+    
+    if (!exportUrl) {
+        throw new Error(`Не удалось получить URL для листа ${sheetId}`);
+    }
+    
+    console.log(`Загружаем данные с листа ${sheetId}:`, exportUrl);
+    
+    try {
+        const response = await fetch(exportUrl, {
+            method: 'GET',
+            headers: {
+                'Accept': 'text/csv,text/plain,*/*',
+            }
+        });
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const csvText = await response.text();
+        
+        if (csvText.length < 100) {
+            throw new Error('Получены некорректные данные');
+        }
+        
+        const parsedData = parseCSV(csvText);
+        console.log(`Распарсено ${parsedData.length} элементов с листа ${sheetId}`);
+        
+        return parsedData;
+        
+    } catch (error) {
+        console.error(`Ошибка загрузки листа ${sheetId}:`, error.message);
+        throw error;
     }
 }
 
 // Преобразование данных в формат для обучающего каталога
 function transformToEducationalFormat(data) {
     return data.map(item => {
-        // Определяем категорию на основе названия и описания
-        const category = determineCategory(item['наименование'] || '', item['описание'] || '');
+        // Определяем категорию на основе названия, описания и источника
+        const category = determineCategoryFromSource(item.sourceSheet, item['наименование'] || '', item['описание'] || '');
         
-        // Определяем сложность (на основе цены как индикатора сложности)
-        const complexity = determineComplexity(item['цена'] || '0');
         
         // Определяем назначение
         const purpose = determinePurpose(item['наименование'] || '', item['описание'] || '');
@@ -170,20 +181,107 @@ function transformToEducationalFormat(data) {
         
         return {
             id: item['id'] || '',
-            name: item['наименование'] || 'Без названия',
+            name: cleanEquipmentName(item['наименование'] || 'Без названия'),
             category: category,
             purpose: purpose,
             description: item['описание'] || 'Описание отсутствует',
             specifications: item['характеристики'] || 'Характеристики не указаны',
             image: item['изображение'] || '',
-            complexity: complexity,
             application: application,
+            sourceSheet: item.sourceSheet || '',
+            sourceTitle: item.sourceTitle || '',
             originalData: item // Сохраняем оригинальные данные
         };
     });
 }
 
-// Определение категории оборудования
+// Очистка названия оборудования от лишней информации
+function cleanEquipmentName(name) {
+    if (!name || name.trim() === '') return 'Без названия';
+    
+    // Убираем лишние пробелы
+    let cleanName = name.trim();
+    
+    // Удаляем информацию о скидках и дополнительных предложениях
+    cleanName = cleanName.replace(/\s*расходники\s*\d+%?/gi, '');
+    cleanName = cleanName.replace(/\s*при\s*единовременной\s*покупке\s*скидка\s*на\s*расходники\s*\d+%?/gi, '');
+    cleanName = cleanName.replace(/\s*что\s*ускоряет\s*рабочий\s*процесс\.?/gi, '');
+    
+    // Удаляем длинные описания, оставляем только название продукта
+    // Ищем паттерны типа "сочетающее высокую точность и производительность..."
+    cleanName = cleanName.replace(/сочетающее\s+высокую\s+точность\s+и\s+производительность\.?\s*Технология\s+.*$/gi, '');
+    
+    // Удаляем технические характеристики из названия
+    cleanName = cleanName.replace(/\s*с\s*\d+[-дюймовым]*\s*дисплеем/gi, '');
+    cleanName = cleanName.replace(/\s*с\s*LCD[-экраном]*/gi, '');
+    cleanName = cleanName.replace(/\s*технология\s+.*$/gi, '');
+    
+    // Удаляем описательные фразы, которые не являются названиями товаров
+    cleanName = cleanName.replace(/включая\s+лазерные\s+в\s+красном\s+и\s+голубом\s+диапазоне\s+и\s+оптические\s+системы\s+белого\s+света.*$/gi, '');
+    cleanName = cleanName.replace(/обеспечивает\s+высокую\s+скорость\s+и\s+точность.*$/gi, '');
+    cleanName = cleanName.replace(/подходит\s+для\s+простых\s+и\s+сложных.*$/gi, '');
+    cleanName = cleanName.replace(/использует\s+технологию.*$/gi, '');
+    cleanName = cleanName.replace(/предназначен\s+для.*$/gi, '');
+    cleanName = cleanName.replace(/разработан\s+специально\s+для.*$/gi, '');
+    cleanName = cleanName.replace(/обеспечивает\s+отличные.*$/gi, '');
+    cleanName = cleanName.replace(/высококачественный.*$/gi, '');
+    cleanName = cleanName.replace(/профессиональный.*$/gi, '');
+    cleanName = cleanName.replace(/современный.*$/gi, '');
+    cleanName = cleanName.replace(/компактный.*$/gi, '');
+    
+    // Удаляем фразы, которые явно являются описанием, а не названием
+    cleanName = cleanName.replace(/^.*обеспечивает.*$/gi, '');
+    cleanName = cleanName.replace(/^.*предназначен.*$/gi, '');
+    cleanName = cleanName.replace(/^.*использует.*$/gi, '');
+    cleanName = cleanName.replace(/^.*подходит.*$/gi, '');
+    cleanName = cleanName.replace(/^.*разработан.*$/gi, '');
+    cleanName = cleanName.replace(/^.*включает.*$/gi, '');
+    cleanName = cleanName.replace(/^.*содержит.*$/gi, '');
+    
+    // Удаляем длинные предложения (более 10 слов подряд)
+    const words = cleanName.split(/\s+/);
+    if (words.length > 10) {
+        // Берем только первые 5-7 слов как название
+        cleanName = words.slice(0, 7).join(' ');
+    }
+    
+    // Убираем лишние пробелы и точки в конце
+    cleanName = cleanName.replace(/\s+/g, ' ').trim();
+    cleanName = cleanName.replace(/\.+$/, '');
+    
+    // Если после очистки название стало пустым или слишком коротким, возвращаем оригинал
+    if (cleanName.trim() === '' || cleanName.length < 3) {
+        return name.trim();
+    }
+    
+    return cleanName;
+}
+
+// Определение категории оборудования на основе источника листа
+function determineCategoryFromSource(sourceSheet, name, description) {
+    // Сначала определяем категорию на основе источника листа
+    const sourceCategoryMap = {
+        '3d-printers': '3D принтеры',
+        '3d-scaners': '3D сканеры',
+        'milling': 'Фрезерные станки',
+        'frezy': 'Фрезы',
+        'sinterising': 'Синтеризация',
+        'zirkon': 'Циркониевые диски',
+        'post-obrabotka': 'Пост-обработка',
+        'photo-polymers': 'Фотополимеры',
+        '3d-consumables': 'Расходные материалы',
+        'compressors': 'Компрессоры'
+    };
+    
+    if (sourceSheet && sourceCategoryMap[sourceSheet]) {
+        return sourceCategoryMap[sourceSheet];
+    }
+    
+    // Если источник не определен, используем старую логику
+    return determineCategory(name, description);
+}
+
+// Определение категории оборудования (старая логика для совместимости)
 function determineCategory(name, description) {
     const nameLower = name.toLowerCase();
     const descLower = description.toLowerCase();
@@ -206,15 +304,6 @@ function determineCategory(name, description) {
     return 'Оборудование';
 }
 
-// Определение сложности (на основе цены)
-function determineComplexity(price) {
-    const numericPrice = parseFloat((price || '0').replace(/[^\d]/g, ''));
-    
-    if (numericPrice >= 1000000) return 'Высокая';
-    if (numericPrice >= 500000) return 'Средняя';
-    if (numericPrice >= 100000) return 'Базовая';
-    return 'Начальная';
-}
 
 // Определение назначения
 function determinePurpose(name, description) {
@@ -253,108 +342,6 @@ function determineApplication(category, description) {
     }
 }
 
-// Загрузка демо-данных при ошибке
-function loadDemoEquipment() {
-    console.log('Загружаем демо-данные...');
-    
-    equipmentData = [
-        {
-            id: '1',
-            name: '3D сканер Sirona Primescan',
-            category: '3D сканеры',
-            purpose: 'Стоматология',
-            description: 'Высокоточный внутриротовой сканер для цифровой стоматологии. Обеспечивает высокую скорость и точность цифровых оттисков. Подходит для простых и сложных клинических случаев, включая полные реставрации.',
-            specifications: 'ДхШхВ: 408x1400x550 мм\nВес: 40000 г\nТочность: ±10 мкм\nСкорость сканирования: 0.2 сек\nРазрешение: 6 МП\nОперационная система: Windows 10, 64 bit\nМонитор: 21.5" TFT LCD\nФункция автоподогрева для предотвращения запотевания',
-            image: '',
-            complexity: 'Высокая',
-            application: 'Сканирование полости рта, цифровые оттиски'
-        },
-        {
-            id: '2',
-            name: '3D принтер Shining AccuFab-CEL',
-            category: '3D принтеры',
-            purpose: 'Стоматология',
-            description: 'Стоматологический 3D-принтер с улучшенной скоростью печати для производства коронок и мостов. Обеспечивает высокое качество и точность печати стоматологических изделий.',
-            specifications: 'Технология печати: LCD\nОбласть печати: 70x70x180 мм\nСкорость печати: 100 мм/ч\nТочность: ±50 мкм\nРазрешение печати: 4K\nМатериалы: Фотополимерные смолы\nПодключение: USB, Wi-Fi',
-            image: '',
-            complexity: 'Высокая',
-            application: 'Печать коронок, мостов, протезов'
-        },
-        {
-            id: '3',
-            name: 'Фрезерный станок Roland DWX-52D',
-            category: 'Фрезерные станки',
-            purpose: 'Лаборатория',
-            description: 'Компактный фрезерный станок для обработки циркониевых дисков и других материалов. Автоматическая смена инструмента и высокая точность обработки.',
-            specifications: 'Область обработки: 40x25x55 мм\nСкорость шпинделя: 60,000 об/мин\nТочность: ±5 мкм\nАвтоматическая смена инструмента: 6 позиций\nМатериалы: Цирконий, воск, композит\nПрограммное обеспечение: DWX-52D Software',
-            image: '',
-            complexity: 'Средняя',
-            application: 'Обработка заготовок, финишная обработка'
-        },
-        {
-            id: '4',
-            name: 'Фотополимерная смола NextDent Base',
-            category: 'Материалы',
-            purpose: 'Общее применение',
-            description: 'Высококачественная фотополимерная смола для 3D печати стоматологических изделий. Обеспечивает отличные механические свойства и биосовместимость.',
-            specifications: 'Цвет: прозрачный\nВязкость: 300-500 мПа·с\nПрочность на изгиб: 80-120 МПа\nТемпература печати: 25-30°C\nВремя отверждения: 2-3 мин\nБиосовместимость: ISO 10993\nОбъем: 1 л',
-            image: '',
-            complexity: 'Базовая',
-            application: 'Сырье для производства'
-        },
-        {
-            id: '5',
-            name: 'Печь для синтеризации Nabertherm',
-            category: 'Пост-обработка',
-            purpose: 'Лаборатория',
-            description: 'Высокотемпературная печь для синтеризации циркониевых изделий. Программируемые циклы нагрева для различных материалов.',
-            specifications: 'Максимальная температура: 1600°C\nОбъем камеры: 2.5 л\nТочность температуры: ±5°C\nПрограммируемые циклы: 10\nВремя нагрева: 2-3 часа\nМатериалы: Цирконий, керамика\nУправление: Цифровая панель',
-            image: '',
-            complexity: 'Высокая',
-            application: 'Окончательная обработка изделий'
-        },
-        {
-            id: '6',
-            name: '3D принтер Formlabs Form 3B',
-            category: '3D принтеры',
-            purpose: 'Лаборатория',
-            description: 'Профессиональный SLA принтер для создания высокоточных стоматологических моделей. Использует технологию Low Force Stereolithography для улучшенного качества печати.',
-            specifications: 'Технология печати: SLA\nОбласть печати: 145x145x185 мм\nСлой: 25-100 мкм\nТочность: ±50 мкм\nРазрешение: 25 мкм\nМатериалы: Биосовместимые смолы\nПрограммное обеспечение: PreForm',
-            image: '',
-            complexity: 'Средняя',
-            application: 'Печать моделей, временных коронок'
-        },
-        {
-            id: '7',
-            name: 'Сканер внутриротовой iTero Element 5D',
-            category: '3D сканеры',
-            purpose: 'Клиника',
-            description: 'Современный внутриротовой сканер с возможностью 3D и рентгеновского сканирования. Интегрированная диагностика и планирование лечения.',
-            specifications: 'Точность: ±20 мкм\nСкорость: 0.3 сек\nРазрешение: 4 МП\nВес: 320 г\nФункции: 3D + рентген\nПрограммное обеспечение: iTero\nПодключение: Wi-Fi, Bluetooth',
-            image: '',
-            complexity: 'Средняя',
-            application: 'Диагностика, планирование лечения'
-        },
-        {
-            id: '8',
-            name: 'Циркониевый диск Zirkonzahn',
-            category: 'Материалы',
-            purpose: 'Лаборатория',
-            description: 'Высококачественный циркониевый диск для фрезерования коронок и мостов. Обеспечивает отличные механические свойства и эстетику.',
-            specifications: 'Диаметр: 98.5 мм\nТолщина: 18 мм\nЦвет: белый\nПлотность: 6.08 г/см³\nПрочность: 1200 МПа\nТемпература спекания: 1500°C\nБиосовместимость: ISO 10993',
-            image: '',
-            complexity: 'Начальная',
-            application: 'Заготовки для фрезерования'
-        }
-    ];
-    
-    filteredEquipment = [...equipmentData];
-    hideLoading();
-    renderEquipment();
-    
-    // Показываем уведомление о демо-данных
-    showWarning('Загружены демо-данные. Проверьте подключение к интернету для загрузки актуального каталога.');
-}
 
 // Парсинг CSV данных (аналогично products.js)
 function parseCSV(csvText) {
@@ -460,10 +447,15 @@ function handleCategoryFilter() {
     } else {
         const categoryMap = {
             '3d-printers': '3D принтеры',
-            'scanners': '3D сканеры',
+            '3d-scanners': '3D сканеры',
             'milling': 'Фрезерные станки',
-            'materials': 'Материалы',
-            'post-processing': 'Пост-обработка'
+            'frezy': 'Фрезы',
+            'sinterising': 'Синтеризация',
+            'zirkon': 'Циркониевые диски',
+            'post-processing': 'Пост-обработка',
+            'photo-polymers': 'Фотополимеры',
+            'consumables': 'Расходные материалы',
+            'compressors': 'Компрессоры'
         };
         
         const targetCategory = categoryMap[selectedCategory];
@@ -480,15 +472,12 @@ function handleCategoryFilter() {
 function handleSort() {
     const sortBy = sortEquipment.value;
     
-    filteredEquipment.sort((a, b) => {
+        filteredEquipment.sort((a, b) => {
         switch (sortBy) {
             case 'name':
                 return a.name.localeCompare(b.name);
             case 'category':
                 return a.category.localeCompare(b.category);
-            case 'complexity':
-                const complexityOrder = { 'Начальная': 1, 'Базовая': 2, 'Средняя': 3, 'Высокая': 4 };
-                return complexityOrder[a.complexity] - complexityOrder[b.complexity];
             default:
                 return 0;
         }
@@ -537,6 +526,15 @@ function renderEquipment() {
 function createEquipmentRow(equipment) {
     const row = document.createElement('tr');
     
+    // Добавляем стили для кликабельности
+    row.style.cursor = 'pointer';
+    row.classList.add('equipment-row');
+    
+    // Добавляем обработчик клика
+    row.addEventListener('click', () => {
+        showEquipmentModal(equipment.id);
+    });
+    
     // Изображение
     const imageCell = document.createElement('td');
     imageCell.innerHTML = createEquipmentImage(equipment.image);
@@ -548,7 +546,7 @@ function createEquipmentRow(equipment) {
             <h5 class="mb-2">${equipment.name}</h5>
             <div class="equipment-category">
                 <span class="badge bg-primary me-2">${equipment.category}</span>
-                <span class="badge ${getComplexityClass(equipment.complexity)}">${equipment.complexity}</span>
+                ${equipment.sourceTitle ? `<span class="badge bg-secondary ms-1" title="Источник: ${equipment.sourceTitle}">${equipment.sourceTitle}</span>` : ''}
             </div>
         </div>
     `;
@@ -571,19 +569,10 @@ function createEquipmentRow(equipment) {
     const specsCell = document.createElement('td');
     specsCell.innerHTML = formatSpecsForTable(equipment.specifications);
     
-    // Действия
-    const actionsCell = document.createElement('td');
-    actionsCell.innerHTML = `
-        <button class="btn btn-sm btn-outline-primary" onclick="showEquipmentModal('${equipment.id}')" title="Подробнее">
-            <i class="fas fa-info-circle"></i>
-        </button>
-    `;
-    
     row.appendChild(imageCell);
     row.appendChild(nameCell);
     row.appendChild(descriptionCell);
     row.appendChild(specsCell);
-    row.appendChild(actionsCell);
     
     return row;
 }
@@ -627,16 +616,6 @@ function formatSpecsForTable(specs) {
     }).join('');
 }
 
-// Получение CSS класса для сложности
-function getComplexityClass(complexity) {
-    switch (complexity) {
-        case 'Начальная': return 'bg-success';
-        case 'Базовая': return 'bg-info';
-        case 'Средняя': return 'bg-warning';
-        case 'Высокая': return 'bg-danger';
-        default: return 'bg-secondary';
-    }
-}
 
 // Отображение пагинации
 function renderPagination() {
@@ -720,7 +699,6 @@ function showEquipmentModal(equipmentId) {
             <div class="col-md-8">
                 <div class="mb-3">
                     <span class="badge bg-primary fs-6 me-2">${equipment.category}</span>
-                    <span class="badge ${getComplexityClass(equipment.complexity)} fs-6">${equipment.complexity}</span>
                 </div>
                 
                 <h4>${equipment.name}</h4>
@@ -819,17 +797,6 @@ function showError(message) {
     }
 }
 
-// Показ предупреждения
-function showWarning(message) {
-    if (errorEquipment) {
-        errorEquipment.style.display = 'block';
-        errorEquipment.className = 'alert alert-warning';
-        const errorMessage = document.getElementById('error-message');
-        if (errorMessage) {
-            errorMessage.textContent = message;
-        }
-    }
-}
 
 // Функция debounce для оптимизации поиска
 function debounce(func, wait) {

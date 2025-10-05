@@ -553,6 +553,24 @@
 
 .educational-table tbody tr:hover {
     cursor: pointer;
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.equipment-row {
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.equipment-row:hover {
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.equipment-row:hover td {
+    border-color: #dee2e6;
 }
 
 /* Стили для выделения текста при поиске */
