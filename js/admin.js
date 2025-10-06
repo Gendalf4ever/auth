@@ -3,22 +3,13 @@
  * Управление видео, пользователями и настройками
  */
 
-// Конфигурация Firebase
-const firebaseConfig = {
-    apiKey: "AIzaSyBPn3QTnKQ9a3s42A3OkumIR0IjXpIYKeE",
-    authDomain: "codent-education.firebaseapp.com",
-    projectId: "codent-education",
-    storageBucket: "codent-education.firebasestorage.app",
-    messagingSenderId: "622995236555",
-    appId: "1:622995236555:web:1dada1c102be46ea361d4e"
-};
-
-// Инициализация Firebase
+// Инициализация Firebase (использует общую конфигурацию)
 function initializeFirebase() {
-    // Проверяем, не инициализирован ли Firebase уже
-    if (!firebase.apps.length) {
-        firebase.initializeApp(firebaseConfig);
+    if (typeof window.initializeFirebaseApp === 'function') {
+        window.initializeFirebaseApp();
         console.log('Firebase инициализирован для админ панели');
+    } else {
+        console.error('Firebase конфигурация не загружена. Убедитесь, что firebase-config.js подключен.');
     }
 }
 
@@ -46,17 +37,50 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // Инициализация админ панели
-function initializeAdmin() {
+async function initializeAdmin() {
     console.log('Инициализация панели администратора...');
     
-    // Настройка навигации
-    setupNavigation();
+    try {
+        // Ждем загрузки системы управления ролями
+        if (typeof RoleManager === 'undefined') {
+            console.warn('Система управления ролями не загружена, используем базовую проверку');
+        }
+        
+        // Настройка навигации
+        setupNavigation();
+        
+        // Загрузка статистики
+        await loadStatistics();
+        
+        // Загрузка видео
+        await loadVideos();
+        
+        // Загрузка пользователей при переходе в соответствующий раздел
+        setupUsersSection();
+        
+        console.log('Панель администратора успешно инициализирована');
+    } catch (error) {
+        console.error('Ошибка инициализации админ панели:', error);
+        showError('Ошибка инициализации панели администратора: ' + error.message);
+    }
+}
+
+// Показать ошибку
+function showError(message) {
+    const alertDiv = document.createElement('div');
+    alertDiv.className = 'alert alert-danger alert-dismissible fade show';
+    alertDiv.style.cssText = 'position: fixed; top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+    alertDiv.innerHTML = `
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    `;
+    document.body.appendChild(alertDiv);
     
-    // Загрузка статистики
-    loadStatistics();
-    
-    // Загрузка видео
-    loadVideos();
+    setTimeout(() => {
+        if (alertDiv.parentNode) {
+            alertDiv.remove();
+        }
+    }, 5000);
 }
 
 // Настройка навигации
@@ -477,11 +501,283 @@ function formatDate(timestamp) {
     });
 }
 
+// ==================== УПРАВЛЕНИЕ ПОЛЬЗОВАТЕЛЯМИ ====================
+
+// Настройка раздела пользователей
+function setupUsersSection() {
+    // Добавляем обработчик для загрузки пользователей при переходе в раздел
+    const usersNavLink = document.querySelector('[data-section="users"]');
+    if (usersNavLink) {
+        usersNavLink.addEventListener('click', () => {
+            setTimeout(() => {
+                loadUsers();
+            }, 100);
+        });
+    }
+}
+
+// Загрузка пользователей
+async function loadUsers() {
+    console.log('Загрузка пользователей...');
+    
+    try {
+        const tableBody = document.getElementById('users-table-body');
+        if (!tableBody) {
+            console.error('Элемент users-table-body не найден');
+            return;
+        }
+
+        // Показываем индикатор загрузки
+        tableBody.innerHTML = `
+            <tr>
+                <td colspan="7" class="text-center">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Загрузка...</span>
+                    </div>
+                    <p class="mt-2">Загрузка пользователей...</p>
+                </td>
+            </tr>
+        `;
+
+        let users = [];
+        
+        // Используем систему управления ролями, если доступна
+        if (typeof RoleManager !== 'undefined') {
+            users = await RoleManager.getAllUsersWithRoles();
+        } else {
+            // Fallback к прямому запросу Firestore
+            const usersSnapshot = await firebase.firestore()
+                .collection('users')
+                .orderBy('createdAt', 'desc')
+                .get();
+            
+            usersSnapshot.forEach(doc => {
+                const userData = doc.data();
+                users.push({
+                    id: doc.id,
+                    displayName: userData.displayName || 'Без имени',
+                    email: userData.email || '',
+                    role: userData.role || 'user',
+                    createdAt: userData.createdAt,
+                    lastLoginAt: userData.lastLoginAt
+                });
+            });
+        }
+
+        // Обновляем статистику
+        updateUsersStatistics(users);
+
+        // Отображаем пользователей
+        displayUsers(users);
+
+    } catch (error) {
+        console.error('Ошибка загрузки пользователей:', error);
+        
+        const tableBody = document.getElementById('users-table-body');
+        if (tableBody) {
+            tableBody.innerHTML = `
+                <tr>
+                    <td colspan="7" class="text-center text-danger">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        Ошибка загрузки пользователей: ${error.message}
+                        <br>
+                        <button class="btn btn-sm btn-outline-primary mt-2" onclick="loadUsers()">
+                            <i class="fas fa-retry me-1"></i>
+                            Попробовать снова
+                        </button>
+                    </td>
+                </tr>
+            `;
+        }
+        
+        showError('Ошибка загрузки пользователей: ' + error.message);
+    }
+}
+
+// Отображение пользователей в таблице
+function displayUsers(users) {
+    const tableBody = document.getElementById('users-table-body');
+    if (!tableBody) return;
+
+    if (users.length === 0) {
+        tableBody.innerHTML = `
+            <tr>
+                <td colspan="7" class="text-center text-muted">
+                    <i class="fas fa-users fa-3x mb-3"></i>
+                    <h5>Пользователи не найдены</h5>
+                    <p>В системе пока нет зарегистрированных пользователей</p>
+                </td>
+            </tr>
+        `;
+        return;
+    }
+
+    let tableHTML = '';
+    
+    users.forEach(user => {
+        const createdAt = user.createdAt ? formatDate(user.createdAt) : 'Неизвестно';
+        const lastLoginAt = user.lastLoginAt ? formatDate(user.lastLoginAt) : 'Никогда';
+        
+        // Создаем аватар
+        const avatar = `
+            <div class="d-flex align-items-center justify-content-center bg-primary text-white rounded-circle" 
+                 style="width: 40px; height: 40px; font-weight: bold;">
+                ${user.displayName.charAt(0).toUpperCase()}
+            </div>
+        `;
+
+        // Создаем селект ролей
+        const roleSelect = typeof RoleManager !== 'undefined' 
+            ? RoleManager.createRoleSelect(user.role, user.id)
+            : createBasicRoleSelect(user.role, user.id);
+
+        tableHTML += `
+            <tr>
+                <td class="text-center">${avatar}</td>
+                <td>
+                    <div class="fw-bold">${user.displayName}</div>
+                    <small class="text-muted">ID: ${user.id}</small>
+                </td>
+                <td>${user.email}</td>
+                <td>${roleSelect}</td>
+                <td>
+                    <small>${createdAt}</small>
+                </td>
+                <td>
+                    <small>${lastLoginAt}</small>
+                </td>
+                <td>
+                    <div class="btn-group" role="group">
+                        <button class="btn btn-sm btn-outline-primary" onclick="viewUserDetails('${user.id}')" title="Просмотр">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline-warning" onclick="editUser('${user.id}')" title="Редактировать">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline-danger" onclick="deleteUser('${user.id}', '${user.displayName}')" title="Удалить">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+        `;
+    });
+
+    tableBody.innerHTML = tableHTML;
+}
+
+// Создание базового селекта ролей (fallback)
+function createBasicRoleSelect(currentRole, userId) {
+    return `
+        <select class="form-select form-select-sm" onchange="handleRoleChange('${userId}', this.value)">
+            <option value="user" ${currentRole === 'user' ? 'selected' : ''}>Пользователь</option>
+            <option value="moderator" ${currentRole === 'moderator' ? 'selected' : ''}>Модератор</option>
+            <option value="admin" ${currentRole === 'admin' ? 'selected' : ''}>Администратор</option>
+        </select>
+    `;
+}
+
+// Обновление статистики пользователей
+function updateUsersStatistics(users) {
+    const totalCount = users.length;
+    const adminCount = users.filter(u => u.role === 'admin').length;
+    const moderatorCount = users.filter(u => u.role === 'moderator').length;
+    
+    // Подсчет активных пользователей (вошедших за последние 24 часа)
+    const oneDayAgo = new Date();
+    oneDayAgo.setDate(oneDayAgo.getDate() - 1);
+    
+    const activeCount = users.filter(u => {
+        if (!u.lastLoginAt) return false;
+        const lastLogin = u.lastLoginAt.toDate ? u.lastLoginAt.toDate() : new Date(u.lastLoginAt);
+        return lastLogin > oneDayAgo;
+    }).length;
+
+    // Обновляем элементы статистики
+    updateElement('users-total-count', totalCount);
+    updateElement('users-admin-count', adminCount);
+    updateElement('users-moderator-count', moderatorCount);
+    updateElement('users-active-count', activeCount);
+    
+    // Также обновляем общую статистику
+    updateElement('total-users', totalCount);
+}
+
+// Вспомогательная функция для обновления элементов
+function updateElement(elementId, value) {
+    const element = document.getElementById(elementId);
+    if (element) {
+        element.textContent = value;
+    }
+}
+
+// Обновление списка пользователей
+function refreshUsersList() {
+    loadUsers();
+}
+
+// Просмотр деталей пользователя
+function viewUserDetails(userId) {
+    console.log('Просмотр пользователя:', userId);
+    // TODO: Реализовать модальное окно с деталями пользователя
+    showNotification('Функция просмотра деталей пользователя в разработке', 'info');
+}
+
+// Редактирование пользователя
+function editUser(userId) {
+    console.log('Редактирование пользователя:', userId);
+    // TODO: Реализовать модальное окно редактирования пользователя
+    showNotification('Функция редактирования пользователя в разработке', 'info');
+}
+
+// Удаление пользователя
+async function deleteUser(userId, userName) {
+    const confirmMessage = `Вы уверены, что хотите удалить пользователя "${userName}"?\n\nЭто действие нельзя отменить!`;
+    
+    if (!confirm(confirmMessage)) {
+        return;
+    }
+    
+    try {
+        // Проверяем права доступа
+        if (typeof RoleManager !== 'undefined') {
+            const isAdmin = await RoleManager.isAdmin();
+            if (!isAdmin) {
+                throw new Error('Недостаточно прав для удаления пользователей');
+            }
+        }
+        
+        // Удаляем пользователя из Firestore
+        await firebase.firestore().collection('users').doc(userId).delete();
+        
+        showNotification(`Пользователь "${userName}" успешно удален`, 'success');
+        
+        // Обновляем список
+        loadUsers();
+        
+    } catch (error) {
+        console.error('Ошибка удаления пользователя:', error);
+        showNotification(`Ошибка удаления пользователя: ${error.message}`, 'error');
+    }
+}
+
 // Экспорт функций для глобального использования
 window.adminModule = {
     loadVideos,
     playVideo,
     downloadVideo,
     deleteVideo,
-    showNotification
+    showNotification,
+    loadUsers,
+    refreshUsersList,
+    viewUserDetails,
+    editUser,
+    deleteUser
 };
+
+// Делаем функции глобальными для использования в HTML
+window.refreshUsersList = refreshUsersList;
+window.viewUserDetails = viewUserDetails;
+window.editUser = editUser;
+window.deleteUser = deleteUser;
+window.loadUsers = loadUsers;

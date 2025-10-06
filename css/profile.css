@@ -317,32 +317,131 @@
     color: var(--dark-color);
 }
 
-/* Адаптивность */
+/* Адаптивность для планшетов */
+@media (max-width: 992px) {
+    .profile-sidebar {
+        margin-bottom: 30px;
+    }
+    
+    .stat-card {
+        margin-bottom: 20px;
+    }
+    
+    .table-responsive {
+        font-size: 0.95rem;
+    }
+    
+    .modal-dialog {
+        margin: 15px;
+    }
+}
+
+/* Адаптивность для мобильных устройств */
 @media (max-width: 768px) {
     .profile-sidebar {
         position: static;
         margin-bottom: 20px;
     }
     
+    .profile-sidebar .card-body {
+        padding: 20px 15px;
+    }
+    
+    .list-group-item {
+        padding: 12px 15px;
+        font-size: 0.95rem;
+    }
+    
+    .list-group-item i {
+        width: 18px;
+        font-size: 0.9rem;
+    }
+    
     .stat-card {
         margin-bottom: 15px;
+        padding: 20px;
     }
     
     .stat-content h3 {
         font-size: 1.5rem;
     }
     
+    .stat-content p {
+        font-size: 0.9rem;
+    }
+    
     .course-actions {
         flex-direction: column;
+        gap: 8px;
     }
     
     .btn {
         width: 100%;
         margin-bottom: 5px;
+        padding: 10px;
+        font-size: 0.9rem;
+    }
+    
+    .card-header h5 {
+        font-size: 1.1rem;
+    }
+    
+    .table th,
+    .table td {
+        padding: 10px 8px;
+        font-size: 0.85rem;
+    }
+    
+    .form-control,
+    .form-select {
+        font-size: 0.9rem;
+    }
+    
+    .modal-dialog {
+        margin: 10px;
+    }
+    
+    .modal-content {
+        border-radius: 10px;
+    }
+    
+    .course-card {
+        padding: 15px;
+        margin-bottom: 15px;
+    }
+    
+    .course-card h6 {
+        font-size: 1rem;
+    }
+    
+    .course-card p {
+        font-size: 0.85rem;
     }
 }
 
+/* Адаптивность для маленьких мобильных устройств */
 @media (max-width: 576px) {
+    .profile-sidebar .card-body {
+        padding: 15px 10px;
+        text-align: center;
+    }
+    
+    .profile-avatar i {
+        font-size: 3.5rem;
+    }
+    
+    .list-group-item {
+        padding: 10px 12px;
+        font-size: 0.9rem;
+        text-align: center;
+    }
+    
+    .list-group-item i {
+        display: block;
+        margin: 0 auto 5px;
+        width: auto;
+    }
+    
     .stat-icon {
         width: 50px;
         height: 50px;
@@ -353,12 +452,65 @@
         font-size: 1.3rem;
     }
     
+    .stat-content p {
+        font-size: 0.85rem;
+    }
+    
     .table-responsive {
-        font-size: 0.9rem;
+        font-size: 0.8rem;
+    }
+    
+    .table th,
+    .table td {
+        padding: 8px 6px;
     }
     
     .course-card {
-        padding: 15px;
+        padding: 12px;
+    }
+    
+    .course-card h6 {
+        font-size: 0.95rem;
+    }
+    
+    .course-card p {
+        font-size: 0.8rem;
+    }
+    
+    .btn {
+        padding: 8px;
+        font-size: 0.85rem;
+    }
+    
+    .form-control,
+    .form-select,
+    .form-label {
+        font-size: 0.85rem;
+    }
+    
+    .card-header h5 {
+        font-size: 1rem;
+    }
+    
+    .modal-dialog {
+        margin: 5px;
+    }
+    
+    .alert {
+        font-size: 0.85rem;
+        padding: 10px;
+    }
+    
+    .empty-state {
+        padding: 30px 15px;
+    }
+    
+    .empty-state i {
+        font-size: 2.5rem;
+    }
+    
+    .empty-state h5 {
+        font-size: 1.1rem;
     }
 }
 

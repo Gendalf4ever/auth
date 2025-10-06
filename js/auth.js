@@ -6,45 +6,12 @@ const registerForm = document.getElementById('register-form');
 const registerLink = document.getElementById('register-link');
 const backToLoginLink = document.getElementById('back-to-login-link');
 
-  // Your web app's Firebase configuration
-  const firebaseConfig = {
-    apiKey: "AIzaSyBPn3QTnKQ9a3s42A3OkumIR0IjXpIYKeE",
-    authDomain: "codent-education.firebaseapp.com",
-    projectId: "codent-education",
-    storageBucket: "codent-education.firebasestorage.app",
-    messagingSenderId: "622995236555",
-    appId: "1:622995236555:web:1dada1c102be46ea361d4e"
-  };
-
-
-// Инициализация Firebase
+// Инициализация Firebase (использует общую конфигурацию)
 function initializeFirebase() {
-    // Проверяем, не инициализирован ли Firebase уже
-    if (!firebase.apps.length) {
-        firebase.initializeApp(firebaseConfig);
-        // Настройка Firestore для стабильной работы в ограниченных сетях
-        const db = firebase.firestore();
-        try {
-            // Используем merge: true для избежания предупреждения о переопределении хоста
-            db.settings({ 
-                experimentalForceLongPolling: true, 
-                useFetchStreams: false,
-                merge: true
-            });
-        } catch (e) {
-            console.warn('Не удалось применить настройки Firestore:', e);
-        }
-        // Используем новый API для кэширования вместо устаревшего enablePersistence
-        try {
-            // Включаем кэширование с настройками по умолчанию
-            db.settings({
-                cache: {
-                    sizeBytes: 40 * 1024 * 1024 // 40MB кэш
-                }
-            });
-        } catch (err) {
-            console.warn('Кэширование недоступно:', err);
-        }
+    if (typeof window.initializeFirebaseApp === 'function') {
+        window.initializeFirebaseApp();
+    } else {
+        console.error('Firebase конфигурация не загружена. Убедитесь, что firebase-config.js подключен.');
     }
 }
 
@@ -68,6 +35,27 @@ function checkUserRole(uid) {
         });
 }
 
+// Функции для управления состоянием загрузки
+function showLoading() {
+    const loadingState = document.getElementById('loading-state');
+    if (loadingState) loadingState.style.display = 'flex';
+}
+
+function hideLoading() {
+    const loadingState = document.getElementById('loading-state');
+    if (loadingState) loadingState.style.display = 'none';
+}
+
+function showError(message) {
+    hideLoading();
+    alert(message); // В будущем можно заменить на более красивое уведомление
+}
+
+function showSuccess(message) {
+    hideLoading();
+    // Можно добавить красивое уведомление об успехе
+}
+
 // Обработчики форм аутентификации
 if (loginForm) {
     loginForm.addEventListener('submit', (e) => {
@@ -75,14 +63,29 @@ if (loginForm) {
         const email = document.getElementById('email').value;
         const password = document.getElementById('password').value;
         
+        if (!email || !password) {
+            showError('Пожалуйста, заполните все поля');
+            return;
+        }
+        
+        showLoading();
+        
         firebase.auth().signInWithEmailAndPassword(email, password)
             .then((userCredential) => {
                 // Вход успешен
                 const user = userCredential.user;
                 console.log('Пользователь вошел:', user);
                 
+                // Обновляем время последнего входа
+                firebase.firestore().collection('users').doc(user.uid).update({
+                    lastLoginAt: firebase.firestore.FieldValue.serverTimestamp()
+                }).catch(error => {
+                    console.warn('Не удалось обновить время последнего входа:', error);
+                });
+                
                 // Проверяем роль пользователя
                 checkUserRole(user.uid).then(role => {
+                    hideLoading();
                     if (role === 'admin') {
                         // Перенаправляем в админ панель
                         window.location.href = 'admin.html';
@@ -94,8 +97,26 @@ if (loginForm) {
             })
             .catch((error) => {
                 const errorCode = error.code;
-                const errorMessage = error.message;
-                alert(`Ошибка входа: ${errorMessage}`);
+                let errorMessage = 'Произошла ошибка при входе';
+                
+                switch (errorCode) {
+                    case 'auth/user-not-found':
+                        errorMessage = 'Пользователь с таким email не найден';
+                        break;
+                    case 'auth/wrong-password':
+                        errorMessage = 'Неверный пароль';
+                        break;
+                    case 'auth/invalid-email':
+                        errorMessage = 'Неверный формат email';
+                        break;
+                    case 'auth/too-many-requests':
+                        errorMessage = 'Слишком много попыток входа. Попробуйте позже';
+                        break;
+                    default:
+                        errorMessage = error.message;
+                }
+                
+                showError(errorMessage);
             });
     });
 }
@@ -108,10 +129,23 @@ if (registerForm) {
         const password = document.getElementById('reg-password').value;
         const confirmPassword = document.getElementById('reg-confirm-password').value;
         
-        if (password !== confirmPassword) {
-            alert('Пароли не совпадают');
+        // Валидация
+        if (!name || !email || !password || !confirmPassword) {
+            showError('Пожалуйста, заполните все поля');
             return;
         }
+        
+        if (password !== confirmPassword) {
+            showError('Пароли не совпадают');
+            return;
+        }
+        
+        if (password.length < 6) {
+            showError('Пароль должен содержать минимум 6 символов');
+            return;
+        }
+        
+        showLoading();
         
         firebase.auth().createUserWithEmailAndPassword(email, password)
             .then((userCredential) => {
@@ -127,31 +161,79 @@ if (registerForm) {
                         displayName: name,
                         email: email,
                         role: 'user',
-                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                        lastLoginAt: firebase.firestore.FieldValue.serverTimestamp()
                     });
                 });
             })
             .then(() => {
+                hideLoading();
                 console.log('Пользователь зарегистрирован');
+                showSuccess('Регистрация успешна! Перенаправляем...');
+                
+                // Перенаправляем на главную страницу
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 1500);
             })
             .catch((error) => {
                 const errorCode = error.code;
-                const errorMessage = error.message;
-                alert(`Ошибка регистрации: ${errorMessage}`);
+                let errorMessage = 'Произошла ошибка при регистрации';
+                
+                switch (errorCode) {
+                    case 'auth/email-already-in-use':
+                        errorMessage = 'Пользователь с таким email уже существует';
+                        break;
+                    case 'auth/invalid-email':
+                        errorMessage = 'Неверный формат email';
+                        break;
+                    case 'auth/weak-password':
+                        errorMessage = 'Слишком слабый пароль';
+                        break;
+                    default:
+                        errorMessage = error.message;
+                }
+                
+                showError(errorMessage);
             });
     });
+}
+
+// Функции для переключения форм
+function showLoginForm() {
+    const loginForm = document.getElementById('login-form');
+    const registerForm = document.getElementById('register-form');
+    const registerLink = document.getElementById('register-link');
+    const backToLoginLink = document.getElementById('back-to-login-link');
+    
+    if (loginForm) loginForm.style.display = 'block';
+    if (registerForm) registerForm.style.display = 'none';
+    if (registerLink) registerLink.style.display = 'block';
+    if (backToLoginLink) backToLoginLink.style.display = 'none';
+}
+
+function showRegisterForm() {
+    const loginForm = document.getElementById('login-form');
+    const registerForm = document.getElementById('register-form');
+    const registerLink = document.getElementById('register-link');
+    const backToLoginLink = document.getElementById('back-to-login-link');
+    
+    if (loginForm) loginForm.style.display = 'none';
+    if (registerForm) registerForm.style.display = 'block';
+    if (registerLink) registerLink.style.display = 'none';
+    if (backToLoginLink) backToLoginLink.style.display = 'block';
 }
 
 if (registerLink) {
     registerLink.addEventListener('click', (e) => {
         e.preventDefault();
-        showPage(registerPage);
+        showRegisterForm();
     });
 }
 
 if (backToLoginLink) {
     backToLoginLink.addEventListener('click', (e) => {
         e.preventDefault();
-        showPage(loginPage);
+        showLoginForm();
     });
 }

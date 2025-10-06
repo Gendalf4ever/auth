@@ -94,15 +94,155 @@
     transition: width 0.5s ease;
 }
 
-/* Адаптивность */
+/* Адаптивность для планшетов */
+@media (max-width: 992px) {
+    .course-card {
+        margin-bottom: 20px;
+    }
+    
+    .course-image {
+        height: 100px;
+        font-size: 2.5rem;
+    }
+    
+    .content-block {
+        padding: 18px;
+    }
+}
+
+/* Адаптивность для мобильных устройств */
 @media (max-width: 768px) {
+    .course-card {
+        margin-bottom: 15px;
+    }
+    
+    .course-image {
+        height: 80px;
+        font-size: 2rem;
+    }
+    
     .course-meta {
         flex-direction: column;
         align-items: flex-start;
         gap: 5px;
+        font-size: 0.85rem;
+    }
+    
+    .course-badges {
+        margin-bottom: 10px;
+    }
+    
+    .badge {
+        font-size: 0.7rem;
+        padding: 4px 8px;
     }
     
     .content-block {
         padding: 15px;
+        margin-bottom: 15px;
+    }
+    
+    .content-block h5 {
+        font-size: 1.1rem;
+        margin-bottom: 12px;
+    }
+    
+    .course-header {
+        padding-bottom: 15px;
+        margin-bottom: 15px;
+    }
+    
+    .course-header h1 {
+        font-size: 1.5rem;
+    }
+    
+    .course-header p {
+        font-size: 0.9rem;
+    }
+    
+    .btn {
+        width: 100%;
+        margin-bottom: 10px;
+        padding: 12px;
+        font-size: 0.9rem;
+    }
+    
+    .form-control,
+    .form-select {
+        font-size: 0.9rem;
+    }
+}
+
+/* Адаптивность для маленьких мобильных устройств */
+@media (max-width: 576px) {
+    .course-card {
+        margin-bottom: 12px;
+    }
+    
+    .course-image {
+        height: 70px;
+        font-size: 1.8rem;
+    }
+    
+    .card-body {
+        padding: 12px;
+    }
+    
+    .card-title {
+        font-size: 1rem;
+        margin-bottom: 8px;
+    }
+    
+    .card-text {
+        font-size: 0.85rem;
+        margin-bottom: 10px;
+    }
+    
+    .course-meta {
+        font-size: 0.8rem;
+    }
+    
+    .badge {
+        font-size: 0.65rem;
+        padding: 3px 6px;
+    }
+    
+    .content-block {
+        padding: 12px;
+        margin-bottom: 12px;
+    }
+    
+    .content-block h5 {
+        font-size: 1rem;
+        margin-bottom: 10px;
+    }
+    
+    .content-text p,
+    .content-text li {
+        font-size: 0.85rem;
+        line-height: 1.5;
+    }
+    
+    .course-header h1 {
+        font-size: 1.3rem;
+    }
+    
+    .course-header p {
+        font-size: 0.85rem;
+    }
+    
+    .btn {
+        padding: 10px;
+        font-size: 0.85rem;
+    }
+    
+    .form-control,
+    .form-select,
+    .form-label {
+        font-size: 0.85rem;
+    }
+    
+    .progress {
+        height: 8px;
     }
 }

@@ -1,5 +1,14 @@
 // Файл для работы с профилем пользователя и админ-панелью
 
+// Инициализация Firebase (использует общую конфигурацию)
+function initializeFirebase() {
+    if (typeof window.initializeFirebaseApp === 'function') {
+        window.initializeFirebaseApp();
+    } else {
+        console.error('Firebase конфигурация не загружена. Убедитесь, что firebase-config.js подключен.');
+    }
+}
+
 // Глобальные переменные
 let currentUser = null;
 let isAdmin = false;
@@ -34,6 +43,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Инициализация профиля
 function initializeProfile() {
+    // Инициализируем Firebase
+    initializeFirebase();
+    
     // Проверяем состояние аутентификации
     if (typeof firebase !== 'undefined') {
         firebase.auth().onAuthStateChanged((user) => {
@@ -49,11 +61,38 @@ function initializeProfile() {
     }
 }
 
+// Проверка роли пользователя
+function checkUserRole(uid) {
+    return firebase.firestore().collection('users').doc(uid).get()
+        .then(doc => {
+            if (doc.exists) {
+                return doc.data().role || 'user';
+            } else {
+                // Создать запись пользователя по умолчанию
+                return firebase.firestore().collection('users').doc(uid).set({
+                    role: 'user',
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                }).then(() => 'user');
+            }
+        })
+        .catch(error => {
+            console.error('Ошибка при проверке роли:', error);
+            return 'user';
+        });
+}
+
 // Проверка роли пользователя и загрузка профиля
 async function checkUserRoleAndLoadProfile() {
     try {
-        const role = await checkUserRole(currentUser.uid);
-        isAdmin = role === 'admin';
+        // Используем новую систему управления ролями, если доступна
+        if (typeof RoleManager !== 'undefined') {
+            const role = await RoleManager.getCurrentUserRole();
+            isAdmin = await RoleManager.isAdmin();
+        } else {
+            // Fallback к старой системе
+            const role = await checkUserRole(currentUser.uid);
+            isAdmin = role === 'admin';
+        }
         
         loadUserProfile();
         showProfileContent();
@@ -210,8 +249,13 @@ function updateUserDisplay(userData) {
     
     if (userRoleBadge) {
         const role = userData.role || 'user';
-        userRoleBadge.textContent = getRoleDisplayName(role);
-        userRoleBadge.className = `badge ${getRoleBadgeClass(role)}`;
+        if (typeof RoleManager !== 'undefined') {
+            userRoleBadge.textContent = RoleManager.getRoleDisplayName(role);
+            userRoleBadge.className = RoleManager.getRoleBadgeClass(role);
+        } else {
+            userRoleBadge.textContent = getRoleDisplayName(role);
+            userRoleBadge.className = `badge ${getRoleBadgeClass(role)}`;
+        }
     }
 }
 
@@ -419,34 +463,57 @@ async function loadAdminUsers() {
     if (!usersList) return;
     
     try {
-        const usersSnapshot = await firebase.firestore()
-            .collection('users')
-            .orderBy('createdAt', 'desc')
-            .get();
+        let users = [];
+        
+        // Используем новую систему управления ролями, если доступна
+        if (typeof RoleManager !== 'undefined') {
+            users = await RoleManager.getAllUsersWithRoles();
+        } else {
+            // Fallback к старой системе
+            const usersSnapshot = await firebase.firestore()
+                .collection('users')
+                .orderBy('createdAt', 'desc')
+                .get();
+            
+            usersSnapshot.forEach(doc => {
+                const userData = doc.data();
+                users.push({
+                    id: doc.id,
+                    displayName: userData.displayName || 'Без имени',
+                    email: userData.email || '',
+                    role: userData.role || 'user',
+                    createdAt: userData.createdAt
+                });
+            });
+        }
         
         let usersHTML = '';
         
-        usersSnapshot.forEach(doc => {
-            const user = doc.data();
+        users.forEach(user => {
             const createdAt = user.createdAt ? user.createdAt.toDate() : new Date();
+            
+            // Используем новую систему для создания селекта ролей
+            const roleSelect = typeof RoleManager !== 'undefined' 
+                ? RoleManager.createRoleSelect(user.role, user.id)
+                : `
+                    <select class="form-select form-select-sm" onchange="updateUserRole('${user.id}', this.value)">
+                        <option value="user" ${user.role === 'user' ? 'selected' : ''}>Пользователь</option>
+                        <option value="moderator" ${user.role === 'moderator' ? 'selected' : ''}>Модератор</option>
+                        <option value="admin" ${user.role === 'admin' ? 'selected' : ''}>Администратор</option>
+                    </select>
+                `;
             
             usersHTML += `
                 <tr>
-                    <td>${user.displayName || 'Без имени'}</td>
-                    <td>${user.email || ''}</td>
-                    <td>
-                        <select class="form-select form-select-sm" onchange="updateUserRole('${doc.id}', this.value)">
-                            <option value="user" ${user.role === 'user' ? 'selected' : ''}>Пользователь</option>
-                            <option value="moderator" ${user.role === 'moderator' ? 'selected' : ''}>Модератор</option>
-                            <option value="admin" ${user.role === 'admin' ? 'selected' : ''}>Администратор</option>
-                        </select>
-                    </td>
+                    <td>${user.displayName}</td>
+                    <td>${user.email}</td>
+                    <td>${roleSelect}</td>
                     <td>${createdAt.toLocaleDateString('ru-RU')}</td>
                     <td>
-                        <button class="btn btn-sm btn-outline-primary" onclick="editUser('${doc.id}')">
+                        <button class="btn btn-sm btn-outline-primary" onclick="editUser('${user.id}')">
                             <i class="fas fa-edit"></i>
                         </button>
-                        <button class="btn btn-sm btn-outline-danger" onclick="deleteUser('${doc.id}')">
+                        <button class="btn btn-sm btn-outline-danger" onclick="deleteUser('${user.id}')">
                             <i class="fas fa-trash"></i>
                         </button>
                     </td>
@@ -460,7 +527,7 @@ async function loadAdminUsers() {
         usersList.innerHTML = `
             <tr>
                 <td colspan="5" class="text-center text-danger">
-                    Ошибка загрузки пользователей
+                    Ошибка загрузки пользователей: ${error.message}
                 </td>
             </tr>
         `;

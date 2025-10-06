@@ -432,8 +432,68 @@
     border-bottom-color: #dc3545;
 }
 
-/* Адаптивность для преимуществ/недостатков */
+/* Адаптивность для планшетов */
+@media (max-width: 992px) {
+    .section-card {
+        padding: 1.5rem;
+        margin-bottom: 20px;
+    }
+    
+    .completion-stats {
+        gap: 1.5rem;
+    }
+    
+    .stat-item strong {
+        font-size: 1.8rem;
+    }
+    
+    .materials-grid {
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    }
+    
+    .post-processing-steps {
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    }
+}
+
+/* Адаптивность для мобильных устройств */
 @media (max-width: 768px) {
+    .intro-section-card {
+        padding: 1.2rem;
+        margin-bottom: 15px;
+    }
+    
+    .section-card {
+        padding: 1.2rem;
+        margin-bottom: 15px;
+    }
+    
+    .section-icon,
+    .component-icon,
+    .advantage-icon {
+        width: 50px;
+        height: 50px;
+        font-size: 1.3rem;
+        margin-bottom: 0.8rem;
+    }
+    
+    .workflow-summary .summary-icon {
+        width: 70px;
+        height: 70px;
+        font-size: 1.8rem;
+        margin-bottom: 0.8rem;
+    }
+    
+    .completion-stats {
+        flex-direction: column;
+        gap: 1rem;
+        margin: 1.5rem 0;
+    }
+    
+    .stat-item strong {
+        font-size: 1.5rem;
+    }
+    
     .tech-pros-cons {
         grid-template-columns: 1fr;
         gap: 15px;
@@ -450,6 +510,205 @@
     .pros li, .cons li {
         padding: 6px 0;
         font-size: 0.9rem;
+    }
+    
+    .materials-grid {
+        grid-template-columns: 1fr;
+        gap: 0.8rem;
+    }
+    
+    .material-item {
+        padding: 0.8rem;
+    }
+    
+    .tech-comparison {
+        justify-content: center;
+    }
+    
+    .tech-item {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.85rem;
+    }
+    
+    .post-processing-steps {
+        grid-template-columns: 1fr;
+        gap: 0.8rem;
+    }
+    
+    .step-item {
+        padding: 1rem;
+    }
+    
+    .advantages-comparison {
+        padding: 1.5rem;
+        margin-top: 1.5rem;
+    }
+    
+    .traditional-method,
+    .digital-method {
+        padding: 1.2rem;
+        margin-bottom: 15px;
+    }
+    
+    .tech-details {
+        padding: 0.8rem;
+        margin-top: 0.8rem;
+    }
+    
+    .step-number,
+    .stage-number {
+        width: 35px;
+        height: 35px;
+        font-size: 16px;
+    }
+    
+    .table-container {
+        font-size: 0.9rem;
+    }
+    
+    .table th,
+    .table td {
+        padding: 10px 8px;
+    }
+}
+
+/* Адаптивность для маленьких мобильных устройств */
+@media (max-width: 576px) {
+    .intro-section-card {
+        padding: 1rem;
+        text-align: center;
+    }
+    
+    .section-card {
+        padding: 1rem;
+        text-align: center;
+    }
+    
+    .section-icon,
+    .component-icon,
+    .advantage-icon {
+        width: 45px;
+        height: 45px;
+        font-size: 1.2rem;
+        margin-bottom: 0.6rem;
+    }
+    
+    .workflow-summary .summary-icon {
+        width: 60px;
+        height: 60px;
+        font-size: 1.6rem;
+    }
+    
+    .completion-stats {
+        gap: 0.8rem;
+        margin: 1rem 0;
+    }
+    
+    .stat-item strong {
+        font-size: 1.3rem;
+    }
+    
+    .stat-item span {
+        font-size: 0.85rem;
+    }
+    
+    .pros, .cons {
+        padding: 12px;
+    }
+    
+    .pros h7, .cons h7 {
+        font-size: 0.95rem;
+        margin-bottom: 10px;
+    }
+    
+    .pros li, .cons li {
+        padding: 5px 0;
+        font-size: 0.85rem;
+    }
+    
+    .material-item {
+        padding: 0.6rem;
+        flex-direction: column;
+        text-align: center;
+        gap: 0.3rem;
+    }
+    
+    .material-icon {
+        font-size: 1rem;
+    }
+    
+    .material-info strong {
+        font-size: 0.85rem;
+    }
+    
+    .material-info span {
+        font-size: 0.75rem;
+    }
+    
+    .tech-item {
+        padding: 0.3rem 0.6rem;
+        font-size: 0.8rem;
+    }
+    
+    .step-item {
+        padding: 0.8rem;
+        flex-direction: column;
+        text-align: center;
+        gap: 0.3rem;
+    }
+    
+    .step-item i {
+        font-size: 1.2rem;
+    }
+    
+    .advantages-comparison {
+        padding: 1rem;
+    }
+    
+    .traditional-method,
+    .digital-method {
+        padding: 1rem;
+    }
+    
+    .tech-details {
+        padding: 0.6rem;
+    }
+    
+    .tech-details h6 {
+        font-size: 0.95rem;
+    }
+    
+    .tech-details li {
+        font-size: 0.8rem;
+    }
+    
+    .step-number,
+    .stage-number {
+        width: 30px;
+        height: 30px;
+        font-size: 14px;
+    }
+    
+    .step-header,
+    .stage-item .stage-content {
+        flex-direction: column;
+        text-align: center;
+        gap: 8px;
+    }
+    
+    .table-container {
+        font-size: 0.8rem;
+    }
+    
+    .table th,
+    .table td {
+        padding: 8px 6px;
+    }
+    
+    .section-arrow {
+        position: static;
+        margin-top: 10px;
+        opacity: 1;
     }
 }
 
