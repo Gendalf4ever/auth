@@ -1,210 +1,487 @@
-// Файл для работы с административной панелью
+/**
+ * Панель администратора
+ * Управление видео, пользователями и настройками
+ */
 
-// Элементы DOM для админ-панели
-const addCourseBtn = document.getElementById('add-course-btn');
-const adminCoursesList = document.getElementById('admin-courses-list');
-const adminUsersList = document.getElementById('admin-users-list');
+// Конфигурация Firebase
+const firebaseConfig = {
+    apiKey: "AIzaSyBPn3QTnKQ9a3s42A3OkumIR0IjXpIYKeE",
+    authDomain: "codent-education.firebaseapp.com",
+    projectId: "codent-education",
+    storageBucket: "codent-education.firebasestorage.app",
+    messagingSenderId: "622995236555",
+    appId: "1:622995236555:web:1dada1c102be46ea361d4e"
+};
 
-// Пример данных пользователей
-const sampleUsers = [
-    { id: 1, name: "Иван Иванов", email: "ivan@example.com", role: "user" },
-    { id: 2, name: "Петр Петров", email: "petr@example.com", role: "admin" },
-    { id: 3, name: "Мария Сидорова", email: "maria@example.com", role: "user" }
-];
-
-// Загрузка данных для админ-панели
-function loadAdminData() {
-    loadAdminCourses();
-    loadAdminUsers();
+// Инициализация Firebase
+function initializeFirebase() {
+    // Проверяем, не инициализирован ли Firebase уже
+    if (!firebase.apps.length) {
+        firebase.initializeApp(firebaseConfig);
+        console.log('Firebase инициализирован для админ панели');
+    }
 }
 
-// Загрузка курсов для администрирования
-function loadAdminCourses() {
-    if (!adminCoursesList) return;
+// Глобальные переменные
+let currentUser = null;
+let videos = [];
+
+// Элементы DOM
+const adminName = document.getElementById('admin-name');
+const totalVideos = document.getElementById('total-videos');
+const totalUsers = document.getElementById('total-users');
+const totalEquipment = document.getElementById('total-equipment');
+const totalDownloads = document.getElementById('total-downloads');
+const videosTbody = document.getElementById('videos-tbody');
+const uploadVideoForm = document.getElementById('upload-video-form');
+const uploadVideoBtn = document.getElementById('upload-video-btn');
+const uploadProgress = document.getElementById('upload-progress');
+
+// Инициализация при загрузке страницы
+document.addEventListener('DOMContentLoaded', () => {
+    initializeFirebase();
+    initializeAdmin();
+    setupEventListeners();
+    checkAuth();
+});
+
+// Инициализация админ панели
+function initializeAdmin() {
+    console.log('Инициализация панели администратора...');
     
-    adminCoursesList.innerHTML = '';
+    // Настройка навигации
+    setupNavigation();
     
-    // В реальном приложении: загрузка из Firestore
-    // firebase.firestore().collection('courses').get()...
+    // Загрузка статистики
+    loadStatistics();
     
-    sampleCourses.forEach(course => {
-        const row = document.createElement('tr');
-        row.innerHTML = `
-            <td>${course.title}</td>
-            <td>${course.description}</td>
-            <td>
-                <button class="btn btn-sm btn-primary me-1 edit-course-btn" data-course-id="${course.id}">Редактировать</button>
-                <button class="btn btn-sm btn-danger delete-course-btn" data-course-id="${course.id}">Удалить</button>
-            </td>
-        `;
-        adminCoursesList.appendChild(row);
-    });
-    
-    // Добавить обработчики для кнопок
-    document.querySelectorAll('.edit-course-btn').forEach(button => {
-        button.addEventListener('click', (e) => {
-            const courseId = e.target.getAttribute('data-course-id');
-            editCourse(courseId);
-        });
-    });
-    
-    document.querySelectorAll('.delete-course-btn').forEach(button => {
-        button.addEventListener('click', (e) => {
-            const courseId = e.target.getAttribute('data-course-id');
-            deleteCourse(courseId);
-        });
-    });
+    // Загрузка видео
+    loadVideos();
 }
 
-// Загрузка пользователей для администрирования
-function loadAdminUsers() {
-    if (!adminUsersList) return;
+// Настройка навигации
+function setupNavigation() {
+    const navLinks = document.querySelectorAll('.nav-link[data-section]');
     
-    adminUsersList.innerHTML = '';
-    
-    // В реальном приложении: загрузка из Firestore
-    // firebase.firestore().collection('users').get()...
-    
-    sampleUsers.forEach(user => {
-        const row = document.createElement('tr');
-        row.innerHTML = `
-            <td>${user.name}</td>
-            <td>${user.email}</td>
-            <td>
-                <select class="form-select form-select-sm role-select" data-user-id="${user.id}">
-                    <option value="user" ${user.role === 'user' ? 'selected' : ''}>Пользователь</option>
-                    <option value="admin" ${user.role === 'admin' ? 'selected' : ''}>Администратор</option>
-                </select>
-            </td>
-            <td>
-                <button class="btn btn-sm btn-primary me-1 edit-user-btn" data-user-id="${user.id}">Редактировать</button>
-                <button class="btn btn-sm btn-danger delete-user-btn" data-user-id="${user.id}">Удалить</button>
-            </td>
-        `;
-        adminUsersList.appendChild(row);
-    });
-    
-    // Добавить обработчики для кнопок
-    document.querySelectorAll('.edit-user-btn').forEach(button => {
-        button.addEventListener('click', (e) => {
-            const userId = e.target.getAttribute('data-user-id');
-            editUser(userId);
-        });
-    });
-    
-    document.querySelectorAll('.delete-user-btn').forEach(button => {
-        button.addEventListener('click', (e) => {
-            const userId = e.target.getAttribute('data-user-id');
-            deleteUser(userId);
-        });
-    });
-    
-    // Обработчики изменения ролей
-    document.querySelectorAll('.role-select').forEach(select => {
-        select.addEventListener('change', (e) => {
-            const userId = e.target.getAttribute('data-user-id');
-            const newRole = e.target.value;
-            updateUserRole(userId, newRole);
+    navLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            
+            // Убираем активный класс со всех ссылок
+            navLinks.forEach(l => l.classList.remove('active'));
+            
+            // Добавляем активный класс к текущей ссылке
+            link.classList.add('active');
+            
+            // Показываем соответствующую секцию
+            const sectionId = link.getAttribute('data-section');
+            showSection(sectionId);
         });
     });
 }
 
-// Обработчики для админ-панели
-if (addCourseBtn) {
-    addCourseBtn.addEventListener('click', () => {
-        if (typeof showCreateCoursePage === 'function') {
-            showCreateCoursePage();
+// Показать секцию
+function showSection(sectionId) {
+    // Скрываем все секции
+    const sections = document.querySelectorAll('.admin-section');
+    sections.forEach(section => {
+        section.style.display = 'none';
+    });
+    
+    // Показываем нужную секцию
+    const targetSection = document.getElementById(`${sectionId}-section`);
+    if (targetSection) {
+        targetSection.style.display = 'block';
+    }
+}
+
+// Настройка обработчиков событий
+function setupEventListeners() {
+    // Загрузка видео
+    if (uploadVideoBtn) {
+        uploadVideoBtn.addEventListener('click', handleVideoUpload);
+    }
+    
+    // Обработка изменения файла
+    const videoFileInput = document.getElementById('video-file');
+    if (videoFileInput) {
+        videoFileInput.addEventListener('change', handleFileSelect);
+    }
+}
+
+// Проверка аутентификации
+function checkAuth() {
+    firebase.auth().onAuthStateChanged((user) => {
+        if (user) {
+            // Пользователь вошел в систему
+            currentUser = user;
+            checkUserRole(user.uid);
         } else {
-            showAddCourseModal();
+            // Пользователь не вошел в систему
+            redirectToLogin();
         }
     });
 }
 
-function editCourse(courseId) {
-    const course = sampleCourses.find(c => c.id == courseId);
-    if (course) {
-        showEditCourseModal(course);
-    }
-}
-
-function deleteCourse(courseId) {
-    if (confirm('Вы уверены, что хотите удалить этот курс?')) {
-        // В реальном приложении: удаление из Firestore
-        // firebase.firestore().collection('courses').doc(courseId).delete()...
+// Проверка роли пользователя
+async function checkUserRole(uid) {
+    try {
+        const doc = await firebase.firestore().collection('users').doc(uid).get();
         
-        // Обновить интерфейс
-        loadAdminCourses();
-        showNotification('Курс успешно удален', 'success');
+        if (doc.exists) {
+            const role = doc.data().role || 'user';
+            
+            if (role === 'admin') {
+                // Пользователь - администратор
+                adminName.textContent = currentUser.displayName || currentUser.email;
+                console.log('Доступ к панели администратора разрешен');
+            } else {
+                // Пользователь не администратор
+                alert('У вас нет прав доступа к панели администратора');
+                redirectToLogin();
+            }
+        } else {
+            // Пользователь не найден в базе данных
+            alert('Пользователь не найден в системе');
+            redirectToLogin();
+        }
+    } catch (error) {
+        console.error('Ошибка проверки роли:', error);
+        redirectToLogin();
     }
 }
 
-function editUser(userId) {
-    const user = sampleUsers.find(u => u.id == userId);
-    if (user) {
-        showEditUserModal(user);
-    }
+// Перенаправление на страницу входа
+function redirectToLogin() {
+    window.location.href = 'login.html';
 }
 
-function deleteUser(userId) {
-    if (confirm('Вы уверены, что хотите удалить этого пользователя?')) {
-        // В реальном приложении: удаление из Firestore
-        // firebase.firestore().collection('users').doc(userId).delete()...
+// Выход из системы
+function logout() {
+    firebase.auth().signOut().then(() => {
+        console.log('Пользователь вышел из системы');
+        redirectToLogin();
+    }).catch((error) => {
+        console.error('Ошибка выхода:', error);
+    });
+}
+
+// Загрузка статистики
+async function loadStatistics() {
+    try {
+        // Подсчет видео
+        const videosSnapshot = await firebase.firestore().collection('videos').get();
+        totalVideos.textContent = videosSnapshot.size;
         
-        // Обновить интерфейс
-        loadAdminUsers();
-        showNotification('Пользователь успешно удален', 'success');
+        // Подсчет пользователей
+        const usersSnapshot = await firebase.firestore().collection('users').get();
+        totalUsers.textContent = usersSnapshot.size;
+        
+        // Подсчет оборудования (примерное значение)
+        totalEquipment.textContent = '0';
+        
+        // Подсчет загрузок (примерное значение)
+        totalDownloads.textContent = '0';
+        
+    } catch (error) {
+        console.error('Ошибка загрузки статистики:', error);
     }
 }
 
-function updateUserRole(userId, newRole) {
-    // В реальном приложении: обновление в Firestore
-    // firebase.firestore().collection('users').doc(userId).update({ role: newRole })...
-    
-    // Обновить данные в массиве
-    const userIndex = sampleUsers.findIndex(u => u.id == userId);
-    if (userIndex !== -1) {
-        sampleUsers[userIndex].role = newRole;
+// Загрузка видео
+async function loadVideos() {
+    try {
+        const videosSnapshot = await firebase.firestore().collection('videos').get();
+        videos = [];
+        
+        videosSnapshot.forEach(doc => {
+            videos.push({
+                id: doc.id,
+                ...doc.data()
+            });
+        });
+        
+        renderVideosTable();
+        
+    } catch (error) {
+        console.error('Ошибка загрузки видео:', error);
     }
-    
-    showNotification(`Роль пользователя изменена на "${newRole}"`, 'success');
 }
 
-// Функция показа уведомлений
+// Отображение таблицы видео
+function renderVideosTable() {
+    if (!videosTbody) return;
+    
+    videosTbody.innerHTML = '';
+    
+    if (videos.length === 0) {
+        videosTbody.innerHTML = `
+            <tr>
+                <td colspan="5" class="text-center py-4">
+                    <i class="fas fa-video fa-3x text-muted mb-3"></i>
+                    <p class="text-muted">Видео не найдены</p>
+                </td>
+            </tr>
+        `;
+        return;
+    }
+    
+    videos.forEach(video => {
+        const row = document.createElement('tr');
+        
+        row.innerHTML = `
+            <td>
+                <div class="d-flex align-items-center">
+                    <div class="video-preview me-3">
+                        <i class="fas fa-video fa-2x text-muted"></i>
+                    </div>
+                    <div>
+                        <strong>${video.title}</strong>
+                        <br>
+                        <small class="text-muted">${video.category}</small>
+                    </div>
+                </div>
+            </td>
+            <td>${video.description || 'Без описания'}</td>
+            <td>${formatFileSize(video.size || 0)}</td>
+            <td>${formatDate(video.uploadedAt)}</td>
+            <td>
+                <div class="table-actions">
+                    <button class="btn btn-sm btn-primary" onclick="playVideo('${video.id}')" title="Воспроизвести">
+                        <i class="fas fa-play"></i>
+                    </button>
+                    <button class="btn btn-sm btn-success" onclick="downloadVideo('${video.id}')" title="Скачать">
+                        <i class="fas fa-download"></i>
+                    </button>
+                    <button class="btn btn-sm btn-danger" onclick="deleteVideo('${video.id}')" title="Удалить">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            </td>
+        `;
+        
+        videosTbody.appendChild(row);
+    });
+}
+
+// Обработка выбора файла
+function handleFileSelect(event) {
+    const file = event.target.files[0];
+    if (file) {
+        // Проверяем размер файла (максимум 500MB)
+        const maxSize = 500 * 1024 * 1024; // 500MB
+        if (file.size > maxSize) {
+            alert('Размер файла не должен превышать 500MB');
+            event.target.value = '';
+            return;
+        }
+        
+        // Проверяем тип файла
+        const allowedTypes = ['video/mp4', 'video/avi', 'video/mov', 'video/wmv'];
+        if (!allowedTypes.includes(file.type)) {
+            alert('Поддерживаются только видеофайлы (MP4, AVI, MOV, WMV)');
+            event.target.value = '';
+            return;
+        }
+        
+        console.log('Выбран файл:', file.name, 'Размер:', formatFileSize(file.size));
+    }
+}
+
+// Загрузка видео
+async function handleVideoUpload() {
+    const title = document.getElementById('video-title').value;
+    const description = document.getElementById('video-description').value;
+    const category = document.getElementById('video-category').value;
+    const file = document.getElementById('video-file').files[0];
+    
+    if (!title || !category || !file) {
+        alert('Пожалуйста, заполните все обязательные поля');
+        return;
+    }
+    
+    try {
+        // Показываем прогресс
+        uploadProgress.style.display = 'block';
+        uploadVideoBtn.disabled = true;
+        
+        // Создаем уникальное имя файла
+        const timestamp = Date.now();
+        const fileName = `${timestamp}_${file.name}`;
+        
+        // Загружаем файл в Firebase Storage
+        const storageRef = firebase.storage().ref();
+        const videoRef = storageRef.child(`videos/${fileName}`);
+        
+        const uploadTask = videoRef.put(file);
+        
+        // Отслеживаем прогресс загрузки
+        uploadTask.on('state_changed', 
+            (snapshot) => {
+                const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                const progressBar = uploadProgress.querySelector('.progress-bar');
+                progressBar.style.width = progress + '%';
+                progressBar.textContent = Math.round(progress) + '%';
+            },
+            (error) => {
+                console.error('Ошибка загрузки:', error);
+                alert('Ошибка загрузки файла');
+                uploadProgress.style.display = 'none';
+                uploadVideoBtn.disabled = false;
+            },
+            async () => {
+                try {
+                    // Получаем URL загруженного файла
+                    const downloadURL = await uploadTask.snapshot.ref.getDownloadURL();
+                    
+                    // Сохраняем информацию о видео в Firestore
+                    await firebase.firestore().collection('videos').add({
+                        title: title,
+                        description: description,
+                        category: category,
+                        fileName: fileName,
+                        originalName: file.name,
+                        size: file.size,
+                        downloadURL: downloadURL,
+                        uploadedBy: currentUser.uid,
+                        uploadedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                        status: 'uploaded'
+                    });
+                    
+                    // Скрываем прогресс
+                    uploadProgress.style.display = 'none';
+                    uploadVideoBtn.disabled = false;
+                    
+                    // Очищаем форму
+                    uploadVideoForm.reset();
+                    
+                    // Закрываем модальное окно
+                    const modal = bootstrap.Modal.getInstance(document.getElementById('uploadVideoModal'));
+                    modal.hide();
+                    
+                    // Показываем уведомление
+                    showNotification('Видео успешно загружено!', 'success');
+                    
+                    // Обновляем список видео
+                    loadVideos();
+                    loadStatistics();
+                    
+                } catch (error) {
+                    console.error('Ошибка сохранения информации о видео:', error);
+                    alert('Ошибка сохранения информации о видео');
+                    uploadProgress.style.display = 'none';
+                    uploadVideoBtn.disabled = false;
+                }
+            }
+        );
+        
+    } catch (error) {
+        console.error('Ошибка загрузки видео:', error);
+        alert('Ошибка загрузки видео');
+        uploadProgress.style.display = 'none';
+        uploadVideoBtn.disabled = false;
+    }
+}
+
+// Воспроизведение видео
+function playVideo(videoId) {
+    const video = videos.find(v => v.id === videoId);
+    if (video) {
+        window.open(video.downloadURL, '_blank');
+    }
+}
+
+// Скачивание видео
+function downloadVideo(videoId) {
+    const video = videos.find(v => v.id === videoId);
+    if (video) {
+        const link = document.createElement('a');
+        link.href = video.downloadURL;
+        link.download = video.originalName;
+        link.click();
+    }
+}
+
+// Удаление видео
+async function deleteVideo(videoId) {
+    if (!confirm('Вы уверены, что хотите удалить это видео?')) {
+        return;
+    }
+    
+    try {
+        const video = videos.find(v => v.id === videoId);
+        
+        if (video) {
+            // Удаляем файл из Storage
+            const storageRef = firebase.storage().ref();
+            const videoRef = storageRef.child(`videos/${video.fileName}`);
+            await videoRef.delete();
+            
+            // Удаляем запись из Firestore
+            await firebase.firestore().collection('videos').doc(videoId).delete();
+            
+            // Обновляем список
+            loadVideos();
+            loadStatistics();
+            
+            showNotification('Видео удалено!', 'success');
+        }
+    } catch (error) {
+        console.error('Ошибка удаления видео:', error);
+        alert('Ошибка удаления видео');
+    }
+}
+
+// Показать уведомление
 function showNotification(message, type = 'info') {
-    // Создать уведомление
-    const notification = document.createElement('div');
-    notification.className = `alert alert-${type === 'error' ? 'danger' : type} alert-dismissible fade show`;
-    notification.style.cssText = `
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        z-index: 9999;
-        min-width: 300px;
-    `;
-    notification.innerHTML = `
+    const alertDiv = document.createElement('div');
+    alertDiv.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
+    alertDiv.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+    alertDiv.innerHTML = `
         ${message}
         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
     `;
     
-    document.body.appendChild(notification);
+    document.body.appendChild(alertDiv);
     
-    // Автоматически скрыть через 5 секунд
+    // Автоматически скрываем через 5 секунд
     setTimeout(() => {
-        if (notification.parentNode) {
-            notification.remove();
+        if (alertDiv.parentNode) {
+            alertDiv.parentNode.removeChild(alertDiv);
         }
     }, 5000);
 }
 
-// Модальные окна (упрощенные версии)
-function showAddCourseModal() {
-    alert('Функция добавления курса будет реализована в полной версии');
+// Форматирование размера файла
+function formatFileSize(bytes) {
+    if (bytes === 0) return '0 Bytes';
+    
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
 }
 
-function showEditCourseModal(course) {
-    alert(`Редактирование курса "${course.title}" будет реализовано в полной версии`);
+// Форматирование даты
+function formatDate(timestamp) {
+    if (!timestamp) return 'Неизвестно';
+    
+    const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
+    return date.toLocaleDateString('ru-RU', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+    });
 }
 
-function showEditUserModal(user) {
-    alert(`Редактирование пользователя "${user.name}" будет реализовано в полной версии`);
-}
+// Экспорт функций для глобального использования
+window.adminModule = {
+    loadVideos,
+    playVideo,
+    downloadVideo,
+    deleteVideo,
+    showNotification
+};

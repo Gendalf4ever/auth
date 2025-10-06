@@ -80,6 +80,17 @@ if (loginForm) {
                 // Вход успешен
                 const user = userCredential.user;
                 console.log('Пользователь вошел:', user);
+                
+                // Проверяем роль пользователя
+                checkUserRole(user.uid).then(role => {
+                    if (role === 'admin') {
+                        // Перенаправляем в админ панель
+                        window.location.href = 'admin.html';
+                    } else {
+                        // Перенаправляем на главную страницу
+                        window.location.href = 'index.html';
+                    }
+                });
             })
             .catch((error) => {
                 const errorCode = error.code;

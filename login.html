@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Вход в систему - CODENT Education</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="css/auth.css" rel="stylesheet">
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-header">
+                <div class="logo">
+                    <i class="fas fa-graduation-cap"></i>
+                    <h1>CODENT Education</h1>
+                </div>
+                <p class="auth-subtitle">Войдите в систему для доступа к обучающим материалам</p>
+            </div>
+
+            <div class="auth-body">
+                <!-- Форма входа -->
+                <form id="login-form" class="auth-form">
+                    <div class="form-group">
+                        <label for="email" class="form-label">
+                            <i class="fas fa-envelope"></i>
+                            Email
+                        </label>
+                        <input type="email" id="email" class="form-control" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password" class="form-label">
+                            <i class="fas fa-lock"></i>
+                            Пароль
+                        </label>
+                        <input type="password" id="password" class="form-control" required>
+                    </div>
+
+                    <div class="form-options">
+                        <div class="form-check">
+                            <input type="checkbox" id="remember-me" class="form-check-input">
+                            <label for="remember-me" class="form-check-label">Запомнить меня</label>
+                        </div>
+                        <a href="#" class="forgot-password">Забыли пароль?</a>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-auth">
+                        <i class="fas fa-sign-in-alt"></i>
+                        Войти
+                    </button>
+                </form>
+
+                <!-- Форма регистрации -->
+                <form id="register-form" class="auth-form" style="display: none;">
+                    <div class="form-group">
+                        <label for="reg-name" class="form-label">
+                            <i class="fas fa-user"></i>
+                            Имя
+                        </label>
+                        <input type="text" id="reg-name" class="form-control" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="reg-email" class="form-label">
+                            <i class="fas fa-envelope"></i>
+                            Email
+                        </label>
+                        <input type="email" id="reg-email" class="form-control" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="reg-password" class="form-label">
+                            <i class="fas fa-lock"></i>
+                            Пароль
+                        </label>
+                        <input type="password" id="reg-password" class="form-control" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="reg-confirm-password" class="form-label">
+                            <i class="fas fa-lock"></i>
+                            Подтвердите пароль
+                        </label>
+                        <input type="password" id="reg-confirm-password" class="form-control" required>
+                    </div>
+
+                    <button type="submit" class="btn btn-success btn-auth">
+                        <i class="fas fa-user-plus"></i>
+                        Зарегистрироваться
+                    </button>
+                </form>
+
+                <div class="auth-footer">
+                    <p id="register-link" class="auth-link">
+                        Нет аккаунта? <span>Зарегистрироваться</span>
+                    </p>
+                    <p id="back-to-login-link" class="auth-link" style="display: none;">
+                        Уже есть аккаунт? <span>Войти</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Состояние загрузки -->
+        <div id="loading-state" class="loading-overlay" style="display: none;">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Загрузка...</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-storage-compat.js"></script>
+    
+    <!-- Скрипты -->
+    <script src="js/auth.js"></script>
+    <script>
+        // Инициализация Firebase при загрузке страницы
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeFirebase();
+        });
+    </script>
+</body>
+</html>

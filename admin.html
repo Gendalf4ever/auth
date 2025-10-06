@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Панель администратора - CODENT Education</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="css/admin.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Навигация -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-cogs"></i>
+                Панель администратора
+            </a>
+            <div class="navbar-nav ms-auto">
+                <span class="navbar-text me-3" id="admin-name">Администратор</span>
+                <button class="btn btn-outline-light btn-sm" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Выйти
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Боковая панель -->
+            <nav class="col-md-3 col-lg-2 d-md-block bg-light sidebar">
+                <div class="position-sticky pt-3">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="#dashboard" data-section="dashboard">
+                                <i class="fas fa-tachometer-alt"></i>
+                                Панель управления
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#videos" data-section="videos">
+                                <i class="fas fa-video"></i>
+                                Управление видео
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#equipment" data-section="equipment">
+                                <i class="fas fa-microscope"></i>
+                                Оборудование
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#users" data-section="users">
+                                <i class="fas fa-users"></i>
+                                Пользователи
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#settings" data-section="settings">
+                                <i class="fas fa-cog"></i>
+                                Настройки
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+
+            <!-- Основной контент -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                <!-- Панель управления -->
+                <div id="dashboard-section" class="admin-section">
+                    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                        <h1 class="h2">Панель управления</h1>
+                    </div>
+
+                    <!-- Статистика -->
+                    <div class="row mb-4">
+                        <div class="col-xl-3 col-md-6 mb-4">
+                            <div class="card border-left-primary shadow h-100 py-2">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                                Всего видео</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800" id="total-videos">0</div>
+                                        </div>
+                                        <div class="col-auto">
+                                            <i class="fas fa-video fa-2x text-gray-300"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-xl-3 col-md-6 mb-4">
+                            <div class="card border-left-success shadow h-100 py-2">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                                Пользователи</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800" id="total-users">0</div>
+                                        </div>
+                                        <div class="col-auto">
+                                            <i class="fas fa-users fa-2x text-gray-300"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-xl-3 col-md-6 mb-4">
+                            <div class="card border-left-info shadow h-100 py-2">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                                Оборудование</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800" id="total-equipment">0</div>
+                                        </div>
+                                        <div class="col-auto">
+                                            <i class="fas fa-microscope fa-2x text-gray-300"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-xl-3 col-md-6 mb-4">
+                            <div class="card border-left-warning shadow h-100 py-2">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                                Загрузки</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800" id="total-downloads">0</div>
+                                        </div>
+                                        <div class="col-auto">
+                                            <i class="fas fa-download fa-2x text-gray-300"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Управление видео -->
+                <div id="videos-section" class="admin-section" style="display: none;">
+                    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                        <h1 class="h2">Управление видео</h1>
+                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#uploadVideoModal">
+                            <i class="fas fa-plus"></i>
+                            Загрузить видео
+                        </button>
+                    </div>
+
+                    <!-- Список видео -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0">Список видео</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-striped" id="videos-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Название</th>
+                                            <th>Описание</th>
+                                            <th>Размер</th>
+                                            <th>Дата загрузки</th>
+                                            <th>Действия</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="videos-tbody">
+                                        <!-- Видео будут загружены динамически -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Оборудование -->
+                <div id="equipment-section" class="admin-section" style="display: none;">
+                    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                        <h1 class="h2">Управление оборудованием</h1>
+                    </div>
+                    <p>Здесь будет управление оборудованием из Google Sheets.</p>
+                </div>
+
+                <!-- Пользователи -->
+                <div id="users-section" class="admin-section" style="display: none;">
+                    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                        <h1 class="h2">Управление пользователями</h1>
+                    </div>
+                    <p>Здесь будет список пользователей и управление ролями.</p>
+                </div>
+
+                <!-- Настройки -->
+                <div id="settings-section" class="admin-section" style="display: none;">
+                    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                        <h1 class="h2">Настройки системы</h1>
+                    </div>
+                    <p>Здесь будут настройки системы.</p>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Модальное окно загрузки видео -->
+    <div class="modal fade" id="uploadVideoModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Загрузить видео</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="upload-video-form">
+                        <div class="mb-3">
+                            <label for="video-title" class="form-label">Название видео</label>
+                            <input type="text" class="form-control" id="video-title" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="video-description" class="form-label">Описание</label>
+                            <textarea class="form-control" id="video-description" rows="3"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="video-category" class="form-label">Категория</label>
+                            <select class="form-select" id="video-category" required>
+                                <option value="">Выберите категорию</option>
+                                <option value="3d-printing">3D печать</option>
+                                <option value="scanning">3D сканирование</option>
+                                <option value="milling">Фрезеровка</option>
+                                <option value="sintering">Синтеризация</option>
+                                <option value="materials">Материалы</option>
+                                <option value="general">Общее</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="video-file" class="form-label">Видеофайл</label>
+                            <input type="file" class="form-control" id="video-file" accept="video/*" required>
+                            <div class="form-text">Поддерживаемые форматы: MP4, AVI, MOV, WMV</div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="progress" id="upload-progress" style="display: none;">
+                                <div class="progress-bar" role="progressbar" style="width: 0%"></div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                    <button type="button" class="btn btn-primary" id="upload-video-btn">
+                        <i class="fas fa-upload"></i>
+                        Загрузить
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-storage-compat.js"></script>
+    
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Скрипты -->
+    <script src="js/auth.js"></script>
+    <script src="js/admin.js"></script>
+</body>
+</html>
