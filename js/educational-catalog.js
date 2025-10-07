@@ -200,6 +200,9 @@ function transformToEducationalFormat(data) {
         // Ищем характеристики в разных возможных колонках
         const specifications = getSpecifications(item);
         
+        // Ищем изображение в разных возможных колонках
+        const imageUrl = getImageUrl(item);
+        
         return {
             id: item['id'] || '',
             name: cleanEquipmentName(item['наименование'] || 'Без названия'),
@@ -207,7 +210,7 @@ function transformToEducationalFormat(data) {
             purpose: purpose,
             description: item['описание'] || 'Описание отсутствует',
             specifications: specifications,
-            image: item['изображение'] || '',
+            image: imageUrl,
             application: application,
             sourceSheet: item.sourceSheet || '',
             sourceTitle: item.sourceTitle || '',
@@ -216,13 +219,335 @@ function transformToEducationalFormat(data) {
     });
 }
 
+// Получение URL изображения из различных возможных колонок
+function getImageUrl(item) {
+    console.log('=== ПОИСК ИЗОБРАЖЕНИЯ ===');
+    console.log('Элемент для поиска изображения:', item);
+    console.log('Доступные ключи:', Object.keys(item));
+    
+    // Возможные названия колонок с изображениями
+    const possibleImageColumns = [
+        'изображение',
+        'Изображение',
+        'ИЗОБРАЖЕНИЕ',
+        'фото',
+        'Фото',
+        'ФОТО',
+        'картинка',
+        'Картинка',
+        'КАРТИНКА',
+        'image',
+        'Image',
+        'IMAGE',
+        'img',
+        'Img',
+        'IMG',
+        'picture',
+        'Picture',
+        'PICTURE',
+        'photo',
+        'Photo',
+        'PHOTO',
+        'url',
+        'URL',
+        'ссылка',
+        'Ссылка',
+        'ССЫЛКА',
+        'link',
+        'Link',
+        'LINK'
+    ];
+    
+    console.log('Проверяем точные совпадения колонок для изображений...');
+    // Ищем первую непустую колонку с изображением
+    for (const column of possibleImageColumns) {
+        if (item.hasOwnProperty(column)) {
+            console.log(`Найдена колонка "${column}" со значением:`, item[column]);
+            if (item[column] && item[column].toString().trim() !== '') {
+                const imageUrl = item[column].toString().trim();
+                
+                // Проверяем, является ли это валидной ссылкой
+                if (isValidImageUrl(imageUrl)) {
+                    // Преобразуем в прямую ссылку (синхронная версия)
+                    const directUrl = convertToDirectImageUrlSync(imageUrl);
+                    console.log(`✅ НАЙДЕНО изображение в колонке "${column}":`, directUrl);
+                    return directUrl;
+                }
+            }
+        }
+    }
+    
+    console.log('Точные совпадения не найдены. Ищем по содержимому...');
+    // Ищем в любых колонках ссылки на изображения
+    for (const key of Object.keys(item)) {
+        const value = item[key];
+        if (value && value.toString().trim() !== '') {
+            const valueStr = value.toString().trim();
+            
+            // Проверяем, является ли это валидной ссылкой на изображение
+            if (isValidImageUrl(valueStr)) {
+                // Преобразуем в прямую ссылку (синхронная версия)
+                const directUrl = convertToDirectImageUrlSync(valueStr);
+                console.log(`✅ НАЙДЕНО изображение в колонке "${key}":`, directUrl);
+                return directUrl;
+            }
+        }
+    }
+    
+    console.log('❌ Изображение НЕ найдено!');
+    console.log('=== КОНЕЦ ПОИСКА ИЗОБРАЖЕНИЯ ===');
+    
+    return '';
+}
+
+// API ключ imgbb
+const IMGBB_API_KEY = '0b770dfcb1e3a1958a8d0a7cb7ae1962';
+
+// Кэш для сохранения преобразованных URL
+const imageUrlCache = new Map();
+
+// Преобразование URL imgbb в прямую ссылку на изображение
+async function convertToDirectImageUrl(url) {
+    if (!url || typeof url !== 'string') return url;
+    
+    // Убираем @ в начале, если есть
+    let urlStr = url.trim();
+    if (urlStr.startsWith('@')) {
+        urlStr = urlStr.substring(1).trim();
+    }
+    
+    // Проверяем кэш
+    if (imageUrlCache.has(urlStr)) {
+        console.log(`Используем кэшированный URL для: ${urlStr}`);
+        return imageUrlCache.get(urlStr);
+    }
+    
+    // Если это уже прямая ссылка i.ibb.co или i.imgur.com, возвращаем как есть
+    if (urlStr.includes('i.ibb.co') || urlStr.includes('i.imgur.com')) {
+        console.log(`Прямая ссылка найдена: ${urlStr}`);
+        imageUrlCache.set(urlStr, urlStr);
+        return urlStr;
+    }
+    
+    // Преобразуем ссылки imgbb (ibb.co) в прямые ссылки
+    // Формат: https://ibb.co/Zp4hmN55
+    if (urlStr.includes('ibb.co/')) {
+        try {
+            // Извлекаем ID изображения
+            const match = urlStr.match(/ibb\.co\/([a-zA-Z0-9]+)/);
+            if (match && match[1]) {
+                const imageId = match[1];
+                
+                // Попытка 1: Используем стандартный формат imgbb
+                // imgbb использует структуру: https://i.ibb.co/HASH/filename.ext
+                // где HASH - это подстрока из ID
+                
+                // Генерируем несколько вариантов прямых ссылок
+                const possibleFormats = [
+                    // Стандартные форматы imgbb
+                    `https://i.ibb.co/${imageId}/image.jpg`,
+                    `https://i.ibb.co/${imageId}/image.png`,
+                    `https://i.ibb.co/${imageId}/photo.jpg`,
+                    `https://i.ibb.co/${imageId}/photo.png`,
+                    // Форматы с использованием самого ID как имени файла
+                    `https://i.ibb.co/${imageId}/${imageId}.jpg`,
+                    `https://i.ibb.co/${imageId}/${imageId}.png`,
+                    // Короткий хэш (первые 7 символов)
+                    `https://i.ibb.co/${imageId.substring(0, 7)}/image.jpg`,
+                    `https://i.ibb.co/${imageId.substring(0, 7)}/image.png`,
+                    // Альтернативный формат с полным ID
+                    `https://i.ibb.co/${imageId.charAt(0)}/${imageId}/image.jpg`,
+                    `https://i.ibb.co/${imageId.charAt(0)}/${imageId}/image.png`
+                ];
+                
+                // Возвращаем первый формат и кэшируем
+                const directUrl = possibleFormats[0];
+                console.log(`Преобразование imgbb URL: ${urlStr} -> ${directUrl}`);
+                console.log(`Доступные варианты для fallback:`, possibleFormats.slice(0, 5));
+                
+                imageUrlCache.set(urlStr, directUrl);
+                return directUrl;
+            }
+        } catch (e) {
+            console.warn('Ошибка преобразования imgbb URL:', e);
+        }
+    }
+    
+    // Преобразуем ссылки imgur
+    if (urlStr.includes('imgur.com/') && !urlStr.includes('i.imgur.com')) {
+        try {
+            const match = urlStr.match(/imgur\.com\/([a-zA-Z0-9]+)/);
+            if (match && match[1]) {
+                const imageId = match[1];
+                const directUrl = `https://i.imgur.com/${imageId}.jpg`;
+                console.log(`Преобразование imgur URL: ${urlStr} -> ${directUrl}`);
+                imageUrlCache.set(urlStr, directUrl);
+                return directUrl;
+            }
+        } catch (e) {
+            console.warn('Ошибка преобразования imgur URL:', e);
+        }
+    }
+    
+    imageUrlCache.set(urlStr, urlStr);
+    return urlStr;
+}
+
+// Синхронная версия для обратной совместимости
+function convertToDirectImageUrlSync(url) {
+    if (!url || typeof url !== 'string') return url;
+    
+    // Убираем @ в начале, если есть
+    let urlStr = url.trim();
+    if (urlStr.startsWith('@')) {
+        urlStr = urlStr.substring(1).trim();
+    }
+    
+    console.log('Конвертация URL:', urlStr);
+    
+    // Если это уже прямая ссылка i.ibb.co или i.imgur.com, возвращаем как есть
+    if (urlStr.includes('i.ibb.co') || urlStr.includes('i.imgur.com')) {
+        console.log('Уже прямая ссылка:', urlStr);
+        return urlStr;
+    }
+    
+    // Преобразуем ссылки imgbb (ibb.co/CODE)
+    if (urlStr.includes('ibb.co/')) {
+        const match = urlStr.match(/ibb\.co\/([a-zA-Z0-9]+)/);
+        if (match && match[1]) {
+            const imageId = match[1];
+            // Пробуем несколько форматов
+            const directUrl = `https://i.ibb.co/${imageId}/image.png`;
+            console.log('Преобразована ссылка imgbb:', directUrl);
+            return directUrl;
+        }
+    }
+    
+    // Преобразуем ссылки imgur
+    if (urlStr.includes('imgur.com/') && !urlStr.includes('i.imgur.com')) {
+        const match = urlStr.match(/imgur\.com\/([a-zA-Z0-9]+)/);
+        if (match && match[1]) {
+            const directUrl = `https://i.imgur.com/${match[1]}.jpg`;
+            console.log('Преобразована ссылка imgur:', directUrl);
+            return directUrl;
+        }
+    }
+    
+    console.log('URL не требует конвертации:', urlStr);
+    return urlStr;
+}
+
+// Проверка валидности URL изображения
+function isValidImageUrl(url) {
+    if (!url || typeof url !== 'string') return false;
+    
+    // Убираем @ в начале, если есть
+    let urlStr = url.trim();
+    if (urlStr.startsWith('@')) {
+        urlStr = urlStr.substring(1).trim();
+    }
+    
+    // Проверяем, что это HTTP/HTTPS ссылка
+    if (!urlStr.startsWith('http://') && !urlStr.startsWith('https://')) {
+        console.log(`URL "${urlStr}" не начинается с http:// или https://`);
+        return false;
+    }
+    
+    // Проверяем популярные хостинги изображений
+    const imageHosts = [
+        'imgbb.com',
+        'imgur.com',
+        'postimg.cc',
+        'ibb.co',
+        'i.imgur.com',
+        'i.ibb.co',
+        'drive.google.com',
+        'dropbox.com',
+        'yandex.ru',
+        'mail.ru'
+    ];
+    
+    const hasImageHost = imageHosts.some(host => urlStr.includes(host));
+    
+    // Проверяем расширения файлов изображений
+    const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.webp', '.svg'];
+    const hasImageExtension = imageExtensions.some(ext => 
+        urlStr.toLowerCase().includes(ext.toLowerCase())
+    );
+    
+    // Считаем валидным, если есть хост изображений или расширение файла
+    const isValid = hasImageHost || hasImageExtension;
+    
+    console.log(`Проверка URL "${urlStr}": хост изображений = ${hasImageHost}, расширение = ${hasImageExtension}, валидный = ${isValid}`);
+    
+    return isValid;
+}
+
 // Получение характеристик из различных возможных колонок
 function getSpecifications(item) {
     console.log('=== ПОИСК ХАРАКТЕРИСТИК ===');
     console.log('Элемент для поиска характеристик:', item);
     console.log('Доступные ключи:', Object.keys(item));
     
-    // Возможные названия колонок с характеристиками (расширенный список)
+    // Получаем описание для сравнения
+    const description = item['описание'] || '';
+    console.log('Описание для сравнения:', description);
+    
+    // Функция проверки, не является ли текст дублированием описания
+    function isDuplicateOfDescription(text) {
+        if (!description || !text) return false;
+        const cleanDesc = description.toString().trim().toLowerCase();
+        const cleanText = text.toString().trim().toLowerCase();
+        
+        // Если тексты слишком короткие, не считаем дублированием
+        if (cleanDesc.length < 20 || cleanText.length < 20) return false;
+        
+        // Проверяем точное совпадение
+        if (cleanDesc === cleanText) return true;
+        
+        // Проверяем очень высокое сходство (более 90% для строгой проверки)
+        const similarity = calculateSimilarity(cleanDesc, cleanText);
+        console.log(`Сходство между описанием и текстом: ${similarity.toFixed(2)}`);
+        return similarity > 0.9;
+    }
+    
+    // Функция расчета сходства строк
+    function calculateSimilarity(str1, str2) {
+        const longer = str1.length > str2.length ? str1 : str2;
+        const shorter = str1.length > str2.length ? str2 : str1;
+        
+        if (longer.length === 0) return 1.0;
+        
+        const distance = levenshteinDistance(longer, shorter);
+        return (longer.length - distance) / longer.length;
+    }
+    
+    // Функция расчета расстояния Левенштейна
+    function levenshteinDistance(str1, str2) {
+        const matrix = [];
+        for (let i = 0; i <= str2.length; i++) {
+            matrix[i] = [i];
+        }
+        for (let j = 0; j <= str1.length; j++) {
+            matrix[0][j] = j;
+        }
+        for (let i = 1; i <= str2.length; i++) {
+            for (let j = 1; j <= str1.length; j++) {
+                if (str2.charAt(i - 1) === str1.charAt(j - 1)) {
+                    matrix[i][j] = matrix[i - 1][j - 1];
+                } else {
+                    matrix[i][j] = Math.min(
+                        matrix[i - 1][j - 1] + 1,
+                        matrix[i][j - 1] + 1,
+                        matrix[i - 1][j] + 1
+                    );
+                }
+            }
+        }
+        return matrix[str2.length][str1.length];
+    }
+    
+    // Возможные названия колонок с характеристиками (только специфичные для характеристик)
     const possibleColumns = [
         'характеристики',
         'Характеристики',
@@ -246,8 +571,6 @@ function getSpecifications(item) {
         'свойства',
         'Свойства',
         'СВОЙСТВА',
-        'описание характеристик',
-        'Описание характеристик',
         'техописание',
         'Техописание',
         'ТЕХОПИСАНИЕ'
@@ -260,6 +583,13 @@ function getSpecifications(item) {
             console.log(`Найдена колонка "${column}" со значением:`, item[column]);
             if (item[column] && item[column].toString().trim() !== '') {
                 const specs = item[column].toString().trim();
+                
+                // Проверяем, не дублирует ли это описание
+                if (isDuplicateOfDescription(specs)) {
+                    console.log(`⚠️ Колонка "${column}" содержит дублирование описания, пропускаем`);
+                    continue;
+                }
+                
                 console.log(`✅ НАЙДЕНЫ характеристики в колонке "${column}":`, specs);
                 return specs;
             }
@@ -267,13 +597,19 @@ function getSpecifications(item) {
     }
     
     console.log('Точные совпадения не найдены. Ищем по ключевым словам...');
-    // Дополнительный поиск: ищем колонки, содержащие ключевые слова
+    // Дополнительный поиск: ищем колонки, содержащие ключевые слова (исключаем "описан")
     const keywords = [
         'характеристик', 'параметр', 'spec', 'техническ', 'свойств', 
-        'описан', 'feature', 'property', 'detail'
+        'feature', 'property', 'detail'
     ];
     
     for (const key of Object.keys(item)) {
+        // Пропускаем колонку с описанием
+        if (key.toLowerCase().includes('описан')) {
+            console.log(`Пропускаем колонку "${key}" (содержит "описан")`);
+            continue;
+        }
+        
         const lowerKey = key.toLowerCase().replace(/\s+/g, '');
         console.log(`Проверяем ключ "${key}" (нормализованный: "${lowerKey}")`);
         
@@ -282,6 +618,13 @@ function getSpecifications(item) {
                 console.log(`Найдено ключевое слово "${keyword}" в колонке "${key}"`);
                 if (item[key] && item[key].toString().trim() !== '') {
                     const specs = item[key].toString().trim();
+                    
+                    // Проверяем, не дублирует ли это описание
+                    if (isDuplicateOfDescription(specs)) {
+                        console.log(`⚠️ Колонка "${key}" содержит дублирование описания, пропускаем`);
+                        continue;
+                    }
+                    
                     console.log(`✅ НАЙДЕНЫ характеристики в колонке с ключевым словом "${key}":`, specs);
                     return specs;
                 }
@@ -296,13 +639,81 @@ function getSpecifications(item) {
         const key = keys[i];
         const value = item[key];
         if (value && value.toString().trim() !== '' && value.toString().length > 10) {
+            const valueStr = value.toString().trim();
+            
+            // Проверяем, не дублирует ли это описание
+            if (isDuplicateOfDescription(valueStr)) {
+                console.log(`⚠️ Колонка ${i+1} ("${key}") содержит дублирование описания, пропускаем`);
+                continue;
+            }
+            
             // Проверяем, похоже ли на характеристики (содержит двоеточия, цифры, единицы измерения)
-            const valueStr = value.toString();
             if (valueStr.includes(':') || valueStr.includes('мм') || valueStr.includes('см') || 
                 valueStr.includes('кг') || valueStr.includes('В') || valueStr.includes('Вт') ||
                 /\d+\s*[а-яё]+/i.test(valueStr)) {
                 console.log(`✅ НАЙДЕНЫ характеристики в колонке ${i+1} ("${key}"):`, valueStr);
-                return valueStr.trim();
+                return valueStr;
+            }
+        }
+    }
+    
+    console.log('Пытаемся найти любую подходящую колонку с техническими данными...');
+    // Последняя попытка: ищем любую колонку с техническими данными
+    for (const key of Object.keys(item)) {
+        const value = item[key];
+        if (value && value.toString().trim() !== '') {
+            const valueStr = value.toString().trim();
+            
+            // Пропускаем очевидно не подходящие колонки
+            const lowerKey = key.toLowerCase();
+            if (lowerKey.includes('наименован') || lowerKey.includes('название') || 
+                lowerKey.includes('категор') || lowerKey.includes('применен') ||
+                lowerKey === 'id' || lowerKey === 'sourcesheet' || lowerKey === 'sourcetitle') {
+                continue;
+            }
+            
+            // Если это не описание и содержит техническую информацию
+            if (!isDuplicateOfDescription(valueStr) && valueStr.length > 15) {
+                // Проверяем на наличие технических признаков
+                const hasTechnicalContent = 
+                    valueStr.includes('мм') || valueStr.includes('см') || valueStr.includes('м') ||
+                    valueStr.includes('кг') || valueStr.includes('г') ||
+                    valueStr.includes('В') || valueStr.includes('Вт') || valueStr.includes('А') ||
+                    valueStr.includes('°C') || valueStr.includes('градус') ||
+                    valueStr.includes('МПа') || valueStr.includes('бар') ||
+                    valueStr.includes('об/мин') || valueStr.includes('rpm') ||
+                    /\d+\s*[x×]\s*\d+/i.test(valueStr) || // размеры типа 100x200
+                    /\d+\s*[-–]\s*\d+/i.test(valueStr) || // диапазоны типа 10-20
+                    valueStr.includes(':') || // списки характеристик
+                    /\d+\s*[а-яё]{2,}/i.test(valueStr); // числа с единицами измерения
+                
+                if (hasTechnicalContent) {
+                    console.log(`✅ НАЙДЕНЫ характеристики в колонке "${key}" (техническое содержимое):`, valueStr);
+                    return valueStr;
+                }
+            }
+        }
+    }
+    
+    // Если все еще не найдены, попробуем взять любую непустую колонку, кроме основных
+    console.log('Ищем любую подходящую колонку...');
+    for (const key of Object.keys(item)) {
+        const value = item[key];
+        if (value && value.toString().trim() !== '') {
+            const valueStr = value.toString().trim();
+            const lowerKey = key.toLowerCase();
+            
+            // Исключаем основные колонки
+            if (lowerKey.includes('наименован') || lowerKey.includes('название') || 
+                lowerKey.includes('категор') || lowerKey.includes('применен') ||
+                lowerKey.includes('описан') || lowerKey === 'id' || 
+                lowerKey === 'sourcesheet' || lowerKey === 'sourcetitle') {
+                continue;
+            }
+            
+            if (valueStr.length > 10 && !isDuplicateOfDescription(valueStr)) {
+                console.log(`✅ НАЙДЕНЫ характеристики в колонке "${key}" (резервный вариант):`, valueStr);
+                return valueStr;
             }
         }
     }
@@ -710,14 +1121,53 @@ function createEquipmentRow(equipment) {
     return row;
 }
 
-// Создание изображения оборудования
+// Создание изображения оборудования с множественными fallback вариантами
 function createEquipmentImage(imageUrl) {
-    if (imageUrl && imageUrl.trim() && imageUrl.startsWith('http')) {
+    if (imageUrl && imageUrl.trim() && isValidImageUrl(imageUrl)) {
+        // Для imgbb генерируем несколько вариантов URL для fallback
+        const fallbackUrls = [];
+        
+        if (imageUrl.includes('ibb.co/')) {
+            const match = imageUrl.match(/ibb\.co\/([a-zA-Z0-9]+)/);
+            if (match && match[1]) {
+                const id = match[1];
+                fallbackUrls.push(
+                    `https://i.ibb.co/${id}/${id}.jpg`,
+                    `https://i.ibb.co/${id}/${id}.png`,
+                    `https://i.ibb.co/${id}/image.jpg`,
+                    `https://i.ibb.co/${id}/image.png`,
+                    imageUrl // оригинальная ссылка как последний вариант
+                );
+            }
+        } else {
+            fallbackUrls.push(imageUrl);
+        }
+        
+        const fallbackScript = fallbackUrls.length > 1 ? 
+            `
+            var fallbacks = ${JSON.stringify(fallbackUrls)};
+            var currentIndex = 0;
+            this.onerror = function() {
+                currentIndex++;
+                if (currentIndex < fallbacks.length) {
+                    this.src = fallbacks[currentIndex];
+                } else {
+                    this.style.display='none'; 
+                    this.nextElementSibling.style.display='flex';
+                }
+            };
+            ` : 
+            `this.style.display='none'; this.nextElementSibling.style.display='flex';`;
+        
         return `
-            <img src="${imageUrl}" 
+            <img src="${fallbackUrls[0]}" 
                  alt="Изображение оборудования" 
                  class="equipment-image" 
-                 onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+                 loading="lazy"
+                 onerror="${fallbackScript}"
+                 onload="this.style.opacity='1';"
+                 style="opacity: 0; transition: opacity 0.3s ease;"
+                 data-original-url="${imageUrl}">
             <div class="equipment-image-placeholder" style="display: none;">
                 <i class="fas fa-microscope"></i>
             </div>
@@ -875,12 +1325,15 @@ function showEquipmentModal(equipmentId) {
 
 // Создание большого изображения для модального окна
 function createEquipmentImageLarge(imageUrl) {
-    if (imageUrl && imageUrl.trim() && imageUrl.startsWith('http')) {
+    if (imageUrl && imageUrl.trim() && isValidImageUrl(imageUrl)) {
         return `
             <img src="${imageUrl}" 
                  alt="Изображение оборудования" 
                  class="equipment-modal-image" 
-                 onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+                 loading="lazy"
+                 onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+                 onload="this.style.opacity='1';"
+                 style="opacity: 0; transition: opacity 0.3s ease;">
             <div class="equipment-image-placeholder equipment-modal-image" style="display: none;">
                 <i class="fas fa-microscope fa-3x"></i>
             </div>

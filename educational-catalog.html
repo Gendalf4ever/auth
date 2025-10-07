@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Обучающий каталог оборудования - CODENT Education</title>
+    <title>Обучающий каталог оборудования - CODENT Обучение</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="css/style.css">
@@ -14,7 +14,7 @@
     <nav class="navbar navbar-expand-lg navbar-dark">
         <div class="container">
             <a class="navbar-brand" href="index.html">
-                <i class="fas fa-graduation-cap me-2"></i>CODENT Education
+                <i class="fas fa-graduation-cap me-2"></i>CODENT Обучение
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
@@ -67,18 +67,26 @@
     </nav>
 
     <!-- Основной контент -->
-    <div class="container py-5">
-        <div class="row">
-            <div class="col-12">
-                <!-- Заголовок страницы -->
-                <div class="educational-header text-center mb-5">
-                    <h1 class="display-4 mb-3">
+    <div class="catalog-wrapper">
+        <!-- Hero секция -->
+        <section class="catalog-hero py-5">
+            <div class="container">
+                <div class="text-center">
+                    <h1 class="display-4 mb-3 text-white">
                         <i class="fas fa-microscope me-3"></i>Обучающий каталог оборудования
                     </h1>
-                    <p class="lead text-white" style="text-shadow: 2px 2px 4px rgba(0,0,0,0.5); font-weight: 500;">
+                    <p class="lead text-white mb-0">
                         Изучайте характеристики и особенности стоматологического оборудования для цифровой стоматологии
                     </p>
                 </div>
+            </div>
+        </section>
+
+        <!-- Контент каталога -->
+        <section class="catalog-content py-5">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
 
                 <!-- Фильтры и поиск -->
                 <div class="filter-section mb-4">
@@ -159,9 +167,10 @@
                             <!-- Пагинация будет создана динамически -->
                         </ul>
                     </nav>
+                    </div>
                 </div>
             </div>
-        </div>
+        </section>
     </div>
 
     <!-- Модальное окно для детального просмотра оборудования -->
@@ -187,7 +196,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-6">
-                    <h5>CODENT Education</h5>
+                    <h5>CODENT Обучение</h5>
                     <p>CODENT Обучение для стоматологов</p>
                 </div>
                 <div class="col-md-6 text-end">
