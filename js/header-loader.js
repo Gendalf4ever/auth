@@ -100,7 +100,7 @@ class HeaderLoader {
             <nav class="navbar navbar-expand-lg navbar-dark">
                 <div class="container">
                     <a class="navbar-brand" href="${this.basePath}index.html">
-                        <i class="fas fa-graduation-cap me-2"></i>Образовательная платформа
+                        <i class="fas fa-graduation-cap me-2"></i>CODENT Обучение
                     </a>
                     <div class="navbar-nav ms-auto">
                         <a class="nav-link" href="${this.basePath}index.html">
