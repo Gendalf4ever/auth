@@ -746,6 +746,169 @@ footer .col-md-6 {
     }
 }
 
+/* ==================== Стили для карточек введения ==================== */
+.introduction-wrapper {
+    margin-top: 1400px;
+    margin-bottom: 50px;
+    padding: 80px 0;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+}
+
+.introduction-section {
+    background: transparent;
+    padding: 0 !important;
+}
+
+.intro-section-card {
+    background: white;
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+.intro-section-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+}
+
+.intro-section-card:hover::before {
+    transform: scaleX(1);
+}
+
+.intro-section-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+}
+
+.intro-section-card .section-icon {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 20px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.intro-section-card .section-icon i {
+    font-size: 2.5rem;
+    color: white;
+    transition: all 0.3s ease;
+}
+
+.intro-section-card:hover .section-icon {
+    transform: scale(1.1);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+}
+
+.intro-section-card h5 {
+    color: #2c3e50;
+    font-weight: 600;
+    margin-bottom: 15px;
+}
+
+.intro-section-card p {
+    color: #6c757d;
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+.intro-section-card:hover h5 {
+    color: #667eea;
+}
+
+/* Стили для модальных окон */
+.modal-content {
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+}
+
+.modal-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 15px 15px 0 0;
+    border: none;
+}
+
+.modal-header .btn-close {
+    filter: invert(1);
+}
+
+.feature-box {
+    background: #f8f9fa;
+    border-radius: 10px;
+    border: 1px solid #e9ecef;
+    transition: all 0.3s ease;
+}
+
+.feature-box:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.tech-card {
+    background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+    border-radius: 10px;
+    border: 1px solid #90caf9;
+}
+
+/* Стили для этапов работы */
+.workflow-steps {
+    position: relative;
+}
+
+.step-item {
+    display: flex;
+    align-items: flex-start;
+    position: relative;
+    padding-left: 80px;
+}
+
+.step-number {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+.step-content h6 {
+    color: #2c3e50;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.step-tags {
+    margin-top: 10px;
+}
+
+.step-tags .badge {
+    margin-right: 8px;
+    margin-bottom: 5px;
+}
+
 /* ==================== Стили для главной страницы ==================== */
 
 /* Секция "Почему выбирают нашу платформу" */

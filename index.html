@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Образовательная платформа</title>
+    <title>CODENT Обучение</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="css/style.css">
@@ -15,7 +15,7 @@
     <nav class="navbar navbar-expand-lg navbar-dark">
         <div class="container">
             <a class="navbar-brand" href="#">
-                <i class="fas fa-graduation-cap me-2"></i>Образовательная платформа
+                <i class="fas fa-graduation-cap me-2"></i>CODENT Обучение
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
@@ -30,11 +30,6 @@
                     <li class="nav-item">
                         <a class="nav-link" href="courses.html" id="courses-link">
                             <i class="fas fa-play-circle me-1"></i>Курсы
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="introduction/index.html">
-                            <i class="fas fa-book me-1"></i>Введение
                         </a>
                     </li>
                     <li class="nav-item">
@@ -81,7 +76,7 @@
     <div id="home-page">
         <section class="hero-section text-center">
             <div class="container">
-                <h1 class="display-4 mb-4">Образовательная платформа для стоматологов</h1>
+                <h1 class="display-4 mb-4">CODENT Обучение для стоматологов</h1>
                 <p class="lead mb-5">Освойте современные технологии CAD/CAM и цифровую стоматологию с помощью наших курсов</p>
                 
                 <!-- Приветствие для новых пользователей -->
@@ -92,9 +87,9 @@
                         </div>
                         <h3>Добро пожаловать!</h3>
                         <p>Рекомендуем начать с вводного курса, чтобы ознакомиться с современными технологиями в стоматологии</p>
-                        <a href="introduction.html" class="btn btn-primary btn-lg">
-                            <i class="fas fa-play-circle me-2"></i>Начать введение
-                        </a>
+                         <a href="courses.html" class="btn btn-primary btn-lg">
+                             <i class="fas fa-play-circle me-2"></i>Начать обучение
+                         </a>
                     </div>
                 </div>
 
@@ -116,12 +111,275 @@
                     <a href="#" class="btn btn-light btn-lg me-3" id="start-learning-btn">
                         <i class="fas fa-play me-2"></i>Начать обучение
                     </a>
-                    <a href="introduction.html" class="btn btn-outline-light btn-lg">
-                        <i class="fas fa-info-circle me-2"></i>Обзор технологий
-                    </a>
+                     <a href="#introduction-section" class="btn btn-outline-light btn-lg">
+                         <i class="fas fa-info-circle me-2"></i>Обзор технологий
+                     </a>
                 </div>
             </div>
         </section>
+
+        <!-- Блок-контейнер для разделов введения -->
+        <div class="introduction-wrapper">
+            <section class="introduction-section py-5" id="introduction-section">
+                <div class="container">
+                    <h2 class="text-center mb-5">Выберите раздел для изучения</h2>
+                    <div class="row g-4">
+                        <!-- Современная стоматология -->
+                        <div class="col-md-6">
+                            <div class="intro-section-card h-100 p-4 text-center" data-bs-toggle="modal" data-bs-target="#modernDentistryModal">
+                                <div class="section-icon mb-3">
+                                    <i class="fas fa-tooth"></i>
+                                </div>
+                                <h5 class="card-title">Современная стоматология</h5>
+                                <p class="card-text">Цифровые технологии, имплантология, эстетическая стоматология</p>
+                            </div>
+                        </div>
+                        
+                        <!-- CAD/CAM системы -->
+                        <div class="col-md-6">
+                            <div class="intro-section-card h-100 p-4 text-center" data-bs-toggle="modal" data-bs-target="#cadcamModal">
+                                <div class="section-icon mb-3">
+                                    <i class="fas fa-cube"></i>
+                                </div>
+                                <h5 class="card-title">CAD/CAM системы</h5>
+                                <p class="card-text">Компьютерное проектирование и автоматизированное производство</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Этапы работы -->
+                        <div class="col-md-6">
+                            <div class="intro-section-card h-100 p-4 text-center" data-bs-toggle="modal" data-bs-target="#workflowModal">
+                                <div class="section-icon mb-3">
+                                    <i class="fas fa-cogs"></i>
+                                </div>
+                                <h5 class="card-title">Этапы работы</h5>
+                                <p class="card-text">От виртуального отпечатка до готовой реставрации</p>
+                            </div>
+                        </div>
+                        
+                        <!-- 3D печать -->
+                        <div class="col-md-6">
+                            <div class="intro-section-card h-100 p-4 text-center" data-bs-toggle="modal" data-bs-target="#printingModal">
+                                <div class="section-icon mb-3">
+                                    <i class="fas fa-print"></i>
+                                </div>
+                                <h5 class="card-title">3D печать</h5>
+                                <p class="card-text">Технологии SLA, DLP, SLS и их применение</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Модальные окна -->
+        <!-- Модальное окно: Современная стоматология -->
+        <div class="modal fade" id="modernDentistryModal" tabindex="-1">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">
+                            <i class="fas fa-tooth me-2"></i>Современная стоматология
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Современная стоматология объединяет передовые технологии и инновационные подходы для обеспечения высококачественного лечения.</p>
+                        
+                        <h6>Ключевые направления:</h6>
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-4">
+                                <div class="feature-box text-center p-3">
+                                    <i class="fas fa-microscope text-primary mb-2" style="font-size: 2rem;"></i>
+                                    <h6>Цифровая диагностика</h6>
+                                    <p class="small">3D сканирование и анализ</p>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="feature-box text-center p-3">
+                                    <i class="fas fa-tooth text-primary mb-2" style="font-size: 2rem;"></i>
+                                    <h6>Имплантология</h6>
+                                    <p class="small">Современные имплантаты</p>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="feature-box text-center p-3">
+                                    <i class="fas fa-smile text-primary mb-2" style="font-size: 2rem;"></i>
+                                    <h6>Эстетическая стоматология</h6>
+                                    <p class="small">Красивая улыбка</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <a href="introduction/modern-dentistry.html" class="btn btn-primary">Подробнее</a>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Модальное окно: CAD/CAM системы -->
+        <div class="modal fade" id="cadcamModal" tabindex="-1">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">
+                            <i class="fas fa-cube me-2"></i>CAD/CAM системы
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>CAD/CAM технологии революционизировали стоматологию, обеспечивая точное проектирование и изготовление реставраций.</p>
+                        
+                        <h6>Компоненты CAD/CAM системы:</h6>
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-4">
+                                <div class="feature-box text-center p-3">
+                                    <i class="fas fa-camera text-primary mb-2" style="font-size: 2rem;"></i>
+                                    <h6>Сканирование</h6>
+                                    <p class="small">Интраоральные сканеры для получения цифровых отпечатков</p>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="feature-box text-center p-3">
+                                    <i class="fas fa-drafting-compass text-primary mb-2" style="font-size: 2rem;"></i>
+                                    <h6>Проектирование (CAD)</h6>
+                                    <p class="small">Компьютерное проектирование реставраций</p>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="feature-box text-center p-3">
+                                    <i class="fas fa-cog text-primary mb-2" style="font-size: 2rem;"></i>
+                                    <h6>Изготовление (CAM)</h6>
+                                    <p class="small">Автоматическое производство реставраций</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <h6>Преимущества CAD/CAM:</h6>
+                        <ul>
+                            <li><strong>Скорость:</strong> Изготовление за один визит</li>
+                            <li><strong>Точность:</strong> Цифровая точность до микрон</li>
+                            <li><strong>Качество:</strong> Стабильные результаты</li>
+                            <li><strong>Комфорт:</strong> Без традиционных отпечатков</li>
+                        </ul>
+                    </div>
+                    <div class="modal-footer">
+                        <a href="introduction/cadcam-systems.html" class="btn btn-primary">Подробнее</a>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Модальное окно: Этапы работы -->
+        <div class="modal fade" id="workflowModal" tabindex="-1">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">
+                            <i class="fas fa-cogs me-2"></i>Этапы работы CAD/CAM
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="workflow-steps">
+                            <div class="step-item mb-4">
+                                <div class="step-number">1</div>
+                                <div class="step-content">
+                                    <h6>Виртуальный отпечаток</h6>
+                                    <p>С помощью интраорального сканера создается точная 3D модель полости рта пациента</p>
+                                    <div class="step-tags">
+                                        <span class="badge bg-info">Точное сканирование</span>
+                                        <span class="badge bg-info">Цифровая модель</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="step-item mb-4">
+                                <div class="step-number">2</div>
+                                <div class="step-content">
+                                    <h6>Моделирование</h6>
+                                    <p>Специалист работает с виртуальной 3D моделью, создавая разные варианты реставраций</p>
+                                    <div class="step-tags">
+                                        <span class="badge bg-success">3D моделирование</span>
+                                        <span class="badge bg-success">Индивидуальный подход</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="step-item mb-4">
+                                <div class="step-number">3</div>
+                                <div class="step-content">
+                                    <h6>Фрезерование</h6>
+                                    <p>Автоматическое изготовление реставрации из выбранного материала на фрезерном станке</p>
+                                    <div class="step-tags">
+                                        <span class="badge bg-warning">Автоматизация</span>
+                                        <span class="badge bg-warning">Высокая точность</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <a href="introduction/workflow-stages.html" class="btn btn-primary">Подробнее</a>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Модальное окно: 3D печать -->
+        <div class="modal fade" id="printingModal" tabindex="-1">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">
+                            <i class="fas fa-print me-2"></i>3D печать в стоматологии
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>3D печать открывает новые возможности в стоматологии для создания точных и индивидуальных решений.</p>
+                        
+                        <h6>Технологии 3D печати:</h6>
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-4">
+                                <div class="tech-card text-center p-3">
+                                    <h6>SLA/SL</h6>
+                                    <p class="small">Стереолитография - высокая точность для моделей и хирургических шаблонов</p>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="tech-card text-center p-3">
+                                    <h6>DLP</h6>
+                                    <p class="small">Цифровая обработка света - быстрая печать с отличным качеством поверхности</p>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="tech-card text-center p-3">
+                                    <h6>SLS</h6>
+                                    <p class="small">Селективное лазерное спекание - прочные функциональные детали</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <h6>Применение в стоматологии:</h6>
+                        <ul>
+                            <li>Хирургические шаблоны для имплантации</li>
+                            <li>Модели для планирования лечения</li>
+                            <li>Временные реставрации</li>
+                            <li>Ортодонтические аппараты</li>
+                        </ul>
+                    </div>
+                    <div class="modal-footer">
+                        <a href="introduction/3d-printing.html" class="btn btn-primary">Подробнее</a>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <!-- Преимущества платформы -->
         <section class="features-section py-5">
@@ -244,7 +502,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-6">
-                    <h5>Образовательная платформа</h5>
+                    <h5>CODENT Обучение</h5>
                     <p>Современное обучение для стоматологов</p>
                 </div>
                 <div class="col-md-6 text-end">
