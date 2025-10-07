@@ -173,7 +173,9 @@ async function checkUserRole(uid) {
             
             if (role === 'admin') {
                 // Пользователь - администратор
-                adminName.textContent = adminCurrentUser.displayName || adminCurrentUser.email;
+                if (adminName) {
+                    adminName.textContent = adminCurrentUser.displayName || adminCurrentUser.email;
+                }
                 console.log('Доступ к панели администратора разрешен');
             } else {
                 // Пользователь не администратор

@@ -11,7 +11,7 @@ function initializeFirebase() {
 
 // Глобальные переменные для профиля
 let profileCurrentUser = null;
-let isAdmin = false;
+let profileIsAdmin = false;
 let currentTab = 'profile';
 
 // Элементы DOM
@@ -87,11 +87,11 @@ async function checkUserRoleAndLoadProfile() {
         // Используем новую систему управления ролями, если доступна
         if (typeof RoleManager !== 'undefined') {
             const role = await RoleManager.getCurrentUserRole();
-            isAdmin = await RoleManager.isAdmin();
+            profileIsAdmin = await RoleManager.profileIsAdmin();
         } else {
             // Fallback к старой системе
             const role = await checkUserRole(currentUser.uid);
-            isAdmin = role === 'admin';
+            profileIsAdmin = role === 'admin';
         }
         
         loadUserProfile();
@@ -176,16 +176,16 @@ function loadTabData(tabName) {
             loadUserProgress();
             break;
         case 'admin-users':
-            if (isAdmin) loadAdminUsers();
+            if (profileIsAdmin) loadAdminUsers();
             break;
         case 'admin-courses':
-            if (isAdmin) loadAdminCourses();
+            if (profileIsAdmin) loadAdminCourses();
             break;
         case 'admin-products':
-            if (isAdmin) loadAdminProducts();
+            if (profileIsAdmin) loadAdminProducts();
             break;
         case 'admin-analytics':
-            if (isAdmin) loadAdminAnalytics();
+            if (profileIsAdmin) loadAdminAnalytics();
             break;
     }
 }
@@ -421,7 +421,7 @@ async function loadUserProgress() {
 
 // Настройка админских функций
 function setupAdminFeatures() {
-    if (!isAdmin) return;
+    if (!profileIsAdmin) return;
     
     // Показываем админские вкладки
     document.querySelectorAll('.admin-only').forEach(element => {

@@ -21,7 +21,16 @@ body {
     top: 0;
     left: 0;
     right: 0;
+    width: 100vw;
     z-index: 1000;
+    min-height: 56px;
+}
+
+.navbar .container {
+    max-width: 100%;
+    width: 100%;
+    padding-left: 15px;
+    padding-right: 15px;
 }
 
 /* Отступ для контента под fixed navbar */
@@ -711,7 +720,8 @@ footer .col-md-6 {
     min-height: 50vh !important;
     width: 100vw;
     margin-left: calc(-50vw + 50%);
-    padding: 60px 20px !important;
+    padding: 80px 20px 60px 20px !important;
+    margin-top: 0 !important;
     display: flex;
     align-items: center;
     justify-content: center;

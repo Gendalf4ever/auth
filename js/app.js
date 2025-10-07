@@ -42,7 +42,7 @@ function showPage(page) {
     if (!page) return;
     
     // Массив всех страниц для скрытия
-    const allPages = [homePage, coursesPage, adminPage, loginPage, registerPage, videoPlayerPage, createCoursePage, courseDetailPage];
+    const allPages = [homePage, adminPage, loginPage, registerPage, videoPlayerPage, createCoursePage, courseDetailPage];
     
     // Скрыть все страницы
     allPages.forEach(pageElement => {
@@ -72,8 +72,6 @@ function updateActiveNavLink(activePage) {
     // Добавить активный класс к соответствующей ссылке
     if (activePage === homePage && homeLink) {
         homeLink.classList.add('active');
-    } else if (activePage === coursesPage && coursesLink) {
-        coursesLink.classList.add('active');
     } else if (activePage === adminPage && adminLink) {
         adminLink.classList.add('active');
     }
@@ -236,17 +234,7 @@ if (homeLink) {
     });
 }
 
-if (coursesLink) {
-    coursesLink.addEventListener('click', (e) => {
-        e.preventDefault();
-        if (currentUser) {
-            showPage(coursesPage);
-            if (typeof loadCourses === 'function') loadCourses();
-        } else {
-            showPage(loginPage);
-        }
-    });
-}
+// Убрали обработчик для coursesLink - теперь используется прямая ссылка на courses.html
 
 if (adminLink) {
     adminLink.addEventListener('click', (e) => {
@@ -280,20 +268,14 @@ if (startLearningBtn) {
 if (continueLearningBtn) {
     continueLearningBtn.addEventListener('click', (e) => {
         e.preventDefault();
-        showPage(coursesPage);
-        if (typeof loadCourses === 'function') loadCourses();
+        window.location.href = 'courses.html';
     });
 }
 
 if (viewAllCoursesBtn) {
     viewAllCoursesBtn.addEventListener('click', (e) => {
         e.preventDefault();
-        if (currentUser) {
-            showPage(coursesPage);
-            if (typeof loadCourses === 'function') loadCourses();
-        } else {
-            showPage(loginPage);
-        }
+        window.location.href = 'courses.html';
     });
 }
 
@@ -305,8 +287,7 @@ function handleStartLearning() {
             window.location.href = 'introduction.html';
         } else {
             // Существующий пользователь - показываем курсы
-            showPage(coursesPage);
-            if (typeof loadCourses === 'function') loadCourses();
+            window.location.href = 'courses.html';
         }
     } else {
         // Не авторизован - показываем страницу входа
