@@ -751,23 +751,48 @@ footer .col-md-6 {
     margin-top: 1400px;
     margin-bottom: 50px;
     padding: 80px 0;
-    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #7e22ce 100%);
+    position: relative;
+}
+
+.introduction-wrapper::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    pointer-events: none;
 }
 
 .introduction-section {
     background: transparent;
     padding: 0 !important;
+    position: relative;
+    z-index: 1;
+}
+
+.introduction-section h2 {
+    color: white;
+    font-weight: 700;
+    font-size: 3rem;
+    text-align: center;
+    margin-bottom: 50px;
+    text-shadow: 0 4px 15px rgba(0,0,0,0.3);
 }
 
 .intro-section-card {
-    background: white;
-    border: none;
-    border-radius: 15px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-    transition: all 0.3s ease;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     cursor: pointer;
     position: relative;
     overflow: hidden;
+    padding: 30px 20px;
 }
 
 .intro-section-card::before {
@@ -776,94 +801,208 @@ footer .col-md-6 {
     top: 0;
     left: 0;
     right: 0;
-    height: 4px;
-    background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+    height: 5px;
+    background: linear-gradient(90deg, #3b82f6 0%, #8b5cf6 50%, #ec4899 100%);
     transform: scaleX(0);
-    transition: transform 0.3s ease;
+    transition: transform 0.4s ease;
+}
+
+.intro-section-card::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(59, 130, 246, 0.1) 0%, transparent 70%);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s ease, height 0.6s ease;
 }
 
 .intro-section-card:hover::before {
     transform: scaleX(1);
 }
 
+.intro-section-card:hover::after {
+    width: 300px;
+    height: 300px;
+}
+
 .intro-section-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+    transform: translateY(-12px) scale(1.02);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+    background: rgba(255, 255, 255, 1);
+    border-color: rgba(59, 130, 246, 0.5);
 }
 
 .intro-section-card .section-icon {
-    width: 80px;
-    height: 80px;
-    margin: 0 auto 20px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    width: 100px;
+    height: 100px;
+    margin: 0 auto 25px;
+    background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 50%, #ec4899 100%);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.3s ease;
+    transition: all 0.4s ease;
+    box-shadow: 0 8px 25px rgba(59, 130, 246, 0.5);
+    position: relative;
+    z-index: 2;
+}
+
+.intro-section-card .section-icon::before {
+    content: '';
+    position: absolute;
+    top: -5px;
+    left: -5px;
+    right: -5px;
+    bottom: -5px;
+    background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 50%, #ec4899 100%);
+    border-radius: 50%;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(1.1);
+        opacity: 0.3;
+    }
 }
 
 .intro-section-card .section-icon i {
-    font-size: 2.5rem;
+    font-size: 3rem;
     color: white;
-    transition: all 0.3s ease;
+    transition: all 0.4s ease;
+    position: relative;
+    z-index: 3;
 }
 
 .intro-section-card:hover .section-icon {
+    transform: scale(1.15) rotate(5deg);
+    box-shadow: 0 15px 40px rgba(59, 130, 246, 0.7);
+}
+
+.intro-section-card:hover .section-icon::before {
+    opacity: 1;
+}
+
+.intro-section-card:hover .section-icon i {
     transform: scale(1.1);
-    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
 }
 
 .intro-section-card h5 {
-    color: #2c3e50;
-    font-weight: 600;
+    color: #1e293b;
+    font-weight: 700;
     margin-bottom: 15px;
+    font-size: 1.4rem;
+    position: relative;
+    z-index: 2;
+    transition: all 0.3s ease;
 }
 
 .intro-section-card p {
-    color: #6c757d;
-    font-size: 0.95rem;
-    line-height: 1.5;
+    color: #64748b;
+    font-size: 1rem;
+    line-height: 1.6;
+    position: relative;
+    z-index: 2;
+    transition: all 0.3s ease;
 }
 
 .intro-section-card:hover h5 {
-    color: #667eea;
+    color: #3b82f6;
+    transform: translateY(-3px);
+}
+
+.intro-section-card:hover p {
+    color: #475569;
 }
 
 /* Стили для модальных окон */
 .modal-content {
     border: none;
-    border-radius: 15px;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+    border-radius: 20px;
+    box-shadow: 0 25px 70px rgba(0,0,0,0.3);
+    overflow: hidden;
 }
 
 .modal-header {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 50%, #ec4899 100%);
     color: white;
-    border-radius: 15px 15px 0 0;
+    border-radius: 20px 20px 0 0;
     border: none;
+    padding: 25px 30px;
+}
+
+.modal-header h5 {
+    font-weight: 700;
+    font-size: 1.75rem;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.2);
 }
 
 .modal-header .btn-close {
-    filter: invert(1);
+    filter: invert(1) brightness(2);
+    opacity: 0.9;
+    transition: all 0.3s ease;
+}
+
+.modal-header .btn-close:hover {
+    opacity: 1;
+    transform: rotate(90deg);
+}
+
+.modal-body {
+    padding: 30px;
 }
 
 .feature-box {
-    background: #f8f9fa;
-    border-radius: 10px;
-    border: 1px solid #e9ecef;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e3f2fd 100%);
+    border-radius: 12px;
+    border: 2px solid #e9ecef;
     transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.feature-box::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: linear-gradient(180deg, #3b82f6 0%, #8b5cf6 100%);
+    transform: scaleY(0);
+    transition: transform 0.3s ease;
 }
 
 .feature-box:hover {
     transform: translateY(-3px);
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    box-shadow: 0 8px 25px rgba(59, 130, 246, 0.2);
+    border-color: #3b82f6;
+}
+
+.feature-box:hover::before {
+    transform: scaleY(1);
 }
 
 .tech-card {
-    background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
-    border-radius: 10px;
-    border: 1px solid #90caf9;
+    background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+    border-radius: 12px;
+    border: 2px solid #93c5fd;
+    transition: all 0.3s ease;
+}
+
+.tech-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(59, 130, 246, 0.25);
 }
 
 /* Стили для этапов работы */
@@ -876,28 +1015,42 @@ footer .col-md-6 {
     align-items: flex-start;
     position: relative;
     padding-left: 80px;
+    margin-bottom: 20px;
 }
 
 .step-number {
     position: absolute;
     left: 0;
     top: 0;
-    width: 50px;
-    height: 50px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
     color: white;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     font-weight: bold;
-    font-size: 1.2rem;
+    font-size: 1.4rem;
+    box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+    transition: all 0.3s ease;
+}
+
+.step-item:hover .step-number {
+    transform: scale(1.1);
+    box-shadow: 0 10px 30px rgba(59, 130, 246, 0.6);
 }
 
 .step-content h6 {
-    color: #2c3e50;
-    font-weight: 600;
+    color: #1e293b;
+    font-weight: 700;
     margin-bottom: 10px;
+    font-size: 1.2rem;
+}
+
+.step-content p {
+    color: #64748b;
+    line-height: 1.6;
 }
 
 .step-tags {
@@ -907,6 +1060,11 @@ footer .col-md-6 {
 .step-tags .badge {
     margin-right: 8px;
     margin-bottom: 5px;
+    padding: 6px 12px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+    border: none;
 }
 
 /* ==================== Стили для каталога оборудования ==================== */
@@ -1312,5 +1470,58 @@ footer .col-md-6 {
     
     footer p {
         font-size: 0.9rem;
+    }
+    
+    /* Адаптация блока введения для мобильных */
+    .introduction-wrapper {
+        padding: 60px 15px;
+    }
+    
+    .introduction-section h2 {
+        font-size: 1.75rem;
+        margin-bottom: 30px;
+    }
+    
+    .intro-section-card {
+        padding: 25px 15px;
+        margin-bottom: 20px;
+    }
+    
+    .intro-section-card .section-icon {
+        width: 70px;
+        height: 70px;
+    }
+    
+    .intro-section-card .section-icon i {
+        font-size: 2rem;
+    }
+    
+    .intro-section-card h5 {
+        font-size: 1.2rem;
+    }
+    
+    .intro-section-card p {
+        font-size: 0.9rem;
+    }
+}
+
+/* Дополнительные адаптивные стили для планшетов */
+@media (max-width: 992px) {
+    .introduction-wrapper {
+        padding: 70px 20px;
+    }
+    
+    .introduction-section h2 {
+        font-size: 2.5rem;
+        margin-bottom: 40px;
+    }
+    
+    .intro-section-card .section-icon {
+        width: 90px;
+        height: 90px;
+    }
+    
+    .intro-section-card .section-icon i {
+        font-size: 2.5rem;
     }
 }
