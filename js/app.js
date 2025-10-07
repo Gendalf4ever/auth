@@ -244,12 +244,7 @@ if (adminLink) {
     });
 }
 
-if (loginLink) {
-    loginLink.addEventListener('click', (e) => {
-        e.preventDefault();
-        showPage(loginPage);
-    });
-}
+// Убрали обработчик для loginLink - теперь используется прямая ссылка на login.html
 
 if (logoutLink) {
     logoutLink.addEventListener('click', (e) => {

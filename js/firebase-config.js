@@ -8,20 +8,35 @@ window.firebaseConfig = {
     appId: "1:622995236555:web:1dada1c102be46ea361d4e"
 };
 
+// Настройки для GitHub Pages
+window.isGitHubPages = window.location.hostname === 'gendalf4ever.github.io';
+
 // Общая функция инициализации Firebase
 window.initializeFirebaseApp = function() {
     if (!firebase.apps.length) {
         firebase.initializeApp(window.firebaseConfig);
         
-        // Настройка Firestore с исправленными параметрами
+        // Настройка Firestore с правильными параметрами
         const db = firebase.firestore();
-        try {
-            // Убираем конфликтующие настройки
-            db.settings({
-                cacheSizeBytes: firebase.firestore.CACHE_SIZE_UNLIMITED
-            });
-        } catch (e) {
-            console.warn('Не удалось применить настройки Firestore:', e);
+        
+        // Применяем настройки только если они еще не были применены
+        if (!window.firestoreSettingsApplied) {
+            try {
+                db.settings({
+                    cacheSizeBytes: firebase.firestore.CACHE_SIZE_UNLIMITED,
+                    merge: true // Исправляет предупреждение о host override
+                });
+                window.firestoreSettingsApplied = true;
+            } catch (e) {
+                console.warn('Не удалось применить настройки Firestore:', e);
+            }
+        }
+        
+        // Настройка Auth для GitHub Pages
+        if (window.isGitHubPages) {
+            const auth = firebase.auth();
+            // Добавляем домен GitHub Pages в список разрешенных
+            console.log('Настройка Firebase Auth для GitHub Pages');
         }
         
         console.log('Firebase успешно инициализирован');

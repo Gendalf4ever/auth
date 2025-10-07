@@ -721,7 +721,7 @@ footer .col-md-6 {
     width: 100vw;
     margin-left: calc(-50vw + 50%);
     padding: 80px 20px 60px 20px !important;
-    margin-top: 0 !important;
+    margin-top: 56px !important; /* Отступ для фиксированного header */
     display: flex;
     align-items: center;
     justify-content: center;
