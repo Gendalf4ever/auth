@@ -26,19 +26,6 @@
 
     <!-- Контейнер для вводных материалов -->
     <div class="introduction-container">
-        <!-- Прогресс-бар -->
-        <div class="progress-container">
-            <div class="progress">
-                <div class="progress-bar" id="introduction-progress" role="progressbar" style="width: 25%"></div>
-            </div>
-            <div class="progress-steps">
-                <span class="step active" data-step="1">Обзор</span>
-                <span class="step" data-step="2">Разделы</span>
-                <span class="step" data-step="3">Оборудование</span>
-                <span class="step" data-step="4">Завершение</span>
-            </div>
-        </div>
-
         <!-- Главная страница введения -->
         <div class="introduction-page active" id="page-1">
             <div class="container">
@@ -46,270 +33,77 @@
                     <div class="col-lg-10">
                         <div class="card introduction-card">
                             <div class="card-body">
-                                <h2 class="card-title text-center mb-4">
-                                    <i class="fas fa-graduation-cap me-2"></i>Введение в современную стоматологию
-                                </h2>
-                                
-                                <div class="content-section">
-                                    <p class="lead text-center">Добро пожаловать в мир современной стоматологии и цифровых технологий!</p>
-                                    <p>Это введение познакомит вас с основными разделами нашей образовательной платформы:</p>
-                                </div>
-                                
-                                <div class="content-section mt-4">
-                                    <div class="row">
-                                        <div class="col-md-6 mb-3">
-                                            <div class="intro-section-card">
-                                                <div class="section-icon">
-                                                    <i class="fas fa-tooth"></i>
-                                                </div>
-                                                <h5>Современная стоматология</h5>
-                                                <p>Основы и особенности современной стоматологической практики</p>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6 mb-3">
-                                            <div class="intro-section-card">
-                                                <div class="section-icon">
-                                                    <i class="fas fa-cube"></i>
-                                                </div>
-                                                <h5>CAD/CAM системы</h5>
-                                                <p>Компьютерное проектирование и производство в стоматологии</p>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6 mb-3">
-                                            <div class="intro-section-card">
-                                                <div class="section-icon">
-                                                    <i class="fas fa-cogs"></i>
-                                                </div>
-                                                <h5>Этапы работы</h5>
-                                                <p>Пошаговый процесс создания стоматологических реставраций</p>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6 mb-3">
-                                            <div class="intro-section-card">
-                                                <div class="section-icon">
-                                                    <i class="fas fa-print"></i>
-                                                </div>
-                                                <h5>3D печать</h5>
-                                                <p>Технологии 3D печати и их применение в стоматологии</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <div class="navigation-buttons">
-                                    <button class="btn btn-outline-secondary" onclick="skipIntroduction()">
-                                        <i class="fas fa-forward me-2"></i>Пропустить введение
-                                    </button>
-                                    <button class="btn btn-primary" onclick="nextPage()">
-                                        Начать изучение <i class="fas fa-arrow-right ms-2"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Страница выбора разделов -->
-        <div class="introduction-page" id="page-2">
-            <div class="container">
-                <div class="row justify-content-center">
-                    <div class="col-lg-10">
-                        <div class="card introduction-card">
-                            <div class="card-body">
-                                <h2 class="card-title text-center mb-4">
+                                <h2 class="card-title text-center mb-5">
                                     <i class="fas fa-list me-2"></i>Выберите раздел для изучения
                                 </h2>
                                 
-                                <div class="content-section">
-                                    <div class="row">
-                                        <div class="col-md-6 mb-4">
+                                <!-- Разделы для изучения -->
+                                <div class="content-section mt-4">
+                                    <div class="row g-4">
+                                        <!-- Современная стоматология -->
+                                        <div class="col-md-6">
                                             <a href="modern-dentistry.html" class="section-link">
-                                                <div class="section-card">
+                                                <div class="intro-section-card h-100">
                                                     <div class="section-icon">
                                                         <i class="fas fa-tooth"></i>
                                                     </div>
-                                                    <h4>Современная стоматология</h4>
+                                                    <h5>Современная стоматология</h5>
                                                     <p>Цифровые технологии, имплантология, эстетическая стоматология</p>
-                                                    <div class="section-arrow">
-                                                        <i class="fas fa-arrow-right"></i>
-                                                    </div>
                                                 </div>
                                             </a>
                                         </div>
-                                        <div class="col-md-6 mb-4">
+                                        
+                                        <!-- CAD/CAM системы -->
+                                        <div class="col-md-6">
                                             <a href="cadcam-systems.html" class="section-link">
-                                                <div class="section-card">
+                                                <div class="intro-section-card h-100">
                                                     <div class="section-icon">
                                                         <i class="fas fa-cube"></i>
                                                     </div>
-                                                    <h4>CAD/CAM системы</h4>
+                                                    <h5>CAD/CAM системы</h5>
                                                     <p>Компьютерное проектирование и автоматизированное производство</p>
-                                                    <div class="section-arrow">
-                                                        <i class="fas fa-arrow-right"></i>
-                                                    </div>
                                                 </div>
                                             </a>
                                         </div>
-                                        <div class="col-md-6 mb-4">
+                                        
+                                        <!-- Этапы работы -->
+                                        <div class="col-md-6">
                                             <a href="workflow-stages.html" class="section-link">
-                                                <div class="section-card">
+                                                <div class="intro-section-card h-100">
                                                     <div class="section-icon">
                                                         <i class="fas fa-cogs"></i>
                                                     </div>
-                                                    <h4>Этапы работы</h4>
-                                                    <p>От виртуального оттиска до готовой реставрации</p>
-                                                    <div class="section-arrow">
-                                                        <i class="fas fa-arrow-right"></i>
-                                                    </div>
+                                                    <h5>Этапы работы</h5>
+                                                    <p>От виртуального отпечатка до готовой реставрации</p>
                                                 </div>
                                             </a>
                                         </div>
-                                        <div class="col-md-6 mb-4">
+                                        
+                                        <!-- 3D печать -->
+                                        <div class="col-md-6">
                                             <a href="3d-printing.html" class="section-link">
-                                                <div class="section-card">
+                                                <div class="intro-section-card h-100">
                                                     <div class="section-icon">
                                                         <i class="fas fa-print"></i>
                                                     </div>
-                                                    <h4>3D печать</h4>
+                                                    <h5>3D печать</h5>
                                                     <p>Технологии SLA, DLP, SLS и их применение</p>
-                                                    <div class="section-arrow">
-                                                        <i class="fas fa-arrow-right"></i>
-                                                    </div>
                                                 </div>
                                             </a>
                                         </div>
                                     </div>
                                 </div>
                                 
-                                <div class="navigation-buttons">
-                                    <button class="btn btn-outline-secondary" onclick="prevPage()">
+                                <!-- Навигационные кнопки -->
+                                <div class="navigation-buttons mt-5">
+                                    <a href="../index.html" class="btn btn-outline-secondary">
                                         <i class="fas fa-arrow-left me-2"></i>Назад
-                                    </button>
-                                    <button class="btn btn-outline-secondary" onclick="skipIntroduction()">
+                                    </a>
+                                    <button class="btn btn-outline-primary" onclick="skipIntroduction()">
                                         <i class="fas fa-forward me-2"></i>Пропустить
                                     </button>
-                                    <button class="btn btn-primary" onclick="nextPage()">
+                                    <button class="btn btn-primary" onclick="completeIntroduction()">
                                         Далее <i class="fas fa-arrow-right ms-2"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Страница с оборудованием -->
-        <div class="introduction-page" id="page-3">
-            <div class="container">
-                <div class="row justify-content-center">
-                    <div class="col-lg-12">
-                        <div class="card introduction-card">
-                            <div class="card-body">
-                                <h2 class="card-title text-center mb-4">
-                                    <i class="fas fa-tools me-2"></i>Оборудование и технологии
-                                </h2>
-                                
-                                <div class="content-section">
-                                    <p class="text-center mb-4">Ознакомьтесь с современным оборудованием для стоматологии</p>
-                                    
-                                    <!-- Встроенная Google Sheets таблица -->
-                                    <div class="table-container">
-                                        <iframe 
-                                            src="https://docs.google.com/spreadsheets/d/1Hxmx_tznE64ifvKON4-waL6x7BYQ7plf1nWta5nsMlI/edit?usp=sharing&widget=true&headers=false"
-                                            width="100%" 
-                                            height="600"
-                                            frameborder="0"
-                                            style="border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
-                                        </iframe>
-                                    </div>
-                                    
-                                    <div class="mt-4 text-center">
-                                        <a href="https://docs.google.com/spreadsheets/d/1Hxmx_tznE64ifvKON4-waL6x7BYQ7plf1nWta5nsMlI/edit?usp=sharing" 
-                                           target="_blank" 
-                                           class="btn btn-outline-primary">
-                                            <i class="fas fa-external-link-alt me-2"></i>Открыть в Google Sheets
-                                        </a>
-                                    </div>
-                                </div>
-                                
-                                <div class="navigation-buttons">
-                                    <button class="btn btn-outline-secondary" onclick="prevPage()">
-                                        <i class="fas fa-arrow-left me-2"></i>Назад
-                                    </button>
-                                    <button class="btn btn-outline-secondary" onclick="skipIntroduction()">
-                                        <i class="fas fa-forward me-2"></i>Пропустить
-                                    </button>
-                                    <button class="btn btn-primary" onclick="nextPage()">
-                                        Далее <i class="fas fa-arrow-right ms-2"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Завершающая страница -->
-        <div class="introduction-page" id="page-4">
-            <div class="container">
-                <div class="row justify-content-center">
-                    <div class="col-lg-10">
-                        <div class="card introduction-card">
-                            <div class="card-body">
-                                <div class="completion-section text-center">
-                                    <div class="completion-icon">
-                                        <i class="fas fa-check-circle"></i>
-                                    </div>
-                                    <h2>Введение завершено!</h2>
-                                    <p class="lead">Теперь вы знакомы с основными принципами современной стоматологии и цифровых технологий.</p>
-                                    
-                                    <div class="completion-stats">
-                                        <div class="stat-item">
-                                            <strong>4</strong>
-                                            <span>раздела доступно</span>
-                                        </div>
-                                        <div class="stat-item">
-                                            <strong>7+</strong>
-                                            <span>технологий изучено</span>
-                                        </div>
-                                        <div class="stat-item">
-                                            <strong>100+</strong>
-                                            <span>единиц оборудования</span>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="next-steps mt-4">
-                                        <h4>Что дальше?</h4>
-                                        <div class="row">
-                                            <div class="col-md-4 mb-3">
-                                                <a href="../index.html#courses" class="btn btn-outline-primary w-100">
-                                                    <i class="fas fa-play-circle me-2"></i>Начать курсы
-                                                </a>
-                                            </div>
-                                            <div class="col-md-4 mb-3">
-                                                <a href="index.html" class="btn btn-outline-secondary w-100">
-                                                    <i class="fas fa-redo me-2"></i>Повторить введение
-                                                </a>
-                                            </div>
-                                            <div class="col-md-4 mb-3">
-                                                <a href="../team.html" class="btn btn-outline-info w-100">
-                                                    <i class="fas fa-users me-2"></i>Наша команда
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <div class="navigation-buttons">
-                                    <button class="btn btn-outline-secondary" onclick="prevPage()">
-                                        <i class="fas fa-arrow-left me-2"></i>Назад
-                                    </button>
-                                    <button class="btn btn-success" onclick="completeIntroduction()">
-                                        <i class="fas fa-check me-2"></i>Завершить введение
                                     </button>
                                 </div>
                             </div>
@@ -322,5 +116,16 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script src="../js/introduction.js"></script>
+    <script>
+        // Функция пропуска введения
+        function skipIntroduction() {
+            window.location.href = '../courses.html';
+        }
+        
+        // Функция завершения введения
+        function completeIntroduction() {
+            window.location.href = '../courses.html';
+        }
+    </script>
 </body>
 </html>

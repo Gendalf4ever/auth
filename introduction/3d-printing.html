@@ -170,7 +170,14 @@
                                             <i class="fas fa-laser"></i>
                                         </div>
                                         <div class="tech-title">
-                                            <h5>Стереолитография (SLA/SL)</h5>
+                                            <h5>
+                                                <span class="tech-name" 
+                                                      data-bs-toggle="tooltip" 
+                                                      data-bs-placement="top" 
+                                                      data-bs-title="Стереолитография использует лазер для точного отверждения жидкой фотополимерной смолы слой за слоем. Обеспечивает высочайшую точность и гладкую поверхность изделий.">
+                                                    Стереолитография (SLA/SL)
+                                                </span>
+                                            </h5>
                                         </div>
                                     </div>
                                     
@@ -209,7 +216,14 @@
                                             <i class="fas fa-sun"></i>
                                         </div>
                                         <div class="tech-title">
-                                            <h5>DLP технология</h5>
+                                            <h5>
+                                                <span class="tech-name" 
+                                                      data-bs-toggle="tooltip" 
+                                                      data-bs-placement="top" 
+                                                      data-bs-title="Digital Light Processing - технология цифровой обработки света. Использует проектор для одновременного отверждения целого слоя смолы, что значительно ускоряет процесс печати.">
+                                                    DLP технология
+                                                </span>
+                                            </h5>
                                         </div>
                                     </div>
                                     
@@ -239,7 +253,14 @@
                                             <i class="fas fa-fire"></i>
                                         </div>
                                         <div class="tech-title">
-                                            <h5>SLS технология</h5>
+                                            <h5>
+                                                <span class="tech-name" 
+                                                      data-bs-toggle="tooltip" 
+                                                      data-bs-placement="top" 
+                                                      data-bs-title="Selective Laser Sintering - селективное лазерное спекание. Лазер спекает порошковые материалы (нейлон, металл, керамика) для создания прочных функциональных деталей без необходимости в поддержках.">
+                                                    SLS технология
+                                                </span>
+                                            </h5>
                                         </div>
                                     </div>
                                     
@@ -389,5 +410,14 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Инициализация tooltips
+        document.addEventListener('DOMContentLoaded', function() {
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl);
+            });
+        });
+    </script>
 </body>
 </html>

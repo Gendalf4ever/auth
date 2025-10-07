@@ -7,7 +7,7 @@
 let equipmentData = [];
 let filteredEquipment = [];
 let currentPage = 1;
-let itemsPerPage = 10;
+let itemsPerPage = 10; // Возвращаем нормальную пагинацию
 
 // Элементы DOM
 const loadingEquipment = document.getElementById('loading-equipment');
@@ -54,15 +54,29 @@ function setupEventListeners() {
     // Обновление
     if (refreshEquipmentBtn) {
         refreshEquipmentBtn.addEventListener('click', () => {
+            console.log('Принудительное обновление данных с очисткой кеша...');
+            
+            // Очищаем кеш браузера для Google Sheets
+            if ('caches' in window) {
+                caches.keys().then(names => {
+                    names.forEach(name => {
+                        if (name.includes('google') || name.includes('sheets')) {
+                            caches.delete(name);
+                        }
+                    });
+                });
+            }
+            
             showLoading();
-            loadEquipmentFromGoogleSheets();
+            // Принудительно перезагружаем данные с параметром для обхода кеша
+            loadEquipmentFromGoogleSheets(true);
         });
     }
 }
 
 // Загрузка данных из Google Sheets со всех листов
-async function loadEquipmentFromGoogleSheets() {
-    console.log('Начинаем загрузку оборудования со всех листов...');
+async function loadEquipmentFromGoogleSheets(forceRefresh = false) {
+    console.log('Начинаем загрузку оборудования со всех листов...', forceRefresh ? '(принудительное обновление)' : '');
     
     try {
         // Получаем все листы для обучающего каталога
@@ -86,7 +100,7 @@ async function loadEquipmentFromGoogleSheets() {
         for (const sheetId of sheetsToLoad) {
             try {
                 console.log(`Загружаем данные с листа: ${sheetId}`);
-                const sheetData = await loadSheetData(sheetId);
+                const sheetData = await loadSheetData(sheetId, forceRefresh);
                 
                 if (sheetData && sheetData.length > 0) {
                     // Добавляем информацию о листе к каждому элементу
@@ -128,7 +142,7 @@ async function loadEquipmentFromGoogleSheets() {
 }
 
 // Загрузка данных с конкретного листа
-async function loadSheetData(sheetId) {
+async function loadSheetData(sheetId, forceRefresh = false) {
     const exportUrl = window.sheetConfig.getExportUrl(sheetId);
     
     if (!exportUrl) {
@@ -138,11 +152,15 @@ async function loadSheetData(sheetId) {
     console.log(`Загружаем данные с листа ${sheetId}:`, exportUrl);
     
     try {
-        const response = await fetch(exportUrl, {
+        // Добавляем параметр времени для обхода кеша при принудительном обновлении
+        const finalUrl = forceRefresh ? `${exportUrl}&t=${Date.now()}` : exportUrl;
+        
+        const response = await fetch(finalUrl, {
             method: 'GET',
             headers: {
                 'Accept': 'text/csv,text/plain,*/*',
-            }
+            },
+            cache: forceRefresh ? 'no-cache' : 'default'
         });
         
         if (!response.ok) {
@@ -179,13 +197,16 @@ function transformToEducationalFormat(data) {
         // Определяем применение
         const application = determineApplication(category, item['описание'] || '');
         
+        // Ищем характеристики в разных возможных колонках
+        const specifications = getSpecifications(item);
+        
         return {
             id: item['id'] || '',
             name: cleanEquipmentName(item['наименование'] || 'Без названия'),
             category: category,
             purpose: purpose,
             description: item['описание'] || 'Описание отсутствует',
-            specifications: item['характеристики'] || 'Характеристики не указаны',
+            specifications: specifications,
             image: item['изображение'] || '',
             application: application,
             sourceSheet: item.sourceSheet || '',
@@ -193,6 +214,108 @@ function transformToEducationalFormat(data) {
             originalData: item // Сохраняем оригинальные данные
         };
     });
+}
+
+// Получение характеристик из различных возможных колонок
+function getSpecifications(item) {
+    console.log('=== ПОИСК ХАРАКТЕРИСТИК ===');
+    console.log('Элемент для поиска характеристик:', item);
+    console.log('Доступные ключи:', Object.keys(item));
+    
+    // Возможные названия колонок с характеристиками (расширенный список)
+    const possibleColumns = [
+        'характеристики',
+        'Характеристики',
+        'ХАРАКТЕРИСТИКИ',
+        'характеристика',
+        'Характеристика',
+        'ХАРАКТЕРИСТИКА',
+        'specs',
+        'Specs',
+        'SPECS',
+        'specifications',
+        'Specifications',
+        'SPECIFICATIONS',
+        'технические характеристики',
+        'Технические характеристики',
+        'ТЕХНИЧЕСКИЕ ХАРАКТЕРИСТИКИ',
+        'техническиехарактеристики',
+        'параметры',
+        'Параметры',
+        'ПАРАМЕТРЫ',
+        'свойства',
+        'Свойства',
+        'СВОЙСТВА',
+        'описание характеристик',
+        'Описание характеристик',
+        'техописание',
+        'Техописание',
+        'ТЕХОПИСАНИЕ'
+    ];
+    
+    console.log('Проверяем точные совпадения колонок...');
+    // Ищем первую непустую колонку с характеристиками
+    for (const column of possibleColumns) {
+        if (item.hasOwnProperty(column)) {
+            console.log(`Найдена колонка "${column}" со значением:`, item[column]);
+            if (item[column] && item[column].toString().trim() !== '') {
+                const specs = item[column].toString().trim();
+                console.log(`✅ НАЙДЕНЫ характеристики в колонке "${column}":`, specs);
+                return specs;
+            }
+        }
+    }
+    
+    console.log('Точные совпадения не найдены. Ищем по ключевым словам...');
+    // Дополнительный поиск: ищем колонки, содержащие ключевые слова
+    const keywords = [
+        'характеристик', 'параметр', 'spec', 'техническ', 'свойств', 
+        'описан', 'feature', 'property', 'detail'
+    ];
+    
+    for (const key of Object.keys(item)) {
+        const lowerKey = key.toLowerCase().replace(/\s+/g, '');
+        console.log(`Проверяем ключ "${key}" (нормализованный: "${lowerKey}")`);
+        
+        for (const keyword of keywords) {
+            if (lowerKey.includes(keyword)) {
+                console.log(`Найдено ключевое слово "${keyword}" в колонке "${key}"`);
+                if (item[key] && item[key].toString().trim() !== '') {
+                    const specs = item[key].toString().trim();
+                    console.log(`✅ НАЙДЕНЫ характеристики в колонке с ключевым словом "${key}":`, specs);
+                    return specs;
+                }
+            }
+        }
+    }
+    
+    console.log('Ищем в колонках с номерами (возможно характеристики в колонке без заголовка)...');
+    // Проверяем колонки по позиции (возможно характеристики в 3-й, 4-й колонке)
+    const keys = Object.keys(item);
+    for (let i = 2; i < Math.min(keys.length, 8); i++) {
+        const key = keys[i];
+        const value = item[key];
+        if (value && value.toString().trim() !== '' && value.toString().length > 10) {
+            // Проверяем, похоже ли на характеристики (содержит двоеточия, цифры, единицы измерения)
+            const valueStr = value.toString();
+            if (valueStr.includes(':') || valueStr.includes('мм') || valueStr.includes('см') || 
+                valueStr.includes('кг') || valueStr.includes('В') || valueStr.includes('Вт') ||
+                /\d+\s*[а-яё]+/i.test(valueStr)) {
+                console.log(`✅ НАЙДЕНЫ характеристики в колонке ${i+1} ("${key}"):`, valueStr);
+                return valueStr.trim();
+            }
+        }
+    }
+    
+    // Если не найдены характеристики, выводим отладочную информацию
+    console.log('❌ Характеристики НЕ найдены!');
+    console.log('Все доступные данные элемента:');
+    Object.keys(item).forEach(key => {
+        console.log(`  "${key}": "${item[key]}"`);
+    });
+    console.log('=== КОНЕЦ ПОИСКА ХАРАКТЕРИСТИК ===');
+    
+    return 'Характеристики не указаны';
 }
 
 // Очистка названия оборудования от лишней информации
@@ -357,6 +480,9 @@ function parseCSV(csvText) {
     const headerLine = lines[0];
     const headers = parseCSVLine(headerLine).map(h => h.trim().replace(/"/g, ''));
     
+    // Отладочная информация о заголовках
+    console.log('Заголовки колонок из Google Sheets:', headers);
+    
     const equipment = [];
     
     for (let i = 1; i < lines.length; i++) {
@@ -377,6 +503,12 @@ function parseCSV(csvText) {
                 
                 if (id && name && !isNaN(parseInt(id))) {
                     equipment.push(item);
+                    
+                    // Отладочная информация для первого элемента
+                    if (equipment.length === 1) {
+                        console.log('Первый элемент из Google Sheets:', item);
+                        console.log('Ключи объекта:', Object.keys(item));
+                    }
                 }
             }
         } catch (error) {
@@ -384,6 +516,7 @@ function parseCSV(csvText) {
         }
     }
     
+    console.log(`Всего загружено ${equipment.length} элементов из CSV`);
     return equipment;
 }
 
@@ -504,7 +637,7 @@ function renderEquipment() {
     if (pageEquipment.length === 0) {
         equipmentTableBody.innerHTML = `
             <tr>
-                <td colspan="8" class="text-center py-5">
+                <td colspan="4" class="text-center py-5">
                     <i class="fas fa-search fa-3x text-muted mb-3"></i>
                     <h5 class="text-muted">Оборудование не найдено</h5>
                     <p class="text-muted">Попробуйте изменить поисковый запрос или фильтры</p>
@@ -641,11 +774,8 @@ function renderPagination() {
         </li>
     `;
     
-    // Номера страниц
-    const startPage = Math.max(1, currentPage - 2);
-    const endPage = Math.min(totalPages, currentPage + 2);
-    
-    for (let i = startPage; i <= endPage; i++) {
+    // Показываем ВСЕ номера страниц (убираем ограничение)
+    for (let i = 1; i <= totalPages; i++) {
         paginationHTML += `
             <li class="page-item ${i === currentPage ? 'active' : ''}">
                 <a class="page-link" href="#" data-page="${i}">${i}</a>
@@ -675,6 +805,18 @@ function renderPagination() {
             }
         });
     });
+    
+    // Показываем информацию о количестве найденных элементов
+    const totalItems = filteredEquipment.length;
+    const startItem = (currentPage - 1) * itemsPerPage + 1;
+    const endItem = Math.min(currentPage * itemsPerPage, totalItems);
+    const infoText = `Показано ${startItem}-${endItem} из ${totalItems} элементов`;
+    
+    // Добавляем информацию под таблицей, если есть контейнер
+    const infoContainer = document.getElementById('equipment-info');
+    if (infoContainer) {
+        infoContainer.innerHTML = `<p class="text-muted text-center mt-3">${infoText}</p>`;
+    }
 }
 
 // Показ модального окна с деталями оборудования
