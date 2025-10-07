@@ -9,8 +9,8 @@ function initializeFirebase() {
     }
 }
 
-// Глобальные переменные
-let currentUser = null;
+// Глобальные переменные для профиля
+let profileCurrentUser = null;
 let isAdmin = false;
 let currentTab = 'profile';
 

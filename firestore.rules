@@ -1,0 +1,149 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Функция для проверки аутентификации
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    // Функция для проверки владельца документа
+    function isOwner(userId) {
+      return request.auth.uid == userId;
+    }
+    
+    // Функция для получения роли пользователя
+    function getUserRole() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role;
+    }
+    
+    // Функция для проверки роли администратора
+    function isAdmin() {
+      return isAuthenticated() && getUserRole() == 'admin';
+    }
+    
+    // Правила для коллекции пользователей
+    match /users/{userId} {
+      // Чтение: пользователь может читать свой профиль, админы - все профили
+      allow read: if isOwner(userId) || isAdmin();
+      
+      // Создание: только аутентифицированные пользователи могут создавать свой профиль
+      allow create: if isAuthenticated() && isOwner(userId) && 
+                   request.resource.data.keys().hasAll(['displayName', 'email', 'role']) &&
+                   request.resource.data.role == 'user'; // Новые пользователи получают роль 'user'
+      
+      // Обновление: пользователь может обновлять свой профиль (кроме роли), админы - любой профиль
+      allow update: if (isOwner(userId) && !('role' in request.resource.data.diff(resource.data).affectedKeys())) ||
+                   isAdmin();
+      
+      // Удаление: только админы могут удалять пользователей
+      allow delete: if isAdmin();
+    }
+    
+    // Правила для коллекции курсов
+    match /courses/{courseId} {
+      // Чтение: все пользователи (включая неавторизованных для превью)
+      allow read: if true;
+      
+      // Создание и обновление: только админы
+      allow create, update: if isAdmin();
+      
+      // Удаление: только админы
+      allow delete: if isAdmin();
+    }
+    
+    // Правила для коллекции пользовательских курсов
+    match /userCourses/{userCourseId} {
+      // Чтение: пользователь может читать свои курсы, админы - все
+      allow read: if isAuthenticated() && 
+                 (resource.data.userId == request.auth.uid || isAdmin());
+      
+      // Создание: пользователь может записываться на курсы
+      allow create: if isAuthenticated() && 
+                   request.resource.data.userId == request.auth.uid;
+      
+      // Обновление: пользователь может обновлять свой прогресс, админы - любой
+      allow update: if isAuthenticated() && 
+                   (resource.data.userId == request.auth.uid || isAdmin());
+      
+      // Удаление: пользователь может отписываться от курсов, админы - удалять любые
+      allow delete: if isAuthenticated() && 
+                   (resource.data.userId == request.auth.uid || isAdmin());
+    }
+    
+    // Правила для коллекции статистики пользователей
+    match /userStats/{userId} {
+      // Чтение: пользователь может читать свою статистику, админы - любую
+      allow read: if isOwner(userId) || isAdmin();
+      
+      // Создание и обновление: система может создавать/обновлять статистику
+      allow create, update: if isAuthenticated() && 
+                           (isOwner(userId) || isAdmin());
+      
+      // Удаление: только админы
+      allow delete: if isAdmin();
+    }
+    
+    // Правила для коллекции видео
+    match /videos/{videoId} {
+      // Чтение: все пользователи (для превью)
+      allow read: if true;
+      
+      // Создание, обновление, удаление: только админы
+      allow create, update, delete: if isAdmin();
+    }
+    
+    // Правила для коллекции оборудования
+    match /equipment/{equipmentId} {
+      // Чтение: все пользователи (для каталога)
+      allow read: if true;
+      
+      // Создание, обновление, удаление: только админы
+      allow create, update, delete: if isAdmin();
+    }
+    
+    // Правила для коллекции настроек системы
+    match /settings/{settingId} {
+      // Чтение: все аутентифицированные пользователи могут читать публичные настройки
+      allow read: if isAuthenticated();
+      
+      // Создание, обновление, удаление: только админы
+      allow create, update, delete: if isAdmin();
+    }
+    
+    // Правила для коллекции логов
+    match /logs/{logId} {
+      // Чтение: только админы
+      allow read: if isAdmin();
+      
+      // Создание: система может создавать логи
+      allow create: if isAuthenticated();
+      
+      // Обновление и удаление: только админы
+      allow update, delete: if isAdmin();
+    }
+    
+    // Правила для коллекции уведомлений
+    match /notifications/{notificationId} {
+      // Чтение: пользователь может читать свои уведомления, админы - все
+      allow read: if isAuthenticated() && 
+                 (resource.data.userId == request.auth.uid || isAdmin());
+      
+      // Создание: админы могут создавать уведомления
+      allow create: if isAdmin();
+      
+      // Обновление: пользователь может отмечать свои уведомления как прочитанные
+      allow update: if isAuthenticated() && 
+                   (resource.data.userId == request.auth.uid || isAdmin());
+      
+      // Удаление: пользователь может удалять свои уведомления, админы - любые
+      allow delete: if isAuthenticated() && 
+                   (resource.data.userId == request.auth.uid || isAdmin());
+    }
+    
+    // Запрет доступа ко всем остальным документам
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

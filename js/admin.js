@@ -13,8 +13,8 @@ function initializeFirebase() {
     }
 }
 
-// Глобальные переменные
-let currentUser = null;
+// Глобальные переменные для админ панели
+let adminCurrentUser = null;
 let videos = [];
 
 // Элементы DOM
@@ -135,16 +135,32 @@ function setupEventListeners() {
 
 // Проверка аутентификации
 function checkAuth() {
-    firebase.auth().onAuthStateChanged((user) => {
+    // Сначала проверяем текущего пользователя синхронно
+    const user = firebase.auth().currentUser;
+    
         if (user) {
-            // Пользователь вошел в систему
-            currentUser = user;
+            // Пользователь уже авторизован (возврат на страницу)
+            adminCurrentUser = user;
+            console.log('Пользователь уже авторизован:', user.email);
             checkUserRole(user.uid);
         } else {
-            // Пользователь не вошел в систему
-            redirectToLogin();
+            // Ждем события авторизации (первая загрузка)
+            const unsubscribe = firebase.auth().onAuthStateChanged((authUser) => {
+                // Отписываемся сразу после первой проверки
+                unsubscribe();
+                
+                if (authUser) {
+                    // Пользователь вошел в систему
+                    adminCurrentUser = authUser;
+                    console.log('Пользователь авторизован:', authUser.email);
+                    checkUserRole(authUser.uid);
+                } else {
+                    // Пользователь не вошел в систему - показываем сообщение
+                    console.log('Пользователь не авторизован');
+                    showAuthRequired();
+                }
+            });
         }
-    });
 }
 
 // Проверка роли пользователя
@@ -157,25 +173,93 @@ async function checkUserRole(uid) {
             
             if (role === 'admin') {
                 // Пользователь - администратор
-                adminName.textContent = currentUser.displayName || currentUser.email;
+                adminName.textContent = adminCurrentUser.displayName || adminCurrentUser.email;
                 console.log('Доступ к панели администратора разрешен');
             } else {
                 // Пользователь не администратор
-                alert('У вас нет прав доступа к панели администратора');
-                redirectToLogin();
+                showAccessDenied('У вас нет прав доступа к панели администратора. Требуется роль администратора.');
             }
         } else {
             // Пользователь не найден в базе данных
-            alert('Пользователь не найден в системе');
-            redirectToLogin();
+            showAccessDenied('Ваш профиль не найден в системе. Обратитесь к администратору.');
         }
     } catch (error) {
         console.error('Ошибка проверки роли:', error);
-        redirectToLogin();
+        showAccessDenied('Ошибка при проверке прав доступа: ' + error.message);
     }
 }
 
-// Перенаправление на страницу входа
+// Показать сообщение о необходимости авторизации
+function showAuthRequired() {
+    const content = document.querySelector('main');
+    if (content) {
+        content.innerHTML = `
+            <div class="container-fluid">
+                <div class="row justify-content-center align-items-center" style="min-height: 70vh;">
+                    <div class="col-md-6 text-center">
+                        <div class="card shadow-lg">
+                            <div class="card-body p-5">
+                                <div class="mb-4">
+                                    <i class="fas fa-lock fa-5x text-warning"></i>
+                                </div>
+                                <h2 class="mb-3">Требуется авторизация</h2>
+                                <p class="text-muted mb-4">
+                                    Для доступа к панели администратора необходимо войти в систему.
+                                </p>
+                                <a href="login.html" class="btn btn-primary btn-lg">
+                                    <i class="fas fa-sign-in-alt me-2"></i>
+                                    Войти в систему
+                                </a>
+                                <br><br>
+                                <a href="index.html" class="btn btn-outline-secondary">
+                                    <i class="fas fa-home me-2"></i>
+                                    Вернуться на главную
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+}
+
+// Показать сообщение об отказе в доступе
+function showAccessDenied(message) {
+    const content = document.querySelector('main');
+    if (content) {
+        content.innerHTML = `
+            <div class="container-fluid">
+                <div class="row justify-content-center align-items-center" style="min-height: 70vh;">
+                    <div class="col-md-6 text-center">
+                        <div class="card shadow-lg border-danger">
+                            <div class="card-body p-5">
+                                <div class="mb-4">
+                                    <i class="fas fa-exclamation-triangle fa-5x text-danger"></i>
+                                </div>
+                                <h2 class="mb-3 text-danger">Доступ запрещен</h2>
+                                <p class="text-muted mb-4">
+                                    ${message}
+                                </p>
+                                <a href="index.html" class="btn btn-primary btn-lg">
+                                    <i class="fas fa-home me-2"></i>
+                                    Вернуться на главную
+                                </a>
+                                <br><br>
+                                <button onclick="logout()" class="btn btn-outline-secondary">
+                                    <i class="fas fa-sign-out-alt me-2"></i>
+                                    Выйти и войти с другой учетной записью
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+}
+
+// Перенаправление на страницу входа (используется только при явном действии)
 function redirectToLogin() {
     window.location.href = 'login.html';
 }
@@ -184,9 +268,11 @@ function redirectToLogin() {
 function logout() {
     firebase.auth().signOut().then(() => {
         console.log('Пользователь вышел из системы');
-        redirectToLogin();
+        // После выхода показываем экран авторизации
+        showAuthRequired();
     }).catch((error) => {
         console.error('Ошибка выхода:', error);
+        alert('Ошибка при выходе из системы: ' + error.message);
     });
 }
 
@@ -195,17 +281,17 @@ async function loadStatistics() {
     try {
         // Подсчет видео
         const videosSnapshot = await firebase.firestore().collection('videos').get();
-        totalVideos.textContent = videosSnapshot.size;
+        if (totalVideos) totalVideos.textContent = videosSnapshot.size;
         
         // Подсчет пользователей
         const usersSnapshot = await firebase.firestore().collection('users').get();
-        totalUsers.textContent = usersSnapshot.size;
+        if (totalUsers) totalUsers.textContent = usersSnapshot.size;
         
         // Подсчет оборудования (примерное значение)
-        totalEquipment.textContent = '0';
+        if (totalEquipment) totalEquipment.textContent = '0';
         
         // Подсчет загрузок (примерное значение)
-        totalDownloads.textContent = '0';
+        if (totalDownloads) totalDownloads.textContent = '0';
         
     } catch (error) {
         console.error('Ошибка загрузки статистики:', error);
@@ -671,7 +757,6 @@ function createBasicRoleSelect(currentRole, userId) {
     return `
         <select class="form-select form-select-sm" onchange="handleRoleChange('${userId}', this.value)">
             <option value="user" ${currentRole === 'user' ? 'selected' : ''}>Пользователь</option>
-            <option value="moderator" ${currentRole === 'moderator' ? 'selected' : ''}>Модератор</option>
             <option value="admin" ${currentRole === 'admin' ? 'selected' : ''}>Администратор</option>
         </select>
     `;
@@ -681,7 +766,6 @@ function createBasicRoleSelect(currentRole, userId) {
 function updateUsersStatistics(users) {
     const totalCount = users.length;
     const adminCount = users.filter(u => u.role === 'admin').length;
-    const moderatorCount = users.filter(u => u.role === 'moderator').length;
     
     // Подсчет активных пользователей (вошедших за последние 24 часа)
     const oneDayAgo = new Date();
@@ -696,7 +780,6 @@ function updateUsersStatistics(users) {
     // Обновляем элементы статистики
     updateElement('users-total-count', totalCount);
     updateElement('users-admin-count', adminCount);
-    updateElement('users-moderator-count', moderatorCount);
     updateElement('users-active-count', activeCount);
     
     // Также обновляем общую статистику
@@ -724,10 +807,101 @@ function viewUserDetails(userId) {
 }
 
 // Редактирование пользователя
-function editUser(userId) {
+async function editUser(userId) {
     console.log('Редактирование пользователя:', userId);
-    // TODO: Реализовать модальное окно редактирования пользователя
-    showNotification('Функция редактирования пользователя в разработке', 'info');
+    
+    try {
+        // Получаем данные пользователя из Firestore
+        const userDoc = await firebase.firestore().collection('users').doc(userId).get();
+        
+        if (!userDoc.exists) {
+            throw new Error('Пользователь не найден');
+        }
+        
+        const userData = userDoc.data();
+        
+        // Заполняем форму данными пользователя
+        document.getElementById('edit-user-id').value = userId;
+        document.getElementById('edit-user-displayName').value = userData.displayName || '';
+        document.getElementById('edit-user-email').value = userData.email || '';
+        document.getElementById('edit-user-phone').value = userData.phone || '';
+        document.getElementById('edit-user-role').value = userData.role || 'user';
+        document.getElementById('edit-user-specialization').value = userData.specialization || '';
+        document.getElementById('edit-user-bio').value = userData.bio || '';
+        
+        // Форматируем и заполняем даты
+        const createdAt = userData.createdAt ? formatDate(userData.createdAt) : 'Неизвестно';
+        const lastLoginAt = userData.lastLoginAt ? formatDate(userData.lastLoginAt) : 'Никогда';
+        
+        document.getElementById('edit-user-createdAt').value = createdAt;
+        document.getElementById('edit-user-lastLoginAt').value = lastLoginAt;
+        
+        // Показываем модальное окно (Bootstrap 5)
+        const modal = new bootstrap.Modal(document.getElementById('editUserModal'));
+        modal.show();
+        
+    } catch (error) {
+        console.error('Ошибка загрузки данных пользователя:', error);
+        showNotification(`Ошибка загрузки данных: ${error.message}`, 'danger');
+    }
+}
+
+// Сохранение изменений пользователя
+async function saveUserChanges() {
+    const userId = document.getElementById('edit-user-id').value;
+    
+    if (!userId) {
+        showNotification('Ошибка: ID пользователя не найден', 'danger');
+        return;
+    }
+    
+    try {
+        // Собираем данные из формы
+        const updatedData = {
+            displayName: document.getElementById('edit-user-displayName').value.trim(),
+            phone: document.getElementById('edit-user-phone').value.trim(),
+            role: document.getElementById('edit-user-role').value,
+            specialization: document.getElementById('edit-user-specialization').value,
+            bio: document.getElementById('edit-user-bio').value.trim(),
+            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+        };
+        
+        // Валидация
+        if (!updatedData.displayName) {
+            throw new Error('Имя пользователя не может быть пустым');
+        }
+        
+        // Проверяем права доступа
+        if (typeof RoleManager !== 'undefined') {
+            const isAdmin = await RoleManager.isAdmin();
+            if (!isAdmin) {
+                throw new Error('Недостаточно прав для редактирования пользователей');
+            }
+        }
+        
+        // Обновляем данные в Firestore
+        await firebase.firestore().collection('users').doc(userId).update(updatedData);
+        
+        console.log('Данные пользователя обновлены:', userId);
+        
+        // Закрываем модальное окно (Bootstrap 5)
+        const modal = bootstrap.Modal.getInstance(document.getElementById('editUserModal'));
+        if (modal) {
+            modal.hide();
+        }
+        
+        // Показываем уведомление
+        showNotification('Данные пользователя успешно обновлены', 'success');
+        
+        // Обновляем список пользователей
+        setTimeout(() => {
+            loadUsers();
+        }, 500);
+        
+    } catch (error) {
+        console.error('Ошибка сохранения данных пользователя:', error);
+        showNotification(`Ошибка сохранения: ${error.message}`, 'danger');
+    }
 }
 
 // Удаление пользователя
@@ -772,12 +946,16 @@ window.adminModule = {
     refreshUsersList,
     viewUserDetails,
     editUser,
-    deleteUser
+    saveUserChanges,
+    deleteUser,
+    logout
 };
 
 // Делаем функции глобальными для использования в HTML
 window.refreshUsersList = refreshUsersList;
 window.viewUserDetails = viewUserDetails;
 window.editUser = editUser;
+window.saveUserChanges = saveUserChanges;
 window.deleteUser = deleteUser;
 window.loadUsers = loadUsers;
+window.logout = logout;

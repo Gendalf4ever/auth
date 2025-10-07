@@ -204,7 +204,7 @@
                     
                     <!-- Статистика пользователей -->
                     <div class="row mb-4">
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <div class="card border-left-primary shadow h-100 py-2">
                                 <div class="card-body">
                                     <div class="row no-gutters align-items-center">
@@ -220,12 +220,12 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-3">
-                            <div class="card border-left-success shadow h-100 py-2">
+                        <div class="col-md-4">
+                            <div class="card border-left-danger shadow h-100 py-2">
                                 <div class="card-body">
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
-                                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                            <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
                                                 Администраторы</div>
                                             <div class="h5 mb-0 font-weight-bold text-gray-800" id="users-admin-count">0</div>
                                         </div>
@@ -236,28 +236,12 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-3">
-                            <div class="card border-left-warning shadow h-100 py-2">
+                        <div class="col-md-4">
+                            <div class="card border-left-success shadow h-100 py-2">
                                 <div class="card-body">
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
-                                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                                                Модераторы</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800" id="users-moderator-count">0</div>
-                                        </div>
-                                        <div class="col-auto">
-                                            <i class="fas fa-user-cog fa-2x text-gray-300"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="card border-left-info shadow h-100 py-2">
-                                <div class="card-body">
-                                    <div class="row no-gutters align-items-center">
-                                        <div class="col mr-2">
-                                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
                                                 Активных сегодня</div>
                                             <div class="h5 mb-0 font-weight-bold text-gray-800" id="users-active-count">0</div>
                                         </div>
@@ -375,6 +359,127 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-storage-compat.js"></script>
     <script src="js/firebase-config.js"></script>
+    
+    <!-- Модальное окно редактирования пользователя -->
+    <div class="modal fade" id="editUserModal" tabindex="-1" role="dialog" aria-labelledby="editUserModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editUserModalLabel">
+                        <i class="fas fa-user-edit mr-2"></i>
+                        Редактирование пользователя
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="edit-user-form">
+                        <input type="hidden" id="edit-user-id">
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="edit-user-displayName">
+                                        <i class="fas fa-user mr-1"></i>
+                                        Имя пользователя
+                                    </label>
+                                    <input type="text" class="form-control" id="edit-user-displayName" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="edit-user-email">
+                                        <i class="fas fa-envelope mr-1"></i>
+                                        Email
+                                    </label>
+                                    <input type="email" class="form-control" id="edit-user-email" readonly>
+                                    <small class="form-text text-muted">Email нельзя изменить</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="edit-user-phone">
+                                        <i class="fas fa-phone mr-1"></i>
+                                        Телефон
+                                    </label>
+                                    <input type="tel" class="form-control" id="edit-user-phone">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="edit-user-role">
+                                        <i class="fas fa-user-tag mr-1"></i>
+                                        Роль
+                                    </label>
+                                    <select class="form-select" id="edit-user-role">
+                                        <option value="user">Пользователь</option>
+                                        <option value="admin">Администратор</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="edit-user-specialization">
+                                <i class="fas fa-briefcase mr-1"></i>
+                                Специализация
+                            </label>
+                            <select class="form-select" id="edit-user-specialization">
+                                <option value="">Выберите специализацию</option>
+                                <option value="therapist">Терапевтическая стоматология</option>
+                                <option value="surgery">Хирургическая стоматология</option>
+                                <option value="orthodontics">Ортодонтия</option>
+                                <option value="prosthetics">Протезирование</option>
+                                <option value="implantology">Имплантология</option>
+                                <option value="other">Другое</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="edit-user-bio">
+                                <i class="fas fa-info-circle mr-1"></i>
+                                О пользователе
+                            </label>
+                            <textarea class="form-control" id="edit-user-bio" rows="3" placeholder="Дополнительная информация о пользователе"></textarea>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>
+                                        <i class="fas fa-calendar-plus mr-1"></i>
+                                        Дата регистрации
+                                    </label>
+                                    <input type="text" class="form-control" id="edit-user-createdAt" readonly>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>
+                                        <i class="fas fa-clock mr-1"></i>
+                                        Последний вход
+                                    </label>
+                                    <input type="text" class="form-control" id="edit-user-lastLoginAt" readonly>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times me-1"></i>
+                        Отмена
+                    </button>
+                    <button type="button" class="btn btn-primary" onclick="saveUserChanges()">
+                        <i class="fas fa-save me-1"></i>
+                        Сохранить изменения
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
     
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

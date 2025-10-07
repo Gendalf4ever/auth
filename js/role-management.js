@@ -3,29 +3,25 @@
 // Доступные роли в системе
 const USER_ROLES = {
     USER: 'user',
-    MODERATOR: 'moderator',
     ADMIN: 'admin'
 };
 
 // Названия ролей для отображения
 const ROLE_NAMES = {
     [USER_ROLES.USER]: 'Пользователь',
-    [USER_ROLES.MODERATOR]: 'Модератор',
     [USER_ROLES.ADMIN]: 'Администратор'
 };
 
 // CSS классы для ролей
 const ROLE_CLASSES = {
     [USER_ROLES.USER]: 'badge bg-primary',
-    [USER_ROLES.MODERATOR]: 'badge bg-warning text-dark',
     [USER_ROLES.ADMIN]: 'badge bg-danger'
 };
 
 // Иерархия ролей (для проверки прав)
 const ROLE_HIERARCHY = {
     [USER_ROLES.USER]: 1,
-    [USER_ROLES.MODERATOR]: 2,
-    [USER_ROLES.ADMIN]: 3
+    [USER_ROLES.ADMIN]: 2
 };
 
 /**
@@ -139,14 +135,6 @@ async function hasRole(requiredRole, userRole = null) {
  */
 async function isAdmin() {
     return await hasRole(USER_ROLES.ADMIN);
-}
-
-/**
- * Проверить, является ли пользователь модератором или выше
- * @returns {Promise<boolean>} Результат проверки
- */
-async function isModerator() {
-    return await hasRole(USER_ROLES.MODERATOR);
 }
 
 /**
@@ -317,7 +305,6 @@ window.RoleManager = {
     updateUserRole,
     hasRole,
     isAdmin,
-    isModerator,
     getRoleDisplayName,
     getRoleBadgeClass,
     createRoleBadge,
