@@ -260,17 +260,20 @@ footer .col-md-6 {
 
 /* Стили для CAD/CAM страницы */
 .tech-card {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 50%, #6d28d9 100%);
     color: white;
     padding: 25px;
     border-radius: 15px;
     height: 100%;
     text-align: center;
-    transition: transform 0.3s;
+    transition: all 0.3s ease;
+    box-shadow: 0 8px 25px rgba(139, 92, 246, 0.3);
 }
 
 .tech-card:hover {
-    transform: translateY(-5px);
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 15px 40px rgba(139, 92, 246, 0.5);
+    background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 50%, #5b21b6 100%);
 }
 
 .tech-title {
@@ -751,7 +754,7 @@ footer .col-md-6 {
     margin-top: 1400px;
     margin-bottom: 50px;
     padding: 80px 0;
-    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #7e22ce 100%);
+    background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 50%, #6d28d9 100%);
     position: relative;
 }
 
@@ -994,15 +997,19 @@ footer .col-md-6 {
 }
 
 .tech-card {
-    background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+    background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 50%, #6d28d9 100%);
     border-radius: 12px;
-    border: 2px solid #93c5fd;
+    border: 2px solid #8b5cf6;
     transition: all 0.3s ease;
+    color: white;
+    box-shadow: 0 8px 25px rgba(139, 92, 246, 0.3);
 }
 
 .tech-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(59, 130, 246, 0.25);
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 15px 40px rgba(139, 92, 246, 0.5);
+    background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 50%, #5b21b6 100%);
+    border-color: #7c3aed;
 }
 
 /* Стили для этапов работы */
@@ -1307,11 +1314,13 @@ footer .col-md-6 {
     min-height: 50vh !important;
     width: 100vw;
     margin-left: calc(-50vw + 50%);
-    padding: 60px 20px !important;
+    padding: 80px 20px 60px 20px !important;
     display: flex;
     align-items: center;
     justify-content: center;
     flex: 1;
+    position: relative;
+    z-index: 1;
 }
 
 .courses-preview .container-fluid {
@@ -1325,6 +1334,10 @@ footer .col-md-6 {
     font-weight: 700;
     color: var(--dark-color);
     margin-bottom: 3rem;
+    margin-top: 2rem;
+    padding-top: 1rem;
+    position: relative;
+    z-index: 10;
 }
 
 /* Адаптивность для главной страницы */
