@@ -1,0 +1,92 @@
+.printer-card {
+    transition: all 0.3s ease;
+    border: 1px solid #e9ecef;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.printer-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+    border-color: #667eea;
+}
+
+.printer-image {
+    width: 100%;
+    height: 200px;
+    object-fit: contain;
+    background: #f8f9fa;
+    padding: 15px;
+}
+
+.printer-image-placeholder {
+    width: 100%;
+    height: 200px;
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+    color: #667eea;
+}
+
+.printer-modal-image {
+    width: 100%;
+    max-height: 300px;
+    object-fit: contain;
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 10px;
+}
+
+.printer-modal-image-placeholder {
+    width: 100%;
+    height: 300px;
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 4rem;
+    color: #667eea;
+    border-radius: 10px;
+}
+
+.specs-preview {
+    background: #f8f9fa;
+    padding: 10px;
+    border-radius: 8px;
+    border-left: 3px solid #667eea;
+    margin-top: 10px;
+}
+
+.specs-detail {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 10px;
+    border-left: 4px solid #667eea;
+}
+
+.spec-item {
+    padding: 5px 0;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.spec-item:last-child {
+    border-bottom: none;
+}
+
+.price-info {
+    font-size: 1.1rem;
+}
+
+.printer-card .card-title {
+    color: #2c3e50;
+    font-weight: 700;
+    font-size: 1.1rem;
+    min-height: 50px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}

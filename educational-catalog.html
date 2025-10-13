@@ -7,64 +7,12 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/header.css">
     <link rel="stylesheet" href="css/educational-catalog.css">
 </head>
 <body>
-    <!-- Навигационная панель -->
-    <nav class="navbar navbar-expand-lg navbar-dark">
-        <div class="container">
-            <a class="navbar-brand" href="index.html">
-                <i class="fas fa-graduation-cap me-2"></i>CODENT Обучение
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav me-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="index.html">
-                            <i class="fas fa-home me-1"></i>Главная
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="courses.html">
-                            <i class="fas fa-play-circle me-1"></i>Курсы
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="introduction/index.html">
-                            <i class="fas fa-book me-1"></i>Введение
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="team.html">
-                            <i class="fas fa-users me-1"></i>Команда
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" href="educational-catalog.html">
-                            <i class="fas fa-microscope me-1"></i>Оборудование
-                        </a>
-                    </li>
-                </ul>
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link" href="#" id="login-link">
-                            <i class="fas fa-sign-in-alt me-1"></i>Войти
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#" id="logout-link" style="display: none;">
-                            <i class="fas fa-sign-out-alt me-1"></i>Выйти
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <span class="nav-link" id="user-info" style="display: none;"></span>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
+    <!-- Подключаем единый хедер -->
+    <div id="header-placeholder"></div>
 
     <!-- Основной контент -->
     <div class="catalog-wrapper">
@@ -106,6 +54,7 @@
                                 <option value="scanners">3D сканеры</option>
                                 <option value="milling">Фрезерные станки</option>
                                 <option value="materials">Материалы</option>
+                                <option value="zirkon">Цирконий</option>
                                 <option value="post-processing">Пост-обработка</option>
                                 <option value="equipment">Оборудование</option>
                             </select>
@@ -213,7 +162,25 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
     <script src="js/firebase-config.js"></script>
+    <script src="js/header.js"></script>
     <script src="js/sheet-config.js"></script>
     <script src="js/educational-catalog.js"></script>
+    
+    <!-- Загружаем хедер -->
+    <script>
+        // Загружаем хедер из компонента
+        fetch('components/header.html')
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('header-placeholder').innerHTML = html;
+                // Устанавливаем активную страницу
+                if (typeof window.HeaderUtils !== 'undefined') {
+                    window.HeaderUtils.setActivePage('equipment');
+                }
+            })
+            .catch(error => {
+                console.error('Ошибка загрузки хедера:', error);
+            });
+    </script>
 </body>
 </html>

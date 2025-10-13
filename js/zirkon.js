@@ -41,26 +41,84 @@ async function loadZirkonFromFirebase() {
             const name = (product.name || product.наименование || '').toLowerCase();
             const category = (product.category || product.категория || '').toLowerCase();
             const description = (product.description || product.описание || '').toLowerCase();
+            const tags = (product.tags || product.теги || '').toLowerCase();
             
-            // Проверяем по различным критериям
+            // Используем ту же логику, что и в educational-catalog.js
             const isZirkon = 
-                name.includes('zircon') || 
+                // Проверяем категорию
+                category === 'цирконий' ||
+                category === 'zircon' ||
+                category === 'zirconia' ||
+                category === 'zirconium' ||
+                category === 'циркон' ||
+                category === 'zro2' ||
+                category === 'зро2' ||
+                // Проверяем теги
+                tags.includes('цирконий') ||
+                tags.includes('zircon') ||
+                tags.includes('zirconia') ||
+                tags.includes('zirconium') ||
+                tags.includes('циркон') ||
+                tags.includes('zro2') ||
+                tags.includes('зро2') ||
+                // Проверяем название (строго по ключевым словам)
+                name.includes('zircon') ||
                 name.includes('циркон') ||
                 name.includes('zro2') ||
                 name.includes('зро2') ||
-                category.includes('zircon') ||
-                category.includes('циркон') ||
-                description.includes('zircon') ||
-                description.includes('циркон');
+                name.includes('цирконий') ||
+                name.includes('zirconia') ||
+                name.includes('zirconium');
             
             return isZirkon;
         });
         
         console.log(`Найдено циркониевых материалов: ${zirkonData.length}`);
         
-        // Логируем найденные товары
+        // Логируем найденные товары с подробностями
         zirkonData.forEach(product => {
-            console.log(`- ${product.name || product.наименование}`);
+            const name = product.name || product.наименование || 'Без названия';
+            const category = product.category || product.категория || 'Без категории';
+            const tags = product.tags || product.теги || 'Без тегов';
+            console.log(`- ${name} | Категория: ${category} | Теги: ${tags}`);
+        });
+        
+        // Логируем все товары для отладки (первые 10)
+        console.log('=== ПЕРВЫЕ 10 ТОВАРОВ ИЗ БАЗЫ (для отладки) ===');
+        allProducts.slice(0, 10).forEach(product => {
+            const name = product.name || product.наименование || 'Без названия';
+            const category = product.category || product.категория || 'Без категории';
+            const tags = product.tags || product.теги || 'Без тегов';
+            
+            // Проверяем, прошел ли товар фильтр
+            const nameLower = name.toLowerCase();
+            const categoryLower = category.toLowerCase();
+            const tagsLower = tags.toLowerCase();
+            
+            const passesFilter = 
+                categoryLower === 'цирконий' ||
+                categoryLower === 'zircon' ||
+                categoryLower === 'zirconia' ||
+                categoryLower === 'zirconium' ||
+                categoryLower === 'циркон' ||
+                categoryLower === 'zro2' ||
+                categoryLower === 'зро2' ||
+                tagsLower.includes('цирконий') ||
+                tagsLower.includes('zircon') ||
+                tagsLower.includes('zirconia') ||
+                tagsLower.includes('zirconium') ||
+                tagsLower.includes('циркон') ||
+                tagsLower.includes('zro2') ||
+                tagsLower.includes('зро2') ||
+                nameLower.includes('zircon') ||
+                nameLower.includes('циркон') ||
+                nameLower.includes('zro2') ||
+                nameLower.includes('зро2') ||
+                nameLower.includes('цирконий') ||
+                nameLower.includes('zirconia') ||
+                nameLower.includes('zirconium');
+            
+            console.log(`${passesFilter ? '✅' : '❌'} ${name} | Категория: ${category} | Теги: ${tags}`);
         });
         
     } catch (error) {
@@ -115,16 +173,6 @@ function displayZirkonProducts() {
                             <div class="specs-preview small">
                                 <strong>Характеристики:</strong>
                                 <p class="mb-0">${truncateText(specs, 80)}</p>
-                            </div>
-                        ` : ''}
-                        ${price ? `
-                            <div class="price-info mt-2">
-                                ${discountPrice ? `
-                                    <span class="text-decoration-line-through text-muted me-2">${price} ₽</span>
-                                    <span class="text-danger fw-bold">${discountPrice} ₽</span>
-                                ` : `
-                                    <span class="fw-bold">${price} ₽</span>
-                                `}
                             </div>
                         ` : ''}
                     </div>
@@ -185,21 +233,6 @@ function showProductDetails(productId) {
                                     <h6 class="text-muted mt-3">Характеристики</h6>
                                     <div class="specs-detail">
                                         ${formatSpecifications(specs)}
-                                    </div>
-                                ` : ''}
-                                
-                                ${price ? `
-                                    <div class="price-info mt-3 p-3 bg-light rounded">
-                                        <h6 class="mb-2">Цена</h6>
-                                        ${discountPrice ? `
-                                            <div>
-                                                <span class="text-decoration-line-through text-muted me-2">${price} ₽</span>
-                                                <span class="text-danger fw-bold fs-5">${discountPrice} ₽</span>
-                                                <span class="badge bg-danger ms-2">Скидка</span>
-                                            </div>
-                                        ` : `
-                                            <span class="fw-bold fs-5">${price} ₽</span>
-                                        `}
                                     </div>
                                 ` : ''}
                             </div>

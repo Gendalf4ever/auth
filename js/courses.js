@@ -3,6 +3,7 @@
 // Переменные (не объявляем заново, если уже объявлены в app.js)
 let currentEditingCourse = null;
 let contentBlocks = [];
+let allCourses = []; // Храним все курсы для фильтрации
 
 // Инициализация курсов
 function initCourses() {
@@ -16,6 +17,25 @@ function setupCourseEventListeners() {
     const createCourseForm = document.getElementById('create-course-form');
     if (createCourseForm) {
         createCourseForm.addEventListener('submit', handleCourseSubmit);
+    }
+    
+    // Обработчики фильтров
+    const filterBeginner = document.getElementById('filter-beginner');
+    const filterAdvanced = document.getElementById('filter-advanced');
+    const filterFree = document.getElementById('filter-free');
+    const courseSearch = document.getElementById('course-search');
+    
+    if (filterBeginner) {
+        filterBeginner.addEventListener('change', applyCourseFilters);
+    }
+    if (filterAdvanced) {
+        filterAdvanced.addEventListener('change', applyCourseFilters);
+    }
+    if (filterFree) {
+        filterFree.addEventListener('change', applyCourseFilters);
+    }
+    if (courseSearch) {
+        courseSearch.addEventListener('input', applyCourseFilters);
     }
     
     // Обработчики кнопок на странице деталей курса
@@ -68,36 +88,12 @@ function loadCourses() {
             
             querySnapshot.forEach((doc) => {
                 const course = doc.data();
-                const courseId = doc.id;
-                
-                const courseCard = document.createElement('div');
-                courseCard.className = 'col-md-6 col-lg-4 mb-4';
-                courseCard.innerHTML = `
-                    <div class="card course-card h-100">
-                        <div class="course-image">
-                            <i class="fas fa-graduation-cap"></i>
-                        </div>
-                        <div class="card-body d-flex flex-column">
-                            <div class="course-badges mb-2">
-                                <span class="badge bg-primary">${course.category}</span>
-                                <span class="badge bg-secondary">${course.level}</span>
-                            </div>
-                            <h5 class="card-title">${course.title}</h5>
-                            <p class="card-text flex-grow-1">${course.description}</p>
-                            <div class="course-meta mt-auto">
-                                <small class="text-muted">
-                                    <i class="fas fa-clock me-1"></i>${course.duration || 1} час
-                                </small>
-                            </div>
-                            <button class="btn btn-primary mt-3 view-course-detail" data-course-id="${courseId}">
-                                Подробнее
-                            </button>
-                        </div>
-                    </div>
-                `;
-                
-                coursesList.appendChild(courseCard);
+                course.id = doc.id;
+                allCourses.push(course); // Сохраняем курс в массив
             });
+            
+            // Применяем фильтры и отображаем курсы
+            applyCourseFilters();
             
             // Добавляем обработчики для кнопок просмотра деталей
             document.querySelectorAll('.view-course-detail').forEach(button => {

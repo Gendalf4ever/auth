@@ -7,25 +7,13 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/header.css">
     <link rel="stylesheet" href="../css/introduction.css">
+    <link rel="stylesheet" href="../css/3d-printing.css">
 </head>
 <body>
-    <!-- Навигационная панель -->
-    <nav class="navbar navbar-expand-lg navbar-dark">
-        <div class="container">
-            <a class="navbar-brand" href="../index.html">
-                <i class="fas fa-graduation-cap me-2"></i>CODENT Обучение
-            </a>
-            <div class="navbar-nav ms-auto">
-                <a class="nav-link" href="index.html">
-                    <i class="fas fa-arrow-left me-2"></i>Вернуться к введению
-                </a>
-                <a class="nav-link" href="../index.html">
-                    <i class="fas fa-home me-2"></i>Главная
-                </a>
-            </div>
-        </div>
-    </nav>
+    <!-- Подключаем единый хедер -->
+    <div id="header-placeholder"></div>
 
     <div class="container py-5">
         <div class="row justify-content-center">
@@ -373,22 +361,14 @@
                             </h3>
                             <p class="text-center mb-4">Актуальная информация о 3D принтерах и оборудовании для стоматологии</p>
                             
-                            <div class="table-container">
-                                <iframe 
-                                    src="https://docs.google.com/spreadsheets/d/1Hxmx_tznE64ifvKON4-waL6x7BYQ7plf1nWta5nsMlI/edit?usp=sharing&widget=true&headers=false"
-                                    width="100%" 
-                                    height="500"
-                                    frameborder="0"
-                                    style="border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
-                                </iframe>
-                            </div>
-                            
-                            <div class="mt-3 text-center">
-                                <a href="https://docs.google.com/spreadsheets/d/1Hxmx_tznE64ifvKON4-waL6x7BYQ7plf1nWta5nsMlI/edit?usp=sharing" 
-                                   target="_blank" 
-                                   class="btn btn-outline-primary">
-                                    <i class="fas fa-external-link-alt me-2"></i>Открыть полную таблицу
-                                </a>
+                            <!-- Контейнер для карточек 3D принтеров -->
+                            <div id="printers-container">
+                                <div class="loading-spinner text-center py-5">
+                                    <div class="spinner-border text-primary" role="status">
+                                        <span class="visually-hidden">Загрузка 3D принтеров...</span>
+                                    </div>
+                                    <p class="mt-3">Загружаем информацию о 3D принтерах...</p>
+                                </div>
                             </div>
                         </div>
                         
@@ -396,10 +376,10 @@
                             <a href="workflow-stages.html" class="btn btn-outline-secondary">
                                 <i class="fas fa-arrow-left me-2"></i>Предыдущий раздел
                             </a>
-                            <a href="index.html" class="btn btn-outline-primary">
+                            <a href="../index.html" class="btn btn-outline-primary">
                                 <i class="fas fa-list me-2"></i>Все разделы
                             </a>
-                            <a href="index.html" class="btn btn-primary">
+                            <a href="../index.html" class="btn btn-primary">
                                 Завершить изучение <i class="fas fa-check ms-2"></i>
                             </a>
                         </div>
@@ -410,14 +390,313 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    
+    <!-- Firebase Configuration -->
+    <script src="../js/firebase-config.js"></script>
+    
+    <!-- Header Script -->
+    <script src="../js/header.js"></script>
     <script>
-        // Инициализация tooltips
+        // Глобальные переменные
+        let printersData = [];
+        let productsDb = null;
+        
+        // Инициализация при загрузке страницы
         document.addEventListener('DOMContentLoaded', function() {
+            // Инициализация tooltips
             var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
             var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
                 return new bootstrap.Tooltip(tooltipTriggerEl);
             });
+            
+            // Загружаем хедер
+            loadHeader();
+            
+            // Загружаем 3D принтеры
+            setTimeout(() => {
+                load3DPrinters();
+            }, 1000);
         });
+        
+        // Загрузка хедера
+        function loadHeader() {
+            fetch('../components/header.html')
+                .then(response => response.text())
+                .then(html => {
+                    document.getElementById('header-placeholder').innerHTML = html;
+                    
+                    // Исправляем пути после загрузки хедера
+                    if (typeof fixNavigationPaths === 'function') {
+                        fixNavigationPaths();
+                    }
+                    
+                    // Устанавливаем активную страницу (главная, так как кнопка "Введение" теперь ведет на главную)
+                    if (typeof window.HeaderUtils !== 'undefined') {
+                        window.HeaderUtils.setActivePage('home');
+                    }
+                })
+                .catch(error => {
+                    console.error('Ошибка загрузки хедера:', error);
+                });
+        }
+        
+        // Загрузка 3D принтеров из Firebase
+        async function load3DPrinters() {
+            console.log('=== ЗАГРУЗКА 3D ПРИНТЕРОВ ===');
+            
+            try {
+                // Получаем Firestore для товаров
+                productsDb = window.getProductsFirestore();
+                console.log('Firestore для товаров получен');
+                
+                const snapshot = await productsDb.collection('products').get();
+                console.log(`Получено ${snapshot.size} документов из Firebase`);
+                
+                const allProducts = [];
+                snapshot.forEach(doc => {
+                    allProducts.push({
+                        id: doc.id,
+                        ...doc.data()
+                    });
+                });
+                
+                // Фильтруем только 3D принтеры
+                printersData = allProducts.filter(product => {
+                    const name = (product.name || product.наименование || '').toLowerCase();
+                    const category = (product.category || product.категория || '').toLowerCase();
+                    const description = (product.description || product.описание || '').toLowerCase();
+                    
+                    // Проверяем по различным критериям
+                    const isPrinter = 
+                        name.includes('принтер') || 
+                        name.includes('printer') ||
+                        name.includes('3d принтер') ||
+                        name.includes('3d printer') ||
+                        category.includes('принтер') ||
+                        category.includes('printer') ||
+                        description.includes('принтер') ||
+                        description.includes('printer');
+                    
+                    return isPrinter;
+                });
+                
+                console.log(`Найдено 3D принтеров: ${printersData.length}`);
+                
+                // Отображаем принтеры
+                display3DPrinters();
+                
+            } catch (error) {
+                console.error('Ошибка загрузки 3D принтеров:', error);
+                showError('Не удалось загрузить данные о 3D принтерах');
+            }
+        }
+        
+        // Отображение 3D принтеров
+        function display3DPrinters() {
+            const container = document.getElementById('printers-container');
+            
+            if (!container) {
+                console.warn('Контейнер для принтеров не найден');
+                return;
+            }
+            
+            if (printersData.length === 0) {
+                container.innerHTML = `
+                    <div class="alert alert-warning text-center">
+                        <i class="fas fa-info-circle me-2"></i>
+                        3D принтеры не найдены в базе данных.
+                    </div>
+                `;
+                return;
+            }
+            
+            let printersHTML = '<div class="row g-4">';
+            
+            printersData.forEach(printer => {
+                const name = printer.name || printer.наименование || 'Без названия';
+                const description = printer.description || printer.описание || 'Описание отсутствует';
+                const specs = printer.specifications || printer.характеристики || '';
+                const imageUrl = printer.img_url || printer.image || printer.изображение || '';
+                const price = printer.price || printer.цена || '';
+                const discountPrice = printer.price_skidka || printer['аукционная цена'] || '';
+                
+                printersHTML += `
+                    <div class="col-md-6 col-lg-4">
+                        <div class="card h-100 printer-card">
+                            ${imageUrl ? `
+                                <img src="${imageUrl}" class="card-img-top printer-image" alt="${name}" loading="lazy" onerror="this.style.display='none'">
+                            ` : `
+                                <div class="card-img-top printer-image-placeholder">
+                                    <i class="fas fa-cube"></i>
+                                </div>
+                            `}
+                            <div class="card-body">
+                                <h5 class="card-title">${name}</h5>
+                                <p class="card-text small text-muted">${truncateText(description, 100)}</p>
+                                ${specs ? `
+                                    <div class="specs-preview small">
+                                        <strong>Характеристики:</strong>
+                                        <p class="mb-0">${truncateText(specs, 80)}</p>
+                                    </div>
+                                ` : ''}
+                                ${price ? `
+                                    <div class="price-info mt-2">
+                                        ${discountPrice ? `
+                                            <span class="text-decoration-line-through text-muted me-2">${price} ₽</span>
+                                            <span class="text-danger fw-bold">${discountPrice} ₽</span>
+                                        ` : `
+                                            <span class="fw-bold">${price} ₽</span>
+                                        `}
+                                    </div>
+                                ` : ''}
+                            </div>
+                            <div class="card-footer bg-transparent">
+                                <button class="btn btn-outline-primary btn-sm w-100" onclick="showPrinterDetails('${printer.id}')">
+                                    <i class="fas fa-info-circle me-2"></i>Подробнее
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            printersHTML += '</div>';
+            container.innerHTML = printersHTML;
+        }
+        
+        // Показать детали принтера
+        function showPrinterDetails(printerId) {
+            const printer = printersData.find(p => p.id === printerId);
+            
+            if (!printer) {
+                console.error('Принтер не найден:', printerId);
+                return;
+            }
+            
+            const name = printer.name || printer.наименование || 'Без названия';
+            const description = printer.description || printer.описание || 'Описание отсутствует';
+            const specs = printer.specifications || printer.характеристики || '';
+            const imageUrl = printer.img_url || printer.image || printer.изображение || '';
+            const price = printer.price || printer.цена || '';
+            const discountPrice = printer.price_skidka || printer['аукционная цена'] || '';
+            
+            const modalHTML = `
+                <div class="modal fade" id="printerModal" tabindex="-1">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">${name}</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="col-md-5">
+                                        ${imageUrl ? `
+                                            <img src="${imageUrl}" class="img-fluid rounded printer-modal-image" alt="${name}" onerror="this.style.display='none'">
+                                        ` : `
+                                            <div class="printer-modal-image-placeholder">
+                                                <i class="fas fa-cube"></i>
+                                            </div>
+                                        `}
+                                    </div>
+                                    <div class="col-md-7">
+                                        <h6 class="text-muted">Описание</h6>
+                                        <p>${description}</p>
+                                        
+                                        ${specs ? `
+                                            <h6 class="text-muted mt-3">Характеристики</h6>
+                                            <div class="specs-detail">
+                                                ${formatSpecifications(specs)}
+                                            </div>
+                                        ` : ''}
+                                        
+                                        ${price ? `
+                                            <div class="price-info mt-3 p-3 bg-light rounded">
+                                                <h6 class="mb-2">Цена</h6>
+                                                ${discountPrice ? `
+                                                    <div>
+                                                        <span class="text-decoration-line-through text-muted me-2">${price} ₽</span>
+                                                        <span class="text-danger fw-bold fs-5">${discountPrice} ₽</span>
+                                                        <span class="badge bg-danger ms-2">Скидка</span>
+                                                    </div>
+                                                ` : `
+                                                    <span class="fw-bold fs-5">${price} ₽</span>
+                                                `}
+                                            </div>
+                                        ` : ''}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Удаляем предыдущее модальное окно, если есть
+            const existingModal = document.getElementById('printerModal');
+            if (existingModal) {
+                existingModal.remove();
+            }
+            
+            // Добавляем новое модальное окно
+            document.body.insertAdjacentHTML('beforeend', modalHTML);
+            
+            // Показываем модальное окно
+            const modal = new bootstrap.Modal(document.getElementById('printerModal'));
+            modal.show();
+            
+            // Удаляем модальное окно после закрытия
+            document.getElementById('printerModal').addEventListener('hidden.bs.modal', function () {
+                this.remove();
+            });
+        }
+        
+        // Вспомогательные функции
+        function truncateText(text, maxLength) {
+            if (!text || text.length <= maxLength) return text;
+            return text.substring(0, maxLength) + '...';
+        }
+        
+        function formatSpecifications(specs) {
+            if (!specs) return '';
+            
+            if (specs.includes('\n')) {
+                return specs.split('\n')
+                    .filter(line => line.trim())
+                    .map(line => `<div class="spec-item"><i class="fas fa-check-circle text-success me-2"></i>${line.trim()}</div>`)
+                    .join('');
+            }
+            
+            if (specs.includes(';')) {
+                return specs.split(';')
+                    .filter(line => line.trim())
+                    .map(line => `<div class="spec-item"><i class="fas fa-check-circle text-success me-2"></i>${line.trim()}</div>`)
+                    .join('');
+            }
+            
+            return `<div class="spec-item">${specs}</div>`;
+        }
+        
+        function showError(message) {
+            const container = document.getElementById('printers-container');
+            if (container) {
+                container.innerHTML = `
+                    <div class="alert alert-danger text-center">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        ${message}
+                    </div>
+                `;
+            }
+        }
     </script>
+    
+    <!-- Стили для карточек принтеров -->
+    <style>
+       
+    </style>
 </body>
 </html>

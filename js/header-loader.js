@@ -33,7 +33,7 @@ class HeaderLoader {
             headerHTML = headerHTML.replace('href="index.html"', 'href="../index.html"');
             
             // Корректируем путь к introduction
-            headerHTML = headerHTML.replace('href="introduction/index.html"', 'href="index.html"');
+            headerHTML = headerHTML.replace('href="index.html"', 'href="../index.html"');
         }
         
         return headerHTML;
@@ -53,7 +53,7 @@ class HeaderLoader {
         } else if (fileName === 'courses.html') {
             headerHTML = headerHTML.replace('id="courses-link"', 'id="courses-link" class="nav-link active"');
         } else if (currentPath.includes('/introduction/')) {
-            headerHTML = headerHTML.replace('href="introduction/index.html"', 'href="introduction/index.html" class="nav-link active"');
+            headerHTML = headerHTML.replace('href="index.html"', 'href="index.html" class="nav-link active"');
         } else if (fileName === 'team.html') {
             headerHTML = headerHTML.replace('href="team.html"', 'href="team.html" class="nav-link active"');
         } else if (fileName === 'educational-catalog.html') {

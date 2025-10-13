@@ -1,0 +1,318 @@
+/* Стили для единого хедера */
+
+/* Основной хедер */
+.main-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    z-index: 1000;
+    min-height: 60px;
+}
+
+.main-header .container-fluid {
+    padding: 0 20px;
+}
+
+/* Контент хедера */
+.header-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 60px;
+    width: 100%;
+}
+
+/* Логотип */
+.header-logo {
+    flex-shrink: 0;
+}
+
+.logo-link {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: white;
+    font-size: 1.25rem;
+    font-weight: 700;
+    transition: all 0.3s ease;
+}
+
+.logo-link:hover {
+    color: rgba(255, 255, 255, 0.9);
+    text-decoration: none;
+}
+
+.logo-link i {
+    font-size: 1.5rem;
+    margin-right: 8px;
+}
+
+.logo-text {
+    white-space: nowrap;
+}
+
+/* Навигация */
+.header-nav {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
+
+.nav-items {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+}
+
+/* Элементы навигации */
+.nav-item {
+    display: flex;
+    align-items: center;
+    padding: 8px 16px;
+    color: white;
+    text-decoration: none;
+    font-weight: 500;
+    border-radius: 25px;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    position: relative;
+}
+
+.nav-item:hover {
+    background: rgba(255, 255, 255, 0.15);
+    color: white;
+    text-decoration: none;
+    transform: translateY(-1px);
+}
+
+.nav-item.active {
+    background: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.nav-item i {
+    margin-right: 6px;
+    font-size: 0.9rem;
+}
+
+/* Секция авторизации */
+.auth-section {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.login-btn, .profile-btn, .logout-btn {
+    display: flex;
+    align-items: center;
+    padding: 10px 20px;
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    text-decoration: none;
+    border-radius: 25px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.login-btn:hover, .profile-btn:hover, .logout-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    text-decoration: none;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.user-info {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 0.9rem;
+    padding: 8px 12px;
+}
+
+/* Мобильное меню */
+.mobile-menu-toggle {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+}
+
+.hamburger-line {
+    width: 25px;
+    height: 3px;
+    background: white;
+    margin: 2px 0;
+    transition: all 0.3s ease;
+    border-radius: 2px;
+}
+
+.mobile-menu-toggle:hover .hamburger-line {
+    background: rgba(255, 255, 255, 0.8);
+}
+
+/* Мобильная навигация */
+.mobile-nav {
+    display: none;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.mobile-nav-content {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.mobile-nav-item {
+    display: flex;
+    align-items: center;
+    padding: 12px 16px;
+    color: #333;
+    text-decoration: none;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+
+.mobile-nav-item:hover {
+    background: rgba(102, 126, 234, 0.1);
+    color: #667eea;
+    text-decoration: none;
+}
+
+.mobile-auth-section {
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    padding-top: 15px;
+    margin-top: 10px;
+}
+
+/* Отступ для контента под fixed header */
+body {
+    padding-top: 60px;
+}
+
+/* Адаптивность */
+@media (max-width: 1200px) {
+    .nav-items {
+        gap: 20px;
+    }
+    
+    .nav-item {
+        padding: 8px 12px;
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 992px) {
+    .nav-items {
+        gap: 15px;
+    }
+    
+    .nav-item span {
+        display: none;
+    }
+    
+    .nav-item {
+        padding: 10px;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        justify-content: center;
+    }
+    
+    .nav-item i {
+        margin: 0;
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .header-nav {
+        display: none;
+    }
+    
+    .mobile-menu-toggle {
+        display: flex;
+    }
+    
+    .mobile-nav {
+        display: block;
+    }
+    
+    .main-header .container-fluid {
+        padding: 0 15px;
+    }
+    
+    .logo-link {
+        font-size: 1.1rem;
+    }
+    
+    .logo-link i {
+        font-size: 1.3rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .logo-text {
+        font-size: 0.9rem;
+    }
+    
+    .logo-link i {
+        font-size: 1.2rem;
+        margin-right: 6px;
+    }
+    
+    .mobile-nav-content {
+        padding: 15px;
+    }
+    
+    .mobile-nav-item {
+        padding: 10px 12px;
+        font-size: 0.9rem;
+    }
+}
+
+/* Анимации */
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.mobile-nav.show {
+    animation: slideDown 0.3s ease-out;
+}
+
+/* Активная страница */
+.nav-item[data-page="home"].active,
+.nav-item[data-page="courses"].active,
+.nav-item[data-page="introduction"].active,
+.nav-item[data-page="team"].active,
+.nav-item[data-page="equipment"].active {
+    background: rgba(255, 255, 255, 0.25);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Эффекты при скролле */
+.main-header.scrolled {
+    background: rgba(102, 126, 234, 0.95);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.15);
+}

@@ -157,8 +157,15 @@ function normalizeCategoryFromFirebase(firebaseCategory, productName) {
         
         'materials': 'Материалы',
         'material': 'Материалы',
-        'zircon': 'Материалы',
         'resin': 'Материалы',
+        
+        'zircon': 'Цирконий',
+        'zirconia': 'Цирконий',
+        'zirconium': 'Цирконий',
+        'циркон': 'Цирконий',
+        'цирконий': 'Цирконий',
+        'zro2': 'Цирконий',
+        'зро2': 'Цирконий',
         
         'post-processing': 'Пост-обработка',
         'postprocessing': 'Пост-обработка',
@@ -175,7 +182,7 @@ function normalizeCategoryFromFirebase(firebaseCategory, productName) {
     }
     
     // Если категория уже на русском
-    const russianCategories = ['3D принтеры', '3D сканеры', 'Фрезерные станки', 'Материалы', 'Пост-обработка', 'Оборудование'];
+    const russianCategories = ['3D принтеры', '3D сканеры', 'Фрезерные станки', 'Материалы', 'Цирконий', 'Пост-обработка', 'Оборудование'];
     if (russianCategories.includes(firebaseCategory)) {
         return firebaseCategory;
     }
@@ -320,9 +327,17 @@ function determineCategoryFromName(name) {
         return 'Фрезерные станки';
     }
     
+    // Цирконий (проверяем перед материалами)
+    if (nameLower.includes('zircon') || nameLower.includes('циркон') || 
+        nameLower.includes('zro2') || nameLower.includes('зро2') ||
+        nameLower.includes('цирконий')) {
+        console.log('→ Категория: Цирконий');
+        return 'Цирконий';
+    }
+    
     // Материалы
-    if (nameLower.includes('диск') || nameLower.includes('zircon') || nameLower.includes('циркон') ||
-        nameLower.includes('полимер') || nameLower.includes('resin') || nameLower.includes('смола') ||
+    if (nameLower.includes('диск') || nameLower.includes('полимер') || 
+        nameLower.includes('resin') || nameLower.includes('смола') ||
         nameLower.includes('материал') || nameLower.includes('блок') || nameLower.includes('заготовк') ||
         nameLower.includes('pmma') || nameLower.includes('пмма') || nameLower.includes('воск')) {
         console.log('→ Категория: Материалы');
@@ -1216,6 +1231,7 @@ function applyFilters() {
             'scanners': '3D сканеры',
             'milling': 'Фрезерные станки',
             'materials': 'Материалы',
+            'zirkon': 'Цирконий',
             'post-processing': 'Пост-обработка',
             'equipment': 'Оборудование'
         };

@@ -1,65 +1,96 @@
-<!-- Навигационная панель -->
-<nav class="navbar navbar-expand-lg navbar-dark">
-    <div class="container">
-        <a class="navbar-brand" href="index.html">
-            <i class="fas fa-graduation-cap me-2"></i>CODENT Обучение
-        </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav me-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="index.html" id="home-link">
-                        <i class="fas fa-home me-1"></i>Главная
+<!-- Единый хедер для всех страниц -->
+<header class="main-header">
+    <div class="container-fluid">
+        <div class="header-content">
+            <!-- Логотип слева -->
+            <div class="header-logo">
+                <a href="index.html" class="logo-link">
+                    <i class="fas fa-graduation-cap me-2"></i>
+                    <span class="logo-text">CODENT Обучение</span>
+                </a>
+            </div>
+            
+            <!-- Навигация справа -->
+            <nav class="header-nav">
+                <div class="nav-items">
+                    <a href="index.html" class="nav-item" data-page="home">
+                        <i class="fas fa-home me-1"></i>
+                        <span>Главная</span>
                     </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="courses.html" id="courses-link">
-                        <i class="fas fa-play-circle me-1"></i>Курсы
+                    <a href="courses.html" class="nav-item" data-page="courses">
+                        <i class="fas fa-play-circle me-1"></i>
+                        <span>Курсы</span>
                     </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="introduction/index.html">
-                        <i class="fas fa-book me-1"></i>Введение
+                    <a href="index.html" class="nav-item" data-page="introduction">
+                        <i class="fas fa-book me-1"></i>
+                        <span>Введение</span>
                     </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="team.html">
-                        <i class="fas fa-users me-1"></i>Команда
+                    <a href="team.html" class="nav-item" data-page="team">
+                        <i class="fas fa-users me-1"></i>
+                        <span>Команда</span>
                     </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="educational-catalog.html">
-                        <i class="fas fa-microscope me-1"></i>Оборудование
+                    <a href="educational-catalog.html" class="nav-item" data-page="equipment">
+                        <i class="fas fa-microscope me-1"></i>
+                        <span>Оборудование</span>
                     </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="admin.html" id="admin-link" style="display: none;">
-                        <i class="fas fa-cog me-1"></i>Панель администратора
+                </div>
+                
+                <!-- Кнопка входа -->
+                <div class="auth-section">
+                    <a href="login.html" class="login-btn" id="login-link">
+                        <i class="fas fa-sign-in-alt me-1"></i>
+                        <span>Войти</span>
                     </a>
-                </li>
-            </ul>
-            <ul class="navbar-nav">
-                <li class="nav-item">
-                    <a class="nav-link" href="login.html" id="login-link">
-                        <i class="fas fa-sign-in-alt me-1"></i>Войти
+                    <a href="profile.html" class="profile-btn" id="profile-link" style="display: none;">
+                        <i class="fas fa-user me-1"></i>
+                        <span>Личный кабинет</span>
                     </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="profile.html" id="profile-link" style="display: none;">
-                        <i class="fas fa-user me-1"></i>Личный кабинет
+                    <a href="#" class="logout-btn" id="logout-link" style="display: none;">
+                        <i class="fas fa-sign-out-alt me-1"></i>
+                        <span>Выйти</span>
                     </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#" id="logout-link" style="display: none;">
-                        <i class="fas fa-sign-out-alt me-1"></i>Выйти
+                    <span class="user-info" id="user-info" style="display: none;"></span>
+                </div>
+            </nav>
+            
+            <!-- Мобильное меню -->
+            <button class="mobile-menu-toggle" type="button" data-bs-toggle="collapse" data-bs-target="#mobileNav">
+                <span class="hamburger-line"></span>
+                <span class="hamburger-line"></span>
+                <span class="hamburger-line"></span>
+            </button>
+        </div>
+        
+        <!-- Мобильная навигация -->
+        <div class="collapse mobile-nav" id="mobileNav">
+            <div class="mobile-nav-content">
+                <a href="index.html" class="mobile-nav-item">
+                    <i class="fas fa-home me-2"></i>Главная
+                </a>
+                <a href="courses.html" class="mobile-nav-item">
+                    <i class="fas fa-play-circle me-2"></i>Курсы
+                </a>
+                <a href="index.html" class="mobile-nav-item">
+                    <i class="fas fa-book me-2"></i>Введение
+                </a>
+                <a href="team.html" class="mobile-nav-item">
+                    <i class="fas fa-users me-2"></i>Команда
+                </a>
+                <a href="educational-catalog.html" class="mobile-nav-item">
+                    <i class="fas fa-microscope me-2"></i>Оборудование
+                </a>
+                <div class="mobile-auth-section">
+                    <a href="login.html" class="mobile-nav-item" id="mobile-login-link">
+                        <i class="fas fa-sign-in-alt me-2"></i>Войти
                     </a>
-                </li>
-                <li class="nav-item">
-                    <span class="nav-link" id="user-info" style="display: none;"></span>
-                </li>
-            </ul>
+                    <a href="profile.html" class="mobile-nav-item" id="mobile-profile-link" style="display: none;">
+                        <i class="fas fa-user me-2"></i>Личный кабинет
+                    </a>
+                    <a href="#" class="mobile-nav-item" id="mobile-logout-link" style="display: none;">
+                        <i class="fas fa-sign-out-alt me-2"></i>Выйти
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
-</nav>
+</header>
