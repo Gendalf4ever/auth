@@ -1,6 +1,6 @@
 /**
  * Обучающий каталог оборудования
- * Загружает данные из Google Sheets и отображает их в виде обучающей таблицы без цен
+ * Загружает данные из Firebase Firestore и отображает их в виде обучающей таблицы без цен
  */
 
 // Глобальные переменные
@@ -8,6 +8,7 @@ let equipmentData = [];
 let filteredEquipment = [];
 let currentPage = 1;
 let itemsPerPage = 10; // Возвращаем нормальную пагинацию
+let productsDb = null; // Firestore для товаров
 
 // Элементы DOM
 const loadingEquipment = document.getElementById('loading-equipment');
@@ -20,8 +21,6 @@ const sortEquipment = document.getElementById('sort-equipment');
 const refreshEquipmentBtn = document.getElementById('refresh-equipment');
 const equipmentPagination = document.getElementById('equipment-pagination');
 
-// Прямая загрузка из Google Sheets (без proxy)
-
 // Инициализация при загрузке страницы
 document.addEventListener('DOMContentLoaded', () => {
     initializeEquipment();
@@ -29,9 +28,25 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // Инициализация оборудования
-function initializeEquipment() {
+async function initializeEquipment() {
     showLoading();
-    loadEquipmentFromGoogleSheets();
+    
+    // Инициализируем Firebase приложение для товаров
+    try {
+        if (typeof window.getProductsFirestore === 'function') {
+            productsDb = window.getProductsFirestore();
+            console.log('Products Firestore инициализирован');
+        } else {
+            throw new Error('getProductsFirestore не определена. Проверьте подключение firebase-config.js');
+        }
+    } catch (error) {
+        console.error('Ошибка инициализации Products Firestore:', error);
+        showError('Ошибка подключения к базе данных товаров');
+        return;
+    }
+    
+    // Загружаем данные из Firebase
+    await loadEquipmentFromFirebase();
 }
 
 // Настройка обработчиков событий
@@ -53,28 +68,285 @@ function setupEventListeners() {
     
     // Обновление
     if (refreshEquipmentBtn) {
-        refreshEquipmentBtn.addEventListener('click', () => {
-            console.log('Принудительное обновление данных с очисткой кеша...');
-            
-            // Очищаем кеш браузера для Google Sheets
-            if ('caches' in window) {
-                caches.keys().then(names => {
-                    names.forEach(name => {
-                        if (name.includes('google') || name.includes('sheets')) {
-                            caches.delete(name);
-                        }
-                    });
-                });
-            }
-            
+        refreshEquipmentBtn.addEventListener('click', async () => {
+            console.log('Обновление данных из Firebase...');
             showLoading();
-            // Принудительно перезагружаем данные с параметром для обхода кеша
-            loadEquipmentFromGoogleSheets(true);
+            await loadEquipmentFromFirebase();
         });
     }
 }
 
-// Загрузка данных из Google Sheets со всех листов
+// ======================================
+// ЗАГРУЗКА ДАННЫХ ИЗ FIREBASE
+// ======================================
+
+// Загрузка данных из Firebase Firestore
+async function loadEquipmentFromFirebase() {
+    console.log('Начинаем загрузку оборудования из Firebase...');
+    
+    try {
+        if (!productsDb) {
+            throw new Error('Products Firestore не инициализирован');
+        }
+        
+        // Загружаем данные из коллекции 'products'
+        const productsRef = productsDb.collection('products');
+        const snapshot = await productsRef.get();
+        
+        if (snapshot.empty) {
+            console.warn('Коллекция products пуста');
+            showError('В базе данных нет товаров');
+            return;
+        }
+        
+        console.log(`Загружено ${snapshot.size} товаров из Firebase`);
+        
+        // Преобразуем данные из Firebase в формат приложения
+        const allProducts = [];
+        snapshot.forEach(doc => {
+            const data = doc.data();
+            allProducts.push({
+                id: doc.id,
+                ...data
+            });
+        });
+        
+        console.log('Пример первого товара:', allProducts[0]);
+        
+        // Преобразуем данные в формат для обучающего каталога
+        equipmentData = transformFirebaseToEducationalFormat(allProducts);
+        
+        console.log(`Преобразовано ${equipmentData.length} товаров`);
+        console.log('Пример преобразованного товара:', equipmentData[0]);
+        
+        filteredEquipment = [...equipmentData];
+        hideLoading();
+        renderEquipment();
+        
+        console.log('Оборудование успешно загружено из Firebase и отображено');
+        
+    } catch (error) {
+        console.error('Ошибка загрузки из Firebase:', error);
+        showError(`Не удалось загрузить данные из Firebase: ${error.message}`);
+    }
+}
+
+// Нормализация категории из Firebase в русское название
+function normalizeCategoryFromFirebase(firebaseCategory, productName) {
+    if (!firebaseCategory) {
+        return determineCategoryFromName(productName);
+    }
+    
+    const categoryLower = firebaseCategory.toLowerCase().trim();
+    
+    // Карта соответствия английских категорий русским
+    const categoryMapping = {
+        'scanners': '3D сканеры',
+        'scanner': '3D сканеры',
+        '3d-scanners': '3D сканеры',
+        '3d scanners': '3D сканеры',
+        
+        'printers': '3D принтеры',
+        'printer': '3D принтеры',
+        '3d-printers': '3D принтеры',
+        '3d printers': '3D принтеры',
+        
+        'milling': 'Фрезерные станки',
+        'mill': 'Фрезерные станки',
+        'cnc': 'Фрезерные станки',
+        
+        'materials': 'Материалы',
+        'material': 'Материалы',
+        'zircon': 'Материалы',
+        'resin': 'Материалы',
+        
+        'post-processing': 'Пост-обработка',
+        'postprocessing': 'Пост-обработка',
+        'furnace': 'Пост-обработка',
+        
+        'equipment': 'Оборудование',
+        'other': 'Оборудование'
+    };
+    
+    // Если есть точное соответствие
+    if (categoryMapping[categoryLower]) {
+        console.log(`Нормализация категории: "${firebaseCategory}" → "${categoryMapping[categoryLower]}"`);
+        return categoryMapping[categoryLower];
+    }
+    
+    // Если категория уже на русском
+    const russianCategories = ['3D принтеры', '3D сканеры', 'Фрезерные станки', 'Материалы', 'Пост-обработка', 'Оборудование'];
+    if (russianCategories.includes(firebaseCategory)) {
+        return firebaseCategory;
+    }
+    
+    // Иначе определяем по названию
+    console.log(`Категория "${firebaseCategory}" не распознана, определяем по названию`);
+    return determineCategoryFromName(productName);
+}
+
+// Преобразование данных из Firebase в формат для обучающего каталога
+function transformFirebaseToEducationalFormat(productsData) {
+    console.log('=== ПРЕОБРАЗОВАНИЕ ДАННЫХ ИЗ FIREBASE ===');
+    console.log(`Преобразуем ${productsData.length} товаров`);
+    
+    return productsData.map(product => {
+        // Структура данных из Firebase может отличаться, адаптируем её
+        const rawCategory = product.category || product.категория;
+        const productName = product.name || product.наименование || '';
+        const category = normalizeCategoryFromFirebase(rawCategory, productName);
+        
+        // Получаем характеристики
+        let specifications = 'Характеристики не указаны';
+        if (product.specifications) {
+            specifications = product.specifications;
+        } else if (product.характеристики) {
+            specifications = product.характеристики;
+        } else if (product.specs) {
+            specifications = product.specs;
+        } else {
+            // Пытаемся найти характеристики в других полях
+            specifications = getSpecificationsFromFirebaseProduct(product);
+        }
+        
+        // Получаем изображение
+        let imageUrl = '';
+        if (product.img_url) {
+            imageUrl = product.img_url;
+        } else if (product.image) {
+            imageUrl = product.image;
+        } else if (product.изображение) {
+            imageUrl = product.изображение;
+        } else if (product.imageUrl) {
+            imageUrl = product.imageUrl;
+        } else if (product.photoURL) {
+            imageUrl = product.photoURL;
+        }
+        
+        // Логируем найденное изображение для отладки
+        if (imageUrl) {
+            console.log(`Изображение для "${product.name || product.наименование}": ${imageUrl}`);
+        }
+        
+        // Получаем описание
+        const description = product.description || product.описание || product.desc || 'Описание отсутствует';
+        
+        // Получаем название
+        const name = cleanEquipmentName(product.name || product.наименование || product.title || 'Без названия');
+        
+        return {
+            id: product.id || '',
+            name: name,
+            category: category,
+            description: description,
+            specifications: specifications,
+            image: imageUrl,
+            originalData: product // Сохраняем оригинальные данные
+        };
+    });
+}
+
+// Получение характеристик из продукта Firebase
+function getSpecificationsFromFirebaseProduct(product) {
+    console.log('Ищем характеристики в Firebase продукте:', product);
+    
+    // Список возможных полей с характеристиками
+    const specsFields = [
+        'characteristics', 'характеристики', 'specs', 'specifications',
+        'techSpecs', 'technicalSpecs', 'parameters', 'параметры',
+        'features', 'свойства', 'properties'
+    ];
+    
+    // Ищем в основных полях
+    for (const field of specsFields) {
+        if (product[field] && typeof product[field] === 'string' && product[field].trim() !== '') {
+            console.log(`Найдены характеристики в поле "${field}"`);
+            return product[field].trim();
+        }
+    }
+    
+    // Если характеристики - это объект, преобразуем в строку
+    for (const field of specsFields) {
+        if (product[field] && typeof product[field] === 'object') {
+            console.log(`Найдены характеристики-объект в поле "${field}"`);
+            return formatSpecsObject(product[field]);
+        }
+    }
+    
+    return 'Характеристики не указаны';
+}
+
+// Форматирование объекта характеристик в строку
+function formatSpecsObject(specsObj) {
+    if (!specsObj) return 'Характеристики не указаны';
+    
+    const parts = [];
+    for (const [key, value] of Object.entries(specsObj)) {
+        if (value) {
+            parts.push(`${key}: ${value}`);
+        }
+    }
+    
+    return parts.length > 0 ? parts.join('\n') : 'Характеристики не указаны';
+}
+
+// Определение категории по названию продукта
+function determineCategoryFromName(name) {
+    const nameLower = name.toLowerCase();
+    
+    console.log(`Определяем категорию для: "${name}"`);
+    
+    // 3D принтеры
+    if (nameLower.includes('принтер') || nameLower.includes('printer') || 
+        nameLower.includes('3d принтер') || nameLower.includes('3d printer')) {
+        console.log('→ Категория: 3D принтеры');
+        return '3D принтеры';
+    }
+    
+    // 3D сканеры
+    if (nameLower.includes('сканер') || nameLower.includes('scanner') || 
+        nameLower.includes('3d сканер') || nameLower.includes('3d scanner') ||
+        nameLower.includes('medit') || nameLower.includes('carestream') || 
+        nameLower.includes('3shape') || nameLower.includes('planmeca')) {
+        console.log('→ Категория: 3D сканеры');
+        return '3D сканеры';
+    }
+    
+    // Фрезерные станки
+    if (nameLower.includes('фрез') || nameLower.includes('mill') || 
+        nameLower.includes('станок') || nameLower.includes('cnc') ||
+        nameLower.includes('cad/cam') || nameLower.includes('cadcam')) {
+        console.log('→ Категория: Фрезерные станки');
+        return 'Фрезерные станки';
+    }
+    
+    // Материалы
+    if (nameLower.includes('диск') || nameLower.includes('zircon') || nameLower.includes('циркон') ||
+        nameLower.includes('полимер') || nameLower.includes('resin') || nameLower.includes('смола') ||
+        nameLower.includes('материал') || nameLower.includes('блок') || nameLower.includes('заготовк') ||
+        nameLower.includes('pmma') || nameLower.includes('пмма') || nameLower.includes('воск')) {
+        console.log('→ Категория: Материалы');
+        return 'Материалы';
+    }
+    
+    // Пост-обработка
+    if (nameLower.includes('печь') || nameLower.includes('синтер') || nameLower.includes('sinter') ||
+        nameLower.includes('полимериз') || nameLower.includes('отверждени') || 
+        nameLower.includes('промывк') || nameLower.includes('очистк') ||
+        nameLower.includes('ультразвук') || nameLower.includes('ultrasonic')) {
+        console.log('→ Категория: Пост-обработка');
+        return 'Пост-обработка';
+    }
+    
+    console.log('→ Категория: Оборудование (по умолчанию)');
+    return 'Оборудование';
+}
+
+// ======================================
+// ЗАГРУЗКА ДАННЫХ ИЗ GOOGLE SHEETS (УСТАРЕВШЕЕ)
+// ======================================
+
+// Загрузка данных из Google Sheets со всех листов (СТАРЫЙ МЕТОД - НЕ ИСПОЛЬЗУЕТСЯ)
 async function loadEquipmentFromGoogleSheets(forceRefresh = false) {
     console.log('Начинаем загрузку оборудования со всех листов...', forceRefresh ? '(принудительное обновление)' : '');
     
@@ -106,8 +378,7 @@ async function loadEquipmentFromGoogleSheets(forceRefresh = false) {
                     // Добавляем информацию о листе к каждому элементу
                     const sheetDataWithSource = sheetData.map(item => ({
                         ...item,
-                        sourceSheet: sheetId,
-                        sourceTitle: window.sheetConfig.pages[sheetId]?.title || sheetId
+                        sourceSheet: sheetId
                     }));
                     
                     allEquipmentData = allEquipmentData.concat(sheetDataWithSource);
@@ -190,13 +461,6 @@ function transformToEducationalFormat(data) {
         // Определяем категорию на основе названия, описания и источника
         const category = determineCategoryFromSource(item.sourceSheet, item['наименование'] || '', item['описание'] || '');
         
-        
-        // Определяем назначение
-        const purpose = determinePurpose(item['наименование'] || '', item['описание'] || '');
-        
-        // Определяем применение
-        const application = determineApplication(category, item['описание'] || '');
-        
         // Ищем характеристики в разных возможных колонках
         const specifications = getSpecifications(item);
         
@@ -207,13 +471,9 @@ function transformToEducationalFormat(data) {
             id: item['id'] || '',
             name: cleanEquipmentName(item['наименование'] || 'Без названия'),
             category: category,
-            purpose: purpose,
             description: item['описание'] || 'Описание отсутствует',
             specifications: specifications,
             image: imageUrl,
-            application: application,
-            sourceSheet: item.sourceSheet || '',
-            sourceTitle: item.sourceTitle || '',
             originalData: item // Сохраняем оригинальные данные
         };
     });
@@ -489,6 +749,14 @@ function getSpecifications(item) {
     console.log('Элемент для поиска характеристик:', item);
     console.log('Доступные ключи:', Object.keys(item));
     
+    // Выводим все ключи и их значения для отладки
+    console.log('Полная информация о всех колонках:');
+    Object.keys(item).forEach(key => {
+        const value = item[key];
+        const valuePreview = value ? value.toString().substring(0, 100) : 'пусто';
+        console.log(`  "${key}": "${valuePreview}${value && value.toString().length > 100 ? '...' : ''}"`);
+    });
+    
     // Получаем описание для сравнения
     const description = item['описание'] || '';
     console.log('Описание для сравнения:', description);
@@ -555,6 +823,7 @@ function getSpecifications(item) {
         'характеристика',
         'Характеристика',
         'ХАРАКТЕРИСТИКА',
+        'характеристикистики', // возможная опечатка в таблице
         'specs',
         'Specs',
         'SPECS',
@@ -573,7 +842,9 @@ function getSpecifications(item) {
         'СВОЙСТВА',
         'техописание',
         'Техописание',
-        'ТЕХОПИСАНИЕ'
+        'ТЕХОПИСАНИЕ',
+        'характ', // сокращенное название
+        'Характ'
     ];
     
     console.log('Проверяем точные совпадения колонок...');
@@ -599,14 +870,19 @@ function getSpecifications(item) {
     console.log('Точные совпадения не найдены. Ищем по ключевым словам...');
     // Дополнительный поиск: ищем колонки, содержащие ключевые слова (исключаем "описан")
     const keywords = [
-        'характеристик', 'параметр', 'spec', 'техническ', 'свойств', 
+        'характеристик', 'харак', 'параметр', 'spec', 'техническ', 'свойств', 
         'feature', 'property', 'detail'
     ];
     
     for (const key of Object.keys(item)) {
-        // Пропускаем колонку с описанием
-        if (key.toLowerCase().includes('описан')) {
-            console.log(`Пропускаем колонку "${key}" (содержит "описан")`);
+        // Пропускаем колонку с описанием и другие стандартные колонки
+        if (key.toLowerCase().includes('описан') || 
+            key.toLowerCase().includes('наименован') ||
+            key.toLowerCase().includes('название') ||
+            key.toLowerCase() === 'id' ||
+            key.toLowerCase() === 'цена' ||
+            key.toLowerCase() === 'акционная цена') {
+            console.log(`Пропускаем колонку "${key}" (стандартная колонка)`);
             continue;
         }
         
@@ -838,45 +1114,6 @@ function determineCategory(name, description) {
     return 'Оборудование';
 }
 
-
-// Определение назначения
-function determinePurpose(name, description) {
-    const nameLower = name.toLowerCase();
-    const descLower = description.toLowerCase();
-    
-    if (nameLower.includes('стоматолог') || descLower.includes('стоматолог')) {
-        return 'Стоматология';
-    }
-    if (nameLower.includes('лаборатор') || descLower.includes('лаборатор')) {
-        return 'Лаборатория';
-    }
-    if (nameLower.includes('клиник') || descLower.includes('клиник')) {
-        return 'Клиника';
-    }
-    return 'Общее применение';
-}
-
-// Определение применения
-function determineApplication(category, description) {
-    const descLower = description.toLowerCase();
-    
-    switch (category) {
-        case '3D принтеры':
-            return 'Печать коронок, мостов, протезов';
-        case '3D сканеры':
-            return 'Сканирование полости рта, слепков';
-        case 'Фрезерные станки':
-            return 'Обработка заготовок, финишная обработка';
-        case 'Материалы':
-            return 'Сырье для производства';
-        case 'Пост-обработка':
-            return 'Окончательная обработка изделий';
-        default:
-            return 'Специализированное применение';
-    }
-}
-
-
 // Парсинг CSV данных (аналогично products.js)
 function parseCSV(csvText) {
     console.log('Начинаем парсинг CSV...');
@@ -962,54 +1199,73 @@ function parseCSVLine(line) {
     return result;
 }
 
-// Поиск оборудования
-function handleSearch() {
-    const searchTerm = searchEquipment.value.toLowerCase().trim();
+// Универсальная функция фильтрации с учетом поиска и категории
+function applyFilters() {
+    const searchTerm = searchEquipment?.value?.toLowerCase().trim() || '';
+    const selectedCategory = categoryFilter?.value || 'all';
     
-    if (searchTerm === '') {
-        filteredEquipment = [...equipmentData];
-    } else {
-        filteredEquipment = equipmentData.filter(equipment => 
-            equipment.name.toLowerCase().includes(searchTerm) ||
-            equipment.description.toLowerCase().includes(searchTerm) ||
-            equipment.specifications.toLowerCase().includes(searchTerm) ||
-            equipment.purpose.toLowerCase().includes(searchTerm) ||
-            equipment.application.toLowerCase().includes(searchTerm)
-        );
+    console.log('Применяем фильтры - Поиск:', searchTerm, 'Категория:', selectedCategory);
+    
+    // Начинаем с полного списка
+    let result = [...equipmentData];
+    
+    // Применяем фильтр по категории
+    if (selectedCategory !== 'all') {
+        const categoryMap = {
+            '3d-printers': '3D принтеры',
+            'scanners': '3D сканеры',
+            'milling': 'Фрезерные станки',
+            'materials': 'Материалы',
+            'post-processing': 'Пост-обработка',
+            'equipment': 'Оборудование'
+        };
+        
+        const targetCategory = categoryMap[selectedCategory];
+        console.log('Фильтруем по категории:', targetCategory);
+        
+        result = result.filter(equipment => equipment.category === targetCategory);
+        console.log(`После фильтрации по категории: ${result.length} товаров`);
     }
+    
+    // Применяем поиск
+    if (searchTerm !== '') {
+        result = result.filter(equipment => {
+            // Безопасная проверка каждого поля
+            const nameMatch = equipment.name?.toLowerCase().includes(searchTerm) || false;
+            const descMatch = equipment.description?.toLowerCase().includes(searchTerm) || false;
+            const specMatch = equipment.specifications?.toLowerCase().includes(searchTerm) || false;
+            const categoryMatch = equipment.category?.toLowerCase().includes(searchTerm) || false;
+            
+            const isMatch = nameMatch || descMatch || specMatch || categoryMatch;
+            
+            if (isMatch) {
+                console.log(`✓ Найдено совпадение в: ${equipment.name}`);
+                if (nameMatch) console.log('  - в названии');
+                if (descMatch) console.log('  - в описании');
+                if (specMatch) console.log('  - в характеристиках');
+                if (categoryMatch) console.log('  - в категории');
+            }
+            
+            return isMatch;
+        });
+        console.log(`После поиска по "${searchTerm}": ${result.length} товаров`);
+    }
+    
+    filteredEquipment = result;
+    console.log(`Итого найдено: ${filteredEquipment.length} товаров`);
     
     currentPage = 1;
     renderEquipment();
 }
 
+// Поиск оборудования
+function handleSearch() {
+    applyFilters();
+}
+
 // Фильтрация по категориям
 function handleCategoryFilter() {
-    const selectedCategory = categoryFilter.value;
-    
-    if (selectedCategory === 'all') {
-        filteredEquipment = [...equipmentData];
-    } else {
-        const categoryMap = {
-            '3d-printers': '3D принтеры',
-            '3d-scanners': '3D сканеры',
-            'milling': 'Фрезерные станки',
-            'frezy': 'Фрезы',
-            'sinterising': 'Синтеризация',
-            'zirkon': 'Циркониевые диски',
-            'post-processing': 'Пост-обработка',
-            'photo-polymers': 'Фотополимеры',
-            'consumables': 'Расходные материалы',
-            'compressors': 'Компрессоры'
-        };
-        
-        const targetCategory = categoryMap[selectedCategory];
-        filteredEquipment = equipmentData.filter(equipment => 
-            equipment.category === targetCategory
-        );
-    }
-    
-    currentPage = 1;
-    renderEquipment();
+    applyFilters();
 }
 
 // Сортировка оборудования
@@ -1090,7 +1346,6 @@ function createEquipmentRow(equipment) {
             <h5 class="mb-2">${equipment.name}</h5>
             <div class="equipment-category">
                 <span class="badge bg-primary me-2">${equipment.category}</span>
-                ${equipment.sourceTitle ? `<span class="badge bg-secondary ms-1" title="Источник: ${equipment.sourceTitle}">${equipment.sourceTitle}</span>` : ''}
             </div>
         </div>
     `;
@@ -1100,12 +1355,6 @@ function createEquipmentRow(equipment) {
     descriptionCell.innerHTML = `
         <div class="equipment-description">
             <p class="mb-2">${equipment.description}</p>
-            <div class="equipment-details">
-                <small class="text-muted">
-                    <strong>Назначение:</strong> ${equipment.purpose}<br>
-                    <strong>Применение:</strong> ${equipment.application}
-                </small>
-            </div>
         </div>
     `;
     
@@ -1294,16 +1543,6 @@ function showEquipmentModal(equipmentId) {
                 </div>
                 
                 <h4>${equipment.name}</h4>
-                
-                <div class="mb-3">
-                    <h5>Назначение:</h5>
-                    <p>${equipment.purpose}</p>
-                </div>
-                
-                <div class="mb-3">
-                    <h5>Применение:</h5>
-                    <p>${equipment.application}</p>
-                </div>
                 
                 <div class="mb-3">
                     <h5>Описание:</h5>

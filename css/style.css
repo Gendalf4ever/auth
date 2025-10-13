@@ -1147,31 +1147,32 @@ footer .col-md-6 {
 
 /* Стили для изображений оборудования */
 .equipment-image {
-    width: 80px;
-    height: 80px;
+    width: 220px;
+    height: 220px;
     object-fit: cover;
-    border-radius: 8px;
+    border-radius: 12px;
     border: 2px solid #e9ecef;
     transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
 .equipment-image:hover {
     transform: scale(1.05);
     border-color: #667eea;
-    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
 }
 
 .equipment-image-placeholder {
-    width: 80px;
-    height: 80px;
+    width: 220px;
+    height: 220px;
     background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
     border: 2px solid #e9ecef;
-    border-radius: 8px;
+    border-radius: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
     color: #6c757d;
-    font-size: 1.5rem;
+    font-size: 2rem;
 }
 
 .equipment-modal-image {

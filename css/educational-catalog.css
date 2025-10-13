@@ -93,8 +93,8 @@
 
 /* Изображения оборудования */
 .equipment-image {
-    width: 70px;
-    height: 70px;
+    width: 150px;
+    height: 150px;
     object-fit: cover;
     border-radius: 12px;
     border: 3px solid #e9ecef;
@@ -103,21 +103,21 @@
 }
 
 .equipment-image:hover {
-    transform: scale(1.1);
+    transform: scale(1.05);
     border-color: #3498db;
-    box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+    box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
 }
 
 .equipment-image-placeholder {
-    width: 70px;
-    height: 70px;
+    width: 150px;
+    height: 150px;
     background: linear-gradient(135deg, #f8f9fa, #e9ecef);
     border-radius: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
     color: #6c757d;
-    font-size: 1.8rem;
+    font-size: 3rem;
     border: 3px solid #e9ecef;
     transition: all 0.3s ease;
 }
@@ -303,12 +303,13 @@
 
 .equipment-modal-image {
     width: 100%;
-    max-width: 400px;
-    height: 300px;
-    object-fit: cover;
+    max-width: 600px;
+    height: 500px;
+    object-fit: contain;
     border-radius: 15px;
     margin-bottom: 20px;
     box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    background: #f8f9fa;
 }
 
 .equipment-modal-specs {
@@ -479,12 +480,12 @@
     
     .equipment-image,
     .equipment-image-placeholder {
-        width: 50px;
-        height: 50px;
+        width: 100px;
+        height: 100px;
     }
     
     .equipment-image-placeholder {
-        font-size: 1.2rem;
+        font-size: 2rem;
     }
     
     .equipment-name h5 {
@@ -504,7 +505,8 @@
     }
     
     .equipment-modal-image {
-        height: 200px;
+        height: 350px;
+        max-width: 100%;
     }
 }
 
