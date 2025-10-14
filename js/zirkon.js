@@ -166,20 +166,20 @@ function displayZirkonProducts() {
                             <i class="fas fa-tooth"></i>
                         </div>
                     `}
-                    <div class="card-body">
+                    <div class="card-body d-flex flex-column">
                         <h5 class="card-title">${name}</h5>
                         <p class="card-text small text-muted">${truncateText(description, 100)}</p>
                         ${specs && specs !== 'Характеристики не указаны' ? `
-                            <div class="specs-preview small">
+                            <div class="specs-preview small mb-3">
                                 <strong>Характеристики:</strong>
                                 <p class="mb-0">${truncateText(specs, 80)}</p>
                             </div>
                         ` : ''}
-                    </div>
-                    <div class="card-footer bg-transparent">
-                        <button class="btn btn-outline-primary btn-sm w-100" onclick="showProductDetails('${product.id}')">
-                            <i class="fas fa-info-circle me-2"></i>Подробнее
-                        </button>
+                        <div class="mt-auto">
+                            <button class="btn btn-outline-primary btn-sm w-100" onclick="showProductDetails('${product.id}')">
+                                <i class="fas fa-info-circle me-2"></i>Подробнее
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>

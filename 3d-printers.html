@@ -3,266 +3,331 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>3D принтеры для стоматологии - CODENT Обучение</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/header.css">
+    <title>3D печать в стоматологии - CODENT Education</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="css/3d-printing.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+    <link href="css/header.css" rel="stylesheet">
 </head>
 <body>
     <!-- Подключаем единый хедер -->
     <div id="header-placeholder"></div>
 
-    <div class="container py-5">
-        <div class="row justify-content-center">
-            <div class="col-lg-9">
-                <div class="card">
-                    <div class="card-body">
-                        <!-- Кнопка назад -->
-                        <div class="mb-3">
-                            <a href="courses.html" class="btn btn-outline-primary">
-                                <i class="fas fa-arrow-left me-2"></i>Назад к курсам
-                            </a>
-                        </div>
-                        
-                        <h1 class="mb-4">3D принтеры для стоматологии</h1>
-                        <p class="lead">3D печать революционизировала стоматологическую практику, предоставив возможность быстрого и точного изготовления различных стоматологических изделий прямо в клинике или лаборатории.</p>
+    <!-- Основной контент -->
+    <div class="container mt-5 pt-5">
+        <!-- Кнопка назад -->
+        <div class="row mb-3">
+            <div class="col-12">
+                <a href="courses.html" class="btn btn-outline-primary">
+                    <i class="fas fa-arrow-left me-2"></i>Назад к курсам
+                </a>
+            </div>
+        </div>
+        
+        <!-- Заголовок страницы -->
+        <div class="row mb-5">
+            <div class="col-12 text-center">
+                <h1 class="display-4 mb-3">
+                    <i class="fas fa-print text-primary me-3"></i>3D печать в стоматологии
+                </h1>
+                <p class="lead text-muted">3D печать открывает новые возможности в стоматологии для создания точных и индивидуальных решений</p>
+            </div>
+        </div>
 
-                        <h3 class="mt-4">Что такое стоматологические 3D принтеры?</h3>
-                        <p>Стоматологические 3D принтеры — это специализированные устройства, предназначенные для печати стоматологических изделий с высокой точностью и биосовместимыми материалами. Они используют различные технологии печати, такие как SLA (стереолитография), DLP (цифровая световая обработка) и FDM (моделирование методом наплавления).</p>
-
-                        <h3 class="mt-4">Основные технологии 3D печати в стоматологии</h3>
-                        
-                        <div class="row mt-3">
-                            <div class="col-md-4 mb-3">
-                                <div class="card h-100 border-primary">
-                                    <div class="card-body text-center">
-                                        <i class="fas fa-lightbulb fa-3x text-primary mb-3"></i>
-                                        <h5 class="card-title">SLA (Стереолитография)</h5>
-                                        <p class="card-text">Использует лазер для отверждения жидкой фотополимерной смолы слой за слоем. Обеспечивает высочайшую точность и гладкую поверхность.</p>
+        <!-- Обзор технологий -->
+        <div class="row mb-5">
+            <div class="col-12">
+                <div class="card shadow-sm">
+                    <div class="card-body p-4">
+                        <h3 class="card-title mb-4">
+                            <i class="fas fa-cogs text-primary me-2"></i>Технологии 3D печати
+                        </h3>
+                        <div class="row g-4">
+                            <!-- SLA -->
+                            <div class="col-md-6 col-lg-4">
+                                <div class="tech-overview-card h-100 p-3 border rounded">
+                                    <div class="text-center mb-3">
+                                        <i class="fas fa-laser-pointer fa-3x text-primary"></i>
                                     </div>
+                                    <h5 class="text-center">Стереолитография (SLA/SL)</h5>
+                                    <p class="text-muted small text-center">Лазерное отверждение жидкой смолы</p>
                                 </div>
                             </div>
-                            <div class="col-md-4 mb-3">
-                                <div class="card h-100 border-success">
-                                    <div class="card-body text-center">
-                                        <i class="fas fa-tv fa-3x text-success mb-3"></i>
-                                        <h5 class="card-title">DLP (Цифровая проекция)</h5>
-                                        <p class="card-text">Использует цифровой проектор для одновременного отверждения целого слоя. Быстрее SLA при печати нескольких объектов.</p>
+                            <!-- DLP -->
+                            <div class="col-md-6 col-lg-4">
+                                <div class="tech-overview-card h-100 p-3 border rounded">
+                                    <div class="text-center mb-3">
+                                        <i class="fas fa-sun fa-3x text-warning"></i>
                                     </div>
+                                    <h5 class="text-center">Цифровая проекция (DLP)</h5>
+                                    <p class="text-muted small text-center">Проекторное отверждение смолы</p>
                                 </div>
                             </div>
-                            <div class="col-md-4 mb-3">
-                                <div class="card h-100 border-warning">
-                                    <div class="card-body text-center">
-                                        <i class="fas fa-fire fa-3x text-warning mb-3"></i>
-                                        <h5 class="card-title">FDM (Наплавление)</h5>
-                                        <p class="card-text">Расплавляет и экструдирует термопластичный материал. Подходит для прототипов и некоторых стоматологических применений.</p>
+                            <!-- PolyJet -->
+                            <div class="col-md-6 col-lg-4">
+                                <div class="tech-overview-card h-100 p-3 border rounded">
+                                    <div class="text-center mb-3">
+                                        <i class="fas fa-spray-can fa-3x text-success"></i>
                                     </div>
+                                    <h5 class="text-center">Технология PolyJet</h5>
+                                    <p class="text-muted small text-center">Струйная печать фотополимерами</p>
                                 </div>
                             </div>
-                        </div>
-
-                        <h3 class="mt-4">Применение в стоматологии</h3>
-                        <p>3D принтеры в стоматологии используются для изготовления широкого спектра изделий:</p>
-                        
-                        <div class="row mt-3">
-                            <div class="col-md-6">
-                                <ul class="list-group list-group-flush">
-                                    <li class="list-group-item"><i class="fas fa-check text-success me-2"></i><strong>Модели челюстей</strong> - для планирования лечения</li>
-                                    <li class="list-group-item"><i class="fas fa-check text-success me-2"></i><strong>Хирургические шаблоны</strong> - для имплантации</li>
-                                    <li class="list-group-item"><i class="fas fa-check text-success me-2"></i><strong>Временные коронки</strong> - быстрое изготовление</li>
-                                    <li class="list-group-item"><i class="fas fa-check text-success me-2"></i><strong>Ортодонтические модели</strong> - для элайнеров</li>
-                                </ul>
-                            </div>
-                            <div class="col-md-6">
-                                <ul class="list-group list-group-flush">
-                                    <li class="list-group-item"><i class="fas fa-check text-success me-2"></i><strong>Зубные протезы</strong> - полные и частичные</li>
-                                    <li class="list-group-item"><i class="fas fa-check text-success me-2"></i><strong>Каппы и шины</strong> - ночные и спортивные</li>
-                                    <li class="list-group-item"><i class="fas fa-check text-success me-2"></i><strong>Индивидуальные ложки</strong> - для оттисков</li>
-                                    <li class="list-group-item"><i class="fas fa-check text-success me-2"></i><strong>Анатомические модели</strong> - для обучения</li>
-                                </ul>
-                            </div>
-                        </div>
-
-                        <h3 class="mt-4">Преимущества 3D печати</h3>
-                        <div class="alert alert-info">
-                            <h5 class="alert-heading">
-                                <i class="fas fa-star me-2"></i>Ключевые преимущества
-                            </h5>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <ul class="mb-0">
-                                        <li><strong>Скорость:</strong> Быстрое изготовление изделий</li>
-                                        <li><strong>Точность:</strong> Высокая детализация (до 25 микрон)</li>
-                                        <li><strong>Персонализация:</strong> Индивидуальные решения для каждого пациента</li>
-                                    </ul>
+                            <!-- SLS/EBM -->
+                            <div class="col-md-6 col-lg-4">
+                                <div class="tech-overview-card h-100 p-3 border rounded">
+                                    <div class="text-center mb-3">
+                                        <i class="fas fa-fire fa-3x text-danger"></i>
+                                    </div>
+                                    <h5 class="text-center">SLS и EBM</h5>
+                                    <p class="text-muted small text-center">Лазерное спекание металлов</p>
                                 </div>
-                                <div class="col-md-6">
-                                    <ul class="mb-0">
-                                        <li><strong>Экономия:</strong> Снижение затрат на лабораторные работы</li>
-                                        <li><strong>Контроль качества:</strong> Производство в собственной клинике</li>
-                                        <li><strong>Инновации:</strong> Возможность создания сложных геометрий</li>
-                                    </ul>
+                            </div>
+                            <!-- Филаментная печать -->
+                            <div class="col-md-6 col-lg-4">
+                                <div class="tech-overview-card h-100 p-3 border rounded">
+                                    <div class="text-center mb-3">
+                                        <i class="fas fa-thread fa-3x text-secondary"></i>
+                                    </div>
+                                    <h5 class="text-center">Филаментная печать</h5>
+                                    <p class="text-muted small text-center">Печать пластиковой нитью</p>
                                 </div>
                             </div>
                         </div>
-
-                        <h3 class="mt-4">Материалы для 3D печати</h3>
-                        <p>Современные стоматологические 3D принтеры работают с различными биосовместимыми материалами:</p>
-                        
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <div class="card border-info">
-                                    <div class="card-header bg-info text-white">
-                                        <i class="fas fa-flask me-2"></i>Фотополимерные смолы
-                                    </div>
-                                    <div class="card-body">
-                                        <ul class="list-unstyled mb-0">
-                                            <li><i class="fas fa-dot-circle text-info me-2"></i>Биосовместимые смолы</li>
-                                            <li><i class="fas fa-dot-circle text-info me-2"></i>Прозрачные материалы</li>
-                                            <li><i class="fas fa-dot-circle text-info me-2"></i>Гибкие смолы</li>
-                                            <li><i class="fas fa-dot-circle text-info me-2"></i>Керамонаполненные композиты</li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <div class="card border-warning">
-                                    <div class="card-header bg-warning text-dark">
-                                        <i class="fas fa-cube me-2"></i>Термопластики
-                                    </div>
-                                    <div class="card-body">
-                                        <ul class="list-unstyled mb-0">
-                                            <li><i class="fas fa-dot-circle text-warning me-2"></i>PEEK (полиэфирэфиркетон)</li>
-                                            <li><i class="fas fa-dot-circle text-warning me-2"></i>PLA медицинский</li>
-                                            <li><i class="fas fa-dot-circle text-warning me-2"></i>PETG</li>
-                                            <li><i class="fas fa-dot-circle text-warning me-2"></i>Нейлон медицинский</li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <h3 class="mt-4">Рабочий процесс</h3>
-                        <p>Процесс 3D печати в стоматологии включает несколько этапов:</p>
-                        
-                        <div class="row">
-                            <div class="col-12">
-                                <div class="timeline">
-                                    <div class="timeline-item">
-                                        <div class="timeline-marker bg-primary text-white">1</div>
-                                        <div class="timeline-content">
-                                            <h5>Сканирование</h5>
-                                            <p>Получение цифрового оттиска с помощью интраорального сканера или сканирование гипсовой модели.</p>
-                                        </div>
-                                    </div>
-                                    <div class="timeline-item">
-                                        <div class="timeline-marker bg-success text-white">2</div>
-                                        <div class="timeline-content">
-                                            <h5>CAD проектирование</h5>
-                                            <p>Создание 3D модели изделия в специализированном программном обеспечении.</p>
-                                        </div>
-                                    </div>
-                                    <div class="timeline-item">
-                                        <div class="timeline-marker bg-warning text-white">3</div>
-                                        <div class="timeline-content">
-                                            <h5>Подготовка к печати</h5>
-                                            <p>Слайсинг модели, настройка параметров печати, добавление поддержек.</p>
-                                        </div>
-                                    </div>
-                                    <div class="timeline-item">
-                                        <div class="timeline-marker bg-info text-white">4</div>
-                                        <div class="timeline-content">
-                                            <h5>3D печать</h5>
-                                            <p>Непосредственно процесс печати изделия на 3D принтере.</p>
-                                        </div>
-                                    </div>
-                                    <div class="timeline-item">
-                                        <div class="timeline-marker bg-danger text-white">5</div>
-                                        <div class="timeline-content">
-                                            <h5>Постобработка</h5>
-                                            <p>Промывка, полимеризация, удаление поддержек, финишная обработка.</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <h3 class="mt-4">Выбор 3D принтера</h3>
-                        <p>При выборе 3D принтера для стоматологической практики следует учитывать:</p>
-                        
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="card border-primary h-100">
-                                    <div class="card-header bg-primary text-white">
-                                        <i class="fas fa-cogs me-2"></i>Технические характеристики
-                                    </div>
-                                    <div class="card-body">
-                                        <ul class="list-unstyled">
-                                            <li><i class="fas fa-ruler me-2 text-primary"></i>Разрешение печати (XY и Z)</li>
-                                            <li><i class="fas fa-expand me-2 text-primary"></i>Размер области печати</li>
-                                            <li><i class="fas fa-tachometer-alt me-2 text-primary"></i>Скорость печати</li>
-                                            <li><i class="fas fa-thermometer-half me-2 text-primary"></i>Стабильность температуры</li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="card border-success h-100">
-                                    <div class="card-header bg-success text-white">
-                                        <i class="fas fa-handshake me-2"></i>Практические аспекты
-                                    </div>
-                                    <div class="card-body">
-                                        <ul class="list-unstyled">
-                                            <li><i class="fas fa-dollar-sign me-2 text-success"></i>Стоимость принтера и материалов</li>
-                                            <li><i class="fas fa-tools me-2 text-success"></i>Простота обслуживания</li>
-                                            <li><i class="fas fa-headset me-2 text-success"></i>Техническая поддержка</li>
-                                            <li><i class="fas fa-certificate me-2 text-success"></i>Сертификация для медицины</li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <h3 class="mt-4">Будущее 3D печати в стоматологии</h3>
-                        <p>3D печать продолжает развиваться, открывая новые возможности:</p>
-                        
-                        <div class="alert alert-success">
-                            <h5 class="alert-heading">
-                                <i class="fas fa-rocket me-2"></i>Перспективы развития
-                            </h5>
-                            <ul class="mb-0">
-                                <li><strong>Многоматериальная печать:</strong> Одновременная печать разными материалами</li>
-                                <li><strong>Биопечать:</strong> Печать живыми клетками для регенерации тканей</li>
-                                <li><strong>Металлическая печать:</strong> Прямая печать имплантатов и каркасов</li>
-                                <li><strong>Автоматизация:</strong> Полностью автоматизированные рабочие процессы</li>
-                                <li><strong>ИИ-оптимизация:</strong> Использование искусственного интеллекта для оптимизации дизайна</li>
-                            </ul>
-                        </div>
-
-                        <p class="mt-4">3D печать уже сегодня является неотъемлемой частью современной стоматологии, предоставляя врачам инструменты для более точного, быстрого и персонализированного лечения пациентов.</p>
                     </div>
                 </div>
             </div>
         </div>
+
+        <!-- Подробное описание технологий -->
+        
+        <!-- SLA Technology -->
+        <div class="row mb-5">
+            <div class="col-12">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-primary text-white">
+                        <h4 class="mb-0">
+                            <i class="fas fa-laser-pointer me-2"></i>Стереолитография (SLA/SL)
+                        </h4>
+                    </div>
+                    <div class="card-body">
+                        <p>При использовании этой технологии лазерный луч избирательно воздействует на ёмкость с жидкой смолой через область печати. Таким образом, смола послойно затвердевает в конкретных местах и образует трёхмерную фигуру.</p>
+                        
+                        <p>Стереолитография даёт наилучшее качество поверхности деталей и наиболее часто используется в современных моделях 3D-принтеров. SLA аппараты обеспечивают большую область построения реставрации и работают с широким спектром материалов, предназначенных для разнообразных задач.</p>
+                        
+                        <p>Чтобы переключиться с одного материала на другой, достаточно заменить картридж и ёмкость с полимерной смолой.</p>
+                        
+                        <div class="row mt-4">
+                            <div class="col-md-6">
+                                <div class="feature-box p-3 border rounded bg-light">
+                                    <h6 class="text-success"><i class="fas fa-plus-circle me-2"></i>Преимущества</h6>
+                                    <ul class="mb-0">
+                                        <li>Большая область печати</li>
+                                        <li>Высокая точность</li>
+                                        <li>Большой выбор материалов</li>
+                                        <li>Простота использования</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="feature-box p-3 border rounded bg-light">
+                                    <h6 class="text-warning"><i class="fas fa-minus-circle me-2"></i>Недостатки</h6>
+                                    <ul class="mb-0">
+                                        <li>Невысокая скорость печати одного изделия</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- DLP Technology -->
+        <div class="row mb-5">
+            <div class="col-12">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-warning text-dark">
+                        <h4 class="mb-0">
+                            <i class="fas fa-sun me-2"></i>Цифровая светодиодная проекция (DLP)
+                        </h4>
+                    </div>
+                    <div class="card-body">
+                        <p>Здесь химический процесс схож с SLA, однако в роли источника света для затвердевания смолы вместо лазера применяется цифровой проектор.</p>
+                        
+                        <p>У DLP принтеров простой процесс взаимодействия, довольно скромная рабочая площадь и неплохой выбор вариантов материала, но по более высокой цене в сравнении с SLA.</p>
+                        
+                        <p>Из-за особенностей засветки светодиодным проектором, наблюдается тенденция появления воксельных линий-слоёв, образованных небольшими прямоугольными кирпичами материала. У моделей, изготовленных по DLP, качество поверхности уступает SLA моделям. Но стоит отметить, что DLP принтеры печатают намного быстрее, чем лазерные.</p>
+                        
+                        <div class="row mt-4">
+                            <div class="col-md-6">
+                                <div class="feature-box p-3 border rounded bg-light">
+                                    <h6 class="text-success"><i class="fas fa-plus-circle me-2"></i>Преимущества</h6>
+                                    <ul class="mb-0">
+                                        <li>Высокая скорость печати</li>
+                                        <li>Простота использования</li>
+                                        <li>Хорошая точность</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="feature-box p-3 border rounded bg-light">
+                                    <h6 class="text-warning"><i class="fas fa-minus-circle me-2"></i>Недостатки</h6>
+                                    <ul class="mb-0">
+                                        <li>Ограниченная область печати</li>
+                                        <li>Высокая цена материалов</li>
+                                        <li>Воксельные линии на поверхности</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PolyJet Technology -->
+        <div class="row mb-5">
+            <div class="col-12">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-success text-white">
+                        <h4 class="mb-0">
+                            <i class="fas fa-spray-can me-2"></i>Технология PolyJet
+                        </h4>
+                    </div>
+                    <div class="card-body">
+                        <p>Процесс напоминает работу обычного струйного принтера, но вместо струйных чернильных капель на бумаге 3D-принтер выдувает слои жидкой смолы на область печати. Слои затвердевают под воздействием света.</p>
+                        
+                        <p>Когда-то PolyJet набирала популярность в стоматологической отрасли, но её развитие затормозили два фактора: высокая стоимость оборудования и внушительные габариты аппаратов. Модели, изготовленные по технологии PolyJet, требуют длительной постобработки и в плане качества поверхностей опять же уступают SLA.</p>
+                        
+                        <p>Системы PolyJet изготавливают детали очень быстро, но применимы для ограниченного круга изделий из-за дорогих запатентованных расходников. Поэтому в контексте нашей отрасли лучше купить 3D-принтер для стоматологии с SLA технологией.</p>
+                        
+                        <div class="row mt-4">
+                            <div class="col-md-6">
+                                <div class="feature-box p-3 border rounded bg-light">
+                                    <h6 class="text-success"><i class="fas fa-plus-circle me-2"></i>Преимущества</h6>
+                                    <ul class="mb-0">
+                                        <li>Высокая точность</li>
+                                        <li>Высокая пропускная способность</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="feature-box p-3 border rounded bg-light">
+                                    <h6 class="text-warning"><i class="fas fa-minus-circle me-2"></i>Недостатки</h6>
+                                    <ul class="mb-0">
+                                        <li>Дорогая техника</li>
+                                        <li>Дорогие материалы</li>
+                                        <li>Ограниченные варианты материалов</li>
+                                        <li>Дорогостоящее обслуживание</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLS/EBM Technology -->
+        <div class="row mb-5">
+            <div class="col-12">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-danger text-white">
+                        <h4 class="mb-0">
+                            <i class="fas fa-fire me-2"></i>SLS и EBM технологии
+                        </h4>
+                    </div>
+                    <div class="card-body">
+                        <p>Позволяют печатать титаном уже готовые элементы для замены частей челюсти. Эти технологии работают по принципу лазерного спекания металлоглины – специального металлического порошка для стоматологии.</p>
+                        
+                        <p>Так, системы SLS и EBM позволяют работать с биосовместимым титановым сплавом. Так как чистый металлический порошок не требует связующего наполнителя, готовые модели не отличаются пористостью.</p>
+                        
+                        <p>Для достижения необходимой механической прочности изделиям не требуется дополнительный обжиг.</p>
+                        
+                        <div class="row mt-4">
+                            <div class="col-md-6">
+                                <div class="feature-box p-3 border rounded bg-light">
+                                    <h6 class="text-success"><i class="fas fa-plus-circle me-2"></i>Преимущества</h6>
+                                    <ul class="mb-0">
+                                        <li>Высокая точность</li>
+                                        <li>Работа с металлом</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="feature-box p-3 border rounded bg-light">
+                                    <h6 class="text-warning"><i class="fas fa-minus-circle me-2"></i>Недостатки</h6>
+                                    <ul class="mb-0">
+                                        <li>Высокая стоимость</li>
+                                        <li>Дорогая техника</li>
+                                        <li>Дорогие материалы</li>
+                                        <li>Дорогостоящее обслуживание</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Филаментная печать -->
+        <div class="row mb-5">
+            <div class="col-12">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-secondary text-white">
+                        <h4 class="mb-0">
+                            <i class="fas fa-thread me-2"></i>Филаментная печать
+                        </h4>
+                    </div>
+                    <div class="card-body">
+                        <p>Технология не актуальна в стоматологии и сейчас мы объясним, почему.</p>
+                        
+                        <p>Печать производится с помощью филамента – материала, похожего на тонкую проволоку для садового триммера. Смотанный филамент заряжают напрямую в головку 3D-принтера, которая движется на трёх осях.</p>
+                        
+                        <p>По сравнению с другими материалами для 3D-печати такая нить стоит совсем недорого, но даёт низкую точность в сравнении с порошками. Самые популярные виды филамента – ABS и PLA пластик.</p>
+                        
+                        <div class="alert alert-warning mt-4">
+                            <h6><i class="fas fa-exclamation-triangle me-2"></i>Важно!</h6>
+                            <p class="mb-0">Филаментная печать не рекомендуется для стоматологических применений из-за низкой точности и качества поверхности.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Навигация -->
+        <div class="row mb-5">
+            <div class="col-12 text-center">
+                <a href="educational-catalog.html" class="btn btn-primary btn-lg me-3">
+                    <i class="fas fa-book me-2"></i>Изучить каталог
+                </a>
+                <a href="index.html" class="btn btn-outline-primary btn-lg">
+                    <i class="fas fa-home me-2"></i>На главную
+                </a>
+            </div>
+        </div>
     </div>
 
-    <footer class="bg-dark text-white py-4">
+    <!-- Футер -->
+    <footer class="bg-dark text-white py-4 mt-5">
         <div class="container">
             <div class="row">
                 <div class="col-md-6">
-                    <h5>CODENT Обучение</h5>
-                    <p>Современное обучение</p>
+                    <h5>CODENT Education</h5>
+                    <p class="mb-0">Образовательная платформа для стоматологов</p>
                 </div>
-                <div class="col-md-6 text-end">
-                    <p>&copy; 2024 Все права защищены</p>
+                <div class="col-md-6 text-md-end">
+                    <p class="mb-0">&copy; 2024 CODENT Education. Все права защищены.</p>
                 </div>
             </div>
         </div>
     </footer>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     
     <!-- Header Script -->
     <script src="js/header.js"></script>
@@ -279,53 +344,5 @@
                 console.error('Ошибка загрузки хедера:', error);
             });
     </script>
-
-    <style>
-        /* Стили для временной шкалы */
-        .timeline {
-            position: relative;
-            padding: 20px 0;
-        }
-        
-        .timeline::before {
-            content: '';
-            position: absolute;
-            left: 30px;
-            top: 0;
-            bottom: 0;
-            width: 2px;
-            background: #dee2e6;
-        }
-        
-        .timeline-item {
-            position: relative;
-            margin-bottom: 30px;
-            padding-left: 80px;
-        }
-        
-        .timeline-marker {
-            position: absolute;
-            left: 15px;
-            top: 0;
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            font-size: 14px;
-        }
-        
-        .timeline-content h5 {
-            margin-bottom: 8px;
-            color: #495057;
-        }
-        
-        .timeline-content p {
-            margin-bottom: 0;
-            color: #6c757d;
-        }
-    </style>
 </body>
 </html>

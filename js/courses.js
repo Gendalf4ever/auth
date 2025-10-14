@@ -105,13 +105,37 @@ function loadCourses() {
         })
         .catch((error) => {
             console.error('Ошибка загрузки курсов:', error);
-            coursesList.innerHTML = `
-                <div class="col-12 text-center py-5">
-                    <i class="fas fa-exclamation-triangle fa-3x text-danger mb-3"></i>
-                    <h5>Ошибка загрузки курсов</h5>
-                    <p class="text-muted">Попробуйте обновить страницу</p>
-                </div>
-            `;
+            
+            // Проверяем тип ошибки
+            if (error.code === 'permission-denied') {
+                coursesList.innerHTML = `
+                    <div class="col-12 text-center py-5">
+                        <i class="fas fa-lock fa-3x text-warning mb-3"></i>
+                        <h5>Курсы временно недоступны</h5>
+                        <p class="text-muted">Система курсов находится в разработке.<br>
+                        Пока что вы можете изучать материалы в разделах:</p>
+                        <div class="mt-3">
+                            <a href="scaners.html" class="btn btn-outline-primary me-2">
+                                <i class="fas fa-tooth me-1"></i>Сканеры
+                            </a>
+                            <a href="3d-printers.html" class="btn btn-outline-primary me-2">
+                                <i class="fas fa-print me-1"></i>3D печать
+                            </a>
+                            <a href="zirkon.html" class="btn btn-outline-primary">
+                                <i class="fas fa-gem me-1"></i>Цирконий
+                            </a>
+                        </div>
+                    </div>
+                `;
+            } else {
+                coursesList.innerHTML = `
+                    <div class="col-12 text-center py-5">
+                        <i class="fas fa-exclamation-triangle fa-3x text-danger mb-3"></i>
+                        <h5>Ошибка загрузки курсов</h5>
+                        <p class="text-muted">Попробуйте обновить страницу</p>
+                    </div>
+                `;
+            }
         });
 }
 
