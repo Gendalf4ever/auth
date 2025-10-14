@@ -106,63 +106,98 @@ function loadFeaturedCourses() {
     
     featuredCourses.innerHTML = '';
     
+    // Сначала добавляем статичный курс "Введение"
+    const introCourse = {
+        id: 'intro-course',
+        title: 'Введение в CODENT',
+        description: 'Основы современной цифровой стоматологии, CAD/CAM системы и их применение в клинической практике.',
+        category: 'Основы',
+        level: 'Начальный',
+        duration: '1 мин 30 сек'
+    };
+    
+    const introCourseCard = createCourseCard(introCourse, introCourse.id);
+    featuredCourses.innerHTML += introCourseCard;
+    
     // Загрузка курсов из Firebase
     if (typeof firebase !== 'undefined' && firebase.apps.length > 0) {
-        firebase.firestore().collection('courses').limit(3).get()
+        firebase.firestore().collection('courses').limit(2).get()
             .then((querySnapshot) => {
-                if (querySnapshot.empty) {
-                    // Показываем демо-курсы если нет реальных
-                    showDemoFeaturedCourses();
-                    return;
-                }
-                
                 querySnapshot.forEach((doc) => {
                     const course = doc.data();
                     const courseId = doc.id;
-                    
-                    const courseCard = `
-                        <div class="col-md-4">
-                            <div class="card course-card h-100">
-                                <div class="course-image">
-                                    <i class="fas fa-graduation-cap"></i>
-                                </div>
-                                <div class="card-body d-flex flex-column">
-                                    <div class="course-badges mb-2">
-                                        <span class="badge bg-primary">${course.category}</span>
-                                        <span class="badge bg-secondary">${course.level}</span>
-                                    </div>
-                                    <h5 class="card-title">${course.title}</h5>
-                                    <p class="card-text flex-grow-1">${course.description}</p>
-                                    <div class="course-meta mt-auto">
-                                        <small class="text-muted">
-                                            <i class="fas fa-clock me-1"></i>${course.duration || 1} час
-                                        </small>
-                                    </div>
-                                    <button class="btn btn-primary mt-3 view-course-detail" data-course-id="${courseId}">
-                                        Подробнее
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    `;
+                    const courseCard = createCourseCard(course, courseId);
                     featuredCourses.innerHTML += courseCard;
                 });
                 
+                // Если нет курсов из Firebase, показываем демо-курсы
+                if (querySnapshot.empty) {
+                    showDemoFeaturedCourses();
+                }
+                
                 // Добавляем обработчики для кнопок просмотра деталей
-                document.querySelectorAll('.view-course-detail').forEach(button => {
-                    button.addEventListener('click', (e) => {
-                        const courseId = e.target.getAttribute('data-course-id');
-                        showCourseDetail(courseId);
-                    });
-                });
+                setupCourseDetailButtons();
             })
             .catch((error) => {
                 console.error('Ошибка загрузки популярных курсов:', error);
+                // Показываем демо-курсы, но оставляем курс "Введение"
                 showDemoFeaturedCourses();
+                setupCourseDetailButtons();
             });
     } else {
         showDemoFeaturedCourses();
+        setupCourseDetailButtons();
     }
+}
+
+// Создание карточки курса
+function createCourseCard(course, courseId) {
+    return `
+        <div class="col-md-4">
+            <div class="card course-card h-100">
+                <div class="course-image">
+                    <i class="fas fa-graduation-cap"></i>
+                </div>
+                <div class="card-body d-flex flex-column">
+                    <div class="course-badges mb-2">
+                        <span class="badge bg-primary">${course.category}</span>
+                        <span class="badge bg-secondary">${course.level}</span>
+                    </div>
+                    <h5 class="card-title">${course.title}</h5>
+                    <p class="card-text flex-grow-1">${course.description}</p>
+                    <div class="course-meta mt-auto">
+                        <small class="text-muted">
+                            <i class="fas fa-clock me-1"></i>${course.duration || 1} мин
+                        </small>
+                    </div>
+                    <button class="btn btn-primary mt-3 view-course-detail" data-course-id="${courseId}">
+                        Подробнее
+                    </button>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+// Настройка обработчиков кнопок деталей курса
+function setupCourseDetailButtons() {
+    document.querySelectorAll('.view-course-detail').forEach(button => {
+        button.addEventListener('click', (e) => {
+            const courseId = e.target.getAttribute('data-course-id');
+            if (courseId === 'intro-course') {
+                // Для статичного курса переходим на страницу курсов
+                showPage(coursesPage);
+                // Затем показываем детали курса
+                setTimeout(() => {
+                    if (typeof showCourseDetail === 'function') {
+                        showCourseDetail(courseId);
+                    }
+                }, 100);
+            } else {
+                showCourseDetail(courseId);
+            }
+        });
+    });
 }
 
 // Показать демо-курсы при ошибке загрузки
@@ -437,8 +472,8 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
     
-    // Загрузить популярные курсы для гостей
-    loadFeaturedCourses();
+    // Популярные курсы отключены
+    // loadFeaturedCourses();
     
     // По умолчанию показываем главную страницу
     if (homePage) {

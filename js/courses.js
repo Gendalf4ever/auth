@@ -19,24 +19,14 @@ function setupCourseEventListeners() {
         createCourseForm.addEventListener('submit', handleCourseSubmit);
     }
     
-    // Обработчики фильтров
+    // Обработчики фильтров (временно отключены)
     const filterBeginner = document.getElementById('filter-beginner');
     const filterAdvanced = document.getElementById('filter-advanced');
     const filterFree = document.getElementById('filter-free');
     const courseSearch = document.getElementById('course-search');
     
-    if (filterBeginner) {
-        filterBeginner.addEventListener('change', applyCourseFilters);
-    }
-    if (filterAdvanced) {
-        filterAdvanced.addEventListener('change', applyCourseFilters);
-    }
-    if (filterFree) {
-        filterFree.addEventListener('change', applyCourseFilters);
-    }
-    if (courseSearch) {
-        courseSearch.addEventListener('input', applyCourseFilters);
-    }
+    // Пока что фильтры отключены
+    console.log('Фильтры курсов временно отключены');
     
     // Обработчики кнопок на странице деталей курса
     const backToCoursesFromDetail = document.getElementById('back-to-courses-from-detail');
@@ -71,120 +61,189 @@ function loadCourses() {
     
     coursesList.innerHTML = '<div class="text-center"><div class="spinner-border" role="status"></div></div>';
     
-    firebase.firestore().collection('courses').get()
-        .then((querySnapshot) => {
-            coursesList.innerHTML = '';
-            
-            if (querySnapshot.empty) {
-                coursesList.innerHTML = `
-                    <div class="col-12 text-center py-5">
-                        <i class="fas fa-book fa-3x text-muted mb-3"></i>
-                        <h5>Курсы пока не добавлены</h5>
-                        <p class="text-muted">Будьте первым, кто создаст обучающий курс</p>
-                    </div>
-                `;
-                return;
-            }
-            
-            querySnapshot.forEach((doc) => {
-                const course = doc.data();
-                course.id = doc.id;
-                allCourses.push(course); // Сохраняем курс в массив
-            });
-            
-            // Применяем фильтры и отображаем курсы
-            applyCourseFilters();
-            
-            // Добавляем обработчики для кнопок просмотра деталей
-            document.querySelectorAll('.view-course-detail').forEach(button => {
-                button.addEventListener('click', (e) => {
-                    const courseId = e.target.getAttribute('data-course-id');
-                    showCourseDetail(courseId);
-                });
-            });
-        })
-        .catch((error) => {
-            console.error('Ошибка загрузки курсов:', error);
-            
-            // Проверяем тип ошибки
-            if (error.code === 'permission-denied') {
-                coursesList.innerHTML = `
-                    <div class="col-12 text-center py-5">
-                        <i class="fas fa-lock fa-3x text-warning mb-3"></i>
-                        <h5>Курсы временно недоступны</h5>
-                        <p class="text-muted">Система курсов находится в разработке.<br>
-                        Пока что вы можете изучать материалы в разделах:</p>
-                        <div class="mt-3">
-                            <a href="scaners.html" class="btn btn-outline-primary me-2">
-                                <i class="fas fa-tooth me-1"></i>Сканеры
-                            </a>
-                            <a href="3d-printers.html" class="btn btn-outline-primary me-2">
-                                <i class="fas fa-print me-1"></i>3D печать
-                            </a>
-                            <a href="zirkon.html" class="btn btn-outline-primary">
-                                <i class="fas fa-gem me-1"></i>Цирконий
-                            </a>
+    // Очищаем массив курсов
+    allCourses = [];
+    
+    // Добавляем статичный курс "Введение"
+    const introCourse = {
+        id: 'intro-course',
+        title: 'Введение в CODENT',
+        description: 'Основы современной цифровой стоматологии, CAD/CAM системы и их применение в клинической практике.',
+        category: 'Основы',
+        level: 'Начальный',
+        duration: '1 мин 30 сек',
+        videoUrl: 'https://jumpshare.com/embed/Oujb8v8Qo5miQqg2b98m',
+        isStatic: true,
+        createdAt: new Date(),
+        studentsCount: 0
+    };
+    allCourses.push(introCourse);
+    
+    // Отображаем статичные курсы напрямую
+    displayCourses(allCourses);
+    
+    // Добавляем обработчики для кнопок просмотра деталей
+    setupCourseButtons();
+}
+
+// Отображение курсов
+function displayCourses(courses) {
+    const coursesList = document.getElementById('courses-list');
+    if (!coursesList) return;
+    
+    coursesList.innerHTML = '';
+    
+    if (courses.length === 0) {
+        coursesList.innerHTML = `
+            <div class="col-12 text-center py-5">
+                <i class="fas fa-book fa-3x text-muted mb-3"></i>
+                <h5>Курсы пока не добавлены</h5>
+                <p class="text-muted">Скоро здесь появятся новые курсы</p>
+            </div>
+        `;
+        return;
+    }
+    
+    courses.forEach(course => {
+        const courseCard = `
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="card course-card h-100 shadow-sm">
+                    <div class="card-header bg-primary text-white">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h6 class="mb-0">
+                                <i class="fas fa-graduation-cap me-2"></i>${course.category}
+                            </h6>
+                            <span class="badge bg-light text-primary">${course.level}</span>
                         </div>
                     </div>
-                `;
-            } else {
-                coursesList.innerHTML = `
-                    <div class="col-12 text-center py-5">
-                        <i class="fas fa-exclamation-triangle fa-3x text-danger mb-3"></i>
-                        <h5>Ошибка загрузки курсов</h5>
-                        <p class="text-muted">Попробуйте обновить страницу</p>
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title">${course.title}</h5>
+                        <p class="card-text flex-grow-1">${course.description}</p>
+                        <div class="course-meta mt-auto">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <small class="text-muted">
+                                    <i class="fas fa-clock me-1"></i>${course.duration} мин
+                                </small>
+                                ${course.isStatic ? '<span class="badge bg-success">Видеокурс</span>' : ''}
+                            </div>
+                            <button class="btn btn-primary w-100 view-course-detail" data-course-id="${course.id}">
+                                <i class="fas fa-play me-2"></i>Начать курс
+                            </button>
+                        </div>
                     </div>
-                `;
-            }
+                </div>
+            </div>
+        `;
+        coursesList.innerHTML += courseCard;
+    });
+}
+
+// Настройка кнопок курсов
+function setupCourseButtons() {
+    document.querySelectorAll('.view-course-detail').forEach(button => {
+        button.addEventListener('click', (e) => {
+            const courseId = e.target.getAttribute('data-course-id');
+            showCourseDetail(courseId);
         });
+    });
 }
 
 // Показать детали курса
 function showCourseDetail(courseId) {
-    firebase.firestore().collection('courses').doc(courseId).get()
-        .then((doc) => {
-            if (doc.exists) {
-                const course = doc.data();
-                currentEditingCourse = courseId;
-                
-                // Заполняем информацию о курсе
-                document.getElementById('course-detail-title').textContent = course.title;
-                document.getElementById('detail-course-title').textContent = course.title;
-                document.getElementById('detail-course-description').textContent = course.description;
-                document.getElementById('detail-course-category').textContent = course.category;
-                document.getElementById('detail-course-level').textContent = course.level;
-                document.getElementById('detail-course-duration').textContent = course.duration || 1;
-                
-                // Заполняем содержание курса
-                const detailCourseContent = document.getElementById('detail-course-content');
-                if (detailCourseContent) {
-                    detailCourseContent.innerHTML = '';
-                    if (course.content && course.content.length > 0) {
-                        course.content.forEach((block, index) => {
-                            const contentBlock = createContentBlockHTML(block, index);
-                            detailCourseContent.innerHTML += contentBlock;
-                        });
-                    }
-                }
-                
-                // Показываем кнопки редактирования для админов
-                const editBtn = document.getElementById('edit-course-btn');
-                const deleteBtn = document.getElementById('delete-course-btn');
-                if (isAdmin) {
-                    if (editBtn) editBtn.style.display = 'block';
-                    if (deleteBtn) deleteBtn.style.display = 'block';
-                } else {
-                    if (editBtn) editBtn.style.display = 'none';
-                    if (deleteBtn) deleteBtn.style.display = 'none';
-                }
-                
-                showPage(courseDetailPage);
-            }
-        })
-        .catch((error) => {
-            console.error('Ошибка загрузки курса:', error);
-            alert('Ошибка загрузки курса');
-        });
+    // Ищем курс в локальном массиве
+    const localCourse = allCourses.find(course => course.id === courseId);
+    
+    if (localCourse) {
+        displayCourseDetail(localCourse, courseId);
+    } else {
+        console.error('Курс не найден:', courseId);
+        alert('Курс не найден');
+    }
+}
+
+// Отображение деталей курса
+function displayCourseDetail(course, courseId) {
+    currentEditingCourse = courseId;
+    
+    // Заполняем информацию о курсе
+    const courseDetailTitle = document.getElementById('course-detail-title');
+    const detailCourseTitle = document.getElementById('detail-course-title');
+    const detailCourseDescription = document.getElementById('detail-course-description');
+    const detailCourseCategory = document.getElementById('detail-course-category');
+    const detailCourseLevel = document.getElementById('detail-course-level');
+    const detailCourseDuration = document.getElementById('detail-course-duration');
+    
+    if (courseDetailTitle) courseDetailTitle.textContent = course.title;
+    if (detailCourseTitle) detailCourseTitle.textContent = course.title;
+    if (detailCourseDescription) detailCourseDescription.textContent = course.description;
+    if (detailCourseCategory) detailCourseCategory.textContent = course.category;
+    if (detailCourseLevel) detailCourseLevel.textContent = course.level;
+    if (detailCourseDuration) detailCourseDuration.textContent = course.duration || 1;
+    
+    // Заполняем содержание курса
+    const detailCourseContent = document.getElementById('detail-course-content');
+    if (detailCourseContent) {
+        detailCourseContent.innerHTML = '';
+        
+        // Если это статичный курс с видео
+        if (course.isStatic && course.videoUrl) {
+            const videoContent = `
+                <div class="course-video-section mb-4">
+                    <div class="d-flex align-items-center mb-3">
+                        <i class="fas fa-play-circle text-primary me-2" style="font-size: 1.5rem;"></i>
+                        <h5 class="mb-0">Видеоурок</h5>
+                    </div>
+                    <div class="video-container border rounded overflow-hidden shadow-sm" style="position: relative; padding-bottom: 56.25%; height: 0;">
+                        <iframe src="${course.videoUrl}" 
+                                frameborder="0" 
+                                webkitallowfullscreen 
+                                mozallowfullscreen 
+                                allowfullscreen 
+                                style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"
+                                title="Видеокурс: ${course.title}">
+                        </iframe>
+                    </div>
+                    <div class="mt-3 text-muted small">
+                        <i class="fas fa-info-circle me-1"></i>
+                        Для полноэкранного просмотра используйте кнопку в плеере.
+                    </div>
+                </div>
+            `;
+            detailCourseContent.innerHTML = videoContent;
+        } else if (course.content && course.content.length > 0) {
+            // Обычное содержание курса
+            course.content.forEach((block, index) => {
+                const contentBlock = createContentBlockHTML(block, index);
+                detailCourseContent.innerHTML += contentBlock;
+            });
+        } else {
+            detailCourseContent.innerHTML = '<p class="text-muted">Содержание курса пока не добавлено.</p>';
+        }
+    }
+    
+    // Показываем кнопки редактирования для админов (только для не-статичных курсов)
+    const editBtn = document.getElementById('edit-course-btn');
+    const deleteBtn = document.getElementById('delete-course-btn');
+    if (typeof isAdmin !== 'undefined' && isAdmin && !course.isStatic) {
+        if (editBtn) editBtn.style.display = 'block';
+        if (deleteBtn) deleteBtn.style.display = 'block';
+    } else {
+        if (editBtn) editBtn.style.display = 'none';
+        if (deleteBtn) deleteBtn.style.display = 'none';
+    }
+    
+    // Открываем модальное окно
+    const courseDetailModal = document.getElementById('courseDetailModal');
+    if (courseDetailModal) {
+        const modal = new bootstrap.Modal(courseDetailModal);
+        modal.show();
+    } else {
+        // Если модального окна нет, пытаемся переключиться на страницу деталей
+        const courseDetailPage = document.getElementById('course-detail-page');
+        if (courseDetailPage && typeof showPage !== 'undefined') {
+            showPage(courseDetailPage);
+        }
+    }
 }
 
 // Создание HTML для блока контента
