@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/header.css">
     <link rel="stylesheet" href="css/auth.css">
-    <link rel="stylesheet" href="css/courses.css">
+        <link rel="stylesheet" href="css/courses.css">
 </head>
 <body class="home-page">
     <!-- Подключаем единый хедер -->
@@ -33,7 +33,7 @@
                         <p>Рекомендуем начать с вводного курса, чтобы ознакомиться с современными технологиями в стоматологии</p>
                          <a href="courses.html" class="btn btn-primary btn-lg">
                              <i class="fas fa-play-circle me-2"></i>Начать обучение
-                         </a>
+                        </a>
                     </div>
                 </div>
 
@@ -56,53 +56,93 @@
                         <i class="fas fa-play me-2"></i>Начать обучение
                     </a>
                      <a href="#introduction-section" class="btn btn-outline-light btn-lg">
-                         <i class="fas fa-info-circle me-2"></i>Обзор технологий
-                     </a>
+                        <i class="fas fa-info-circle me-2"></i>Обзор технологий
+                    </a>
                 </div>
             </div>
         </section>
 
-        <!-- Блок-контейнер для разделов введения -->
-        <div class="introduction-wrapper">
-            <section class="introduction-section pt-0" id="introduction-section">
-                <div class="container">
-                    <h2 class="text-center mb-3 mt-0">Выберите раздел для изучения</h2>
-                    <div class="row g-4">
+        <!-- Объединенный контейнер с градиентом -->
+        <div class="unified-gradient-container">
+            <!-- Блок-контейнер для разделов введения -->
+            <div class="introduction-wrapper">
+                <section class="introduction-section pt-0" id="introduction-section">
+                    <div class="container-fluid">
+                    <h2 class="text-center mb-5">Выберите раздел для изучения</h2>
+                    <!-- Все три карточки в один ряд -->
+                    <div class="row">
                         <!-- Современная стоматология -->
-                        <div class="col-md-6">
-                            <div class="intro-section-card h-100 p-4 text-center" data-bs-toggle="modal" data-bs-target="#modernDentistryModal">
-                                <div class="section-icon mb-3">
+                        <div class="col-md-4 mb-4">
+                            <div class="intro-section-card h-100" data-bs-toggle="modal" data-bs-target="#modernDentistryModal">
+                                <div class="section-icon">
                                     <i class="fas fa-tooth"></i>
                                 </div>
-                                <h5 class="card-title">Современная стоматология</h5>
-                                <p class="card-text">Цифровые технологии, имплантология, эстетическая стоматология</p>
+                                <h4>Современная стоматология</h4>
+                                <p>Цифровые технологии, имплантология, эстетическая стоматология</p>
                             </div>
                         </div>
                         
                         <!-- CAD/CAM системы -->
-                        <div class="col-md-6">
-                            <div class="intro-section-card h-100 p-4 text-center" data-bs-toggle="modal" data-bs-target="#cadcamModal">
-                                <div class="section-icon mb-3">
+                        <div class="col-md-4 mb-4">
+                            <div class="intro-section-card h-100" data-bs-toggle="modal" data-bs-target="#cadcamModal">
+                                <div class="section-icon">
                                     <i class="fas fa-cube"></i>
                                 </div>
-                                <h5 class="card-title">CAD/CAM системы</h5>
-                                <p class="card-text">Компьютерное проектирование и автоматизированное производство</p>
+                                <h4>CAD/CAM системы</h4>
+                                <p>Компьютерное проектирование и автоматизированное производство</p>
                             </div>
                         </div>
                         
                         <!-- Этапы работы -->
-                        <div class="col-md-6">
-                            <div class="intro-section-card h-100 p-4 text-center" data-bs-toggle="modal" data-bs-target="#workflowModal">
-                                <div class="section-icon mb-3">
+                        <div class="col-md-4 mb-4">
+                            <div class="intro-section-card h-100" data-bs-toggle="modal" data-bs-target="#workflowModal">
+                                <div class="section-icon">
                                     <i class="fas fa-cogs"></i>
                                 </div>
-                                <h5 class="card-title">Этапы работы</h5>
-                                <p class="card-text">От виртуального отпечатка до готовой реставрации</p>
+                                <h4>Этапы работы</h4>
+                                <p>От виртуального отпечатка до готовой реставрации</p>
                             </div>
                         </div>
                     </div>
+                    </div>
+                </section>
+            </div>
+
+        <!-- Преимущества платформы -->
+        <section class="features-section py-5">
+                <div class="container-fluid">
+                <h2 class="text-center mb-5">Почему выбирают нашу платформу</h2>
+                <div class="row">
+                    <div class="col-md-4 mb-4">
+                        <div class="feature-card">
+                            <div class="feature-icon">
+                                <i class="fas fa-video"></i>
+                            </div>
+                            <h4>Практические видеоуроки</h4>
+                            <p>Подробные инструкции от ведущих специалистов с реальными кейсами</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <div class="feature-card">
+                            <div class="feature-icon">
+                                <i class="fas fa-certificate"></i>
+                            </div>
+                            <h4>Сертификация</h4>
+                            <p>Получите официальный сертификат после успешного прохождения курсов</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <div class="feature-card">
+                            <div class="feature-icon">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <h4>Сообщество</h4>
+                            <p>Общайтесь с коллегами и преподавателями, делитесь опытом</p>
+                        </div>
+                    </div>
                 </div>
-            </section>
+            </div>
+        </section>
         </div>
 
         <!-- Модальные окна -->
@@ -261,46 +301,10 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Закрыть</button>
-                    </div>
+                </div>
+                </div>
                 </div>
             </div>
-        </div>
-
-        <!-- Преимущества платформы -->
-        <section class="features-section py-5">
-            <div class="container-fluid">
-                <h2 class="text-center mb-5">Почему выбирают нашу платформу</h2>
-                <div class="row">
-                    <div class="col-md-4 mb-4">
-                        <div class="feature-card">
-                            <div class="feature-icon">
-                                <i class="fas fa-video"></i>
-                            </div>
-                            <h4>Практические видеоуроки</h4>
-                            <p>Подробные инструкции от ведущих специалистов с реальными кейсами</p>
-                        </div>
-                    </div>
-                    <div class="col-md-4 mb-4">
-                        <div class="feature-card">
-                            <div class="feature-icon">
-                                <i class="fas fa-certificate"></i>
-                            </div>
-                            <h4>Сертификация</h4>
-                            <p>Получите официальный сертификат после успешного прохождения курсов</p>
-                        </div>
-                    </div>
-                    <div class="col-md-4 mb-4">
-                        <div class="feature-card">
-                            <div class="feature-icon">
-                                <i class="fas fa-users"></i>
-                            </div>
-                            <h4>Сообщество</h4>
-                            <p>Общайтесь с коллегами и преподавателями, делитесь опытом</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
 
     </div>
 
@@ -520,6 +524,10 @@
             })
             .catch(error => {
                 console.error('Ошибка загрузки хедера:', error);
+            });
+    </script>
+</body>
+</html>
             });
     </script>
 </body>

@@ -786,12 +786,33 @@ footer .col-md-6 {
 }
 
 /* ==================== Стили для карточек введения ==================== */
-.introduction-wrapper {
+/* Объединенный контейнер с перетекающим градиентом */
+.unified-gradient-container {
     margin-top: 600px;
     margin-bottom: 50px;
-    padding: 80px 0;
-    background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 50%, #6d28d9 100%);
+    background: linear-gradient(180deg, 
+        #8b5cf6 0%,      /* Фиолетовый верх */
+        #7c3aed 15%,
+        #6d28d9 30%,
+        #7c3aed 45%,
+        #764ba2 60%,
+        #667eea 80%,     /* Синий переход */
+        #5a67d8 100%     /* Синий низ */
+    );
     position: relative;
+    border-radius: 30px;
+    overflow: hidden;
+    padding-bottom: 60px;
+}
+
+.introduction-wrapper {
+    margin-top: 0;
+    margin-bottom: 0;
+    padding: 60px 20px 40px 20px;
+    background: transparent;
+    position: relative;
+    border-radius: 0;
+    overflow: visible;
 }
 
 .introduction-wrapper::before {
@@ -812,156 +833,75 @@ footer .col-md-6 {
     z-index: 1;
 }
 
+.introduction-section .container-fluid {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
 .introduction-section h2 {
     color: white;
     font-weight: 700;
     font-size: 3rem;
     text-align: center;
-    margin-bottom: 50px;
-    text-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    margin-bottom: 4rem;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
 }
 
 .intro-section-card {
     background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(10px);
-    border: 2px solid rgba(255, 255, 255, 0.2);
+    padding: 40px 30px;
     border-radius: 20px;
-    box-shadow: 0 8px 30px rgba(0,0,0,0.2);
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    height: 100%;
+    transition: all 0.4s ease;
+    border: 2px solid rgba(255, 255, 255, 0.3);
     cursor: pointer;
-    position: relative;
-    overflow: hidden;
-    padding: 30px 20px;
-}
-
-.intro-section-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 5px;
-    background: linear-gradient(90deg, #3b82f6 0%, #8b5cf6 50%, #ec4899 100%);
-    transform: scaleX(0);
-    transition: transform 0.4s ease;
-}
-
-.intro-section-card::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 0;
-    height: 0;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(59, 130, 246, 0.1) 0%, transparent 70%);
-    transform: translate(-50%, -50%);
-    transition: width 0.6s ease, height 0.6s ease;
-}
-
-.intro-section-card:hover::before {
-    transform: scaleX(1);
-}
-
-.intro-section-card:hover::after {
-    width: 300px;
-    height: 300px;
 }
 
 .intro-section-card:hover {
-    transform: translateY(-12px) scale(1.02);
-    box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+    transform: translateY(-15px) scale(1.02);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+    border-color: rgba(255, 255, 255, 0.8);
     background: rgba(255, 255, 255, 1);
-    border-color: rgba(59, 130, 246, 0.5);
 }
 
 .intro-section-card .section-icon {
-    width: 100px;
-    height: 100px;
-    margin: 0 auto 25px;
-    background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 50%, #ec4899 100%);
+    width: 90px;
+    height: 90px;
+    margin: 0 auto 20px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.4s ease;
-    box-shadow: 0 8px 25px rgba(59, 130, 246, 0.5);
-    position: relative;
-    z-index: 2;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
 }
 
-.intro-section-card .section-icon::before {
-    content: '';
-    position: absolute;
-    top: -5px;
-    left: -5px;
-    right: -5px;
-    bottom: -5px;
-    background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 50%, #ec4899 100%);
-    border-radius: 50%;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    animation: pulse 2s infinite;
-}
-
-@keyframes pulse {
-    0%, 100% {
-        transform: scale(1);
-        opacity: 0;
-    }
-    50% {
-        transform: scale(1.1);
-        opacity: 0.3;
-    }
+.intro-section-card:hover .section-icon {
+    transform: scale(1.1) rotate(5deg);
 }
 
 .intro-section-card .section-icon i {
     font-size: 3rem;
     color: white;
-    transition: all 0.4s ease;
-    position: relative;
-    z-index: 3;
 }
 
-.intro-section-card:hover .section-icon {
-    transform: scale(1.15) rotate(5deg);
-    box-shadow: 0 15px 40px rgba(59, 130, 246, 0.7);
-}
-
-.intro-section-card:hover .section-icon::before {
-    opacity: 1;
-}
-
-.intro-section-card:hover .section-icon i {
-    transform: scale(1.1);
-}
-
-.intro-section-card h5 {
-    color: #1e293b;
+.intro-section-card h4 {
+    font-size: 1.75rem;
     font-weight: 700;
-    margin-bottom: 15px;
-    font-size: 1.4rem;
-    position: relative;
-    z-index: 2;
-    transition: all 0.3s ease;
+    color: var(--dark-color);
+    margin-bottom: 20px;
 }
 
 .intro-section-card p {
-    color: #64748b;
-    font-size: 1rem;
-    line-height: 1.6;
-    position: relative;
-    z-index: 2;
-    transition: all 0.3s ease;
-}
-
-.intro-section-card:hover h5 {
-    color: #3b82f6;
-    transform: translateY(-3px);
-}
-
-.intro-section-card:hover p {
-    color: #475569;
+    font-size: 1.1rem;
+    color: #5a5c69;
+    line-height: 1.7;
+    margin-bottom: 0;
 }
 
 /* Стили для модальных окон */
@@ -1263,17 +1203,10 @@ footer .col-md-6 {
 
 /* Секция "Почему выбирают нашу платформу" */
 .features-section {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    background: transparent;
     position: relative;
-    min-height: 50vh !important;
-    width: 100vw;
-    margin-left: calc(-50vw + 50%);
-    padding: 80px 20px 60px 20px !important;
-    margin-top: 56px !important; /* Отступ для фиксированного header */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex: 1;
+    padding: 60px 20px 40px 20px !important;
+    margin-top: 0 !important;
 }
 
 .features-section .container-fluid {
@@ -1523,10 +1456,17 @@ footer .col-md-6 {
     }
     
     /* Адаптация блока введения для мобильных */
-    .introduction-wrapper {
-        padding: 60px 15px;
+    .unified-gradient-container {
         margin-top: 300px;
         margin-bottom: 30px;
+        border-radius: 20px;
+        padding-bottom: 40px;
+    }
+    
+    .introduction-wrapper {
+        padding: 50px 15px;
+        margin-top: 0;
+        margin-bottom: 0;
     }
     
     .introduction-section {
@@ -1552,19 +1492,24 @@ footer .col-md-6 {
         font-size: 2rem;
     }
     
-    .intro-section-card h5 {
-        font-size: 1.2rem;
+    .intro-section-card h4 {
+        font-size: 1.35rem;
     }
     
     .intro-section-card p {
-        font-size: 0.9rem;
+        font-size: 0.95rem;
     }
 }
 
 /* Дополнительные адаптивные стили для планшетов */
 @media (max-width: 992px) {
+    .unified-gradient-container {
+        border-radius: 25px;
+        padding-bottom: 50px;
+    }
+    
     .introduction-wrapper {
-        padding: 70px 20px;
+        padding: 60px 20px;
     }
     
     .introduction-section h2 {
@@ -1572,9 +1517,14 @@ footer .col-md-6 {
         margin-bottom: 40px;
     }
     
+    .intro-section-card {
+        padding: 35px 25px;
+        margin-bottom: 30px;
+    }
+    
     .intro-section-card .section-icon {
-        width: 90px;
-        height: 90px;
+        width: 80px;
+        height: 80px;
     }
     
     .intro-section-card .section-icon i {
