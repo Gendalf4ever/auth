@@ -246,3 +246,105 @@
         height: 8px;
     }
 }
+
+/* Стили для поиска и фильтров курсов */
+.search-filters-section {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 10px;
+    border: 1px solid #e9ecef;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.search-box {
+    position: relative;
+}
+
+.search-box .form-control {
+    padding-right: 45px;
+    border-radius: 8px;
+    border: 2px solid #e9ecef;
+    transition: all 0.3s ease;
+    font-size: 1rem;
+    padding: 12px 15px;
+}
+
+.search-box .form-control:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+}
+
+.search-icon {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #6c757d;
+    pointer-events: none;
+    font-size: 1.1rem;
+}
+
+.quick-filters {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+}
+
+.filter-label {
+    font-weight: 600;
+    color: #495057;
+    white-space: nowrap;
+    font-size: 0.9rem;
+}
+
+.filter-tag {
+    border-radius: 20px;
+    font-size: 0.85rem;
+    padding: 6px 14px;
+    transition: all 0.3s ease;
+    border-width: 1px;
+}
+
+.filter-tag:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0,123,255,0.3);
+}
+
+.filter-tag.active {
+    background-color: #007bff;
+    color: white;
+    border-color: #007bff;
+}
+
+.search-info {
+    padding: 10px 15px;
+    background: #e3f2fd;
+    border-radius: 8px;
+    border-left: 4px solid #2196f3;
+    font-size: 0.9rem;
+    color: #1565c0;
+}
+
+/* Адаптивность для поиска курсов */
+@media (max-width: 768px) {
+    .search-filters-section {
+        padding: 15px;
+    }
+    
+    .quick-filters {
+        justify-content: center;
+        margin-top: 15px;
+    }
+    
+    .filter-label {
+        width: 100%;
+        text-align: center;
+        margin-bottom: 8px;
+    }
+    
+    .search-box .form-control {
+        font-size: 0.9rem;
+        padding: 10px 12px;
+    }
+}

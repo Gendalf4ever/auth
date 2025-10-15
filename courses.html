@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Курсы - CODENT Обучение</title>
+    <link rel="icon" type="image/png" href="src/img/logo.png">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="css/style.css">
@@ -16,6 +17,35 @@
 
     <!-- Основной контент -->
     <div class="container py-5">
+        <!-- Секция поиска курсов -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="search-filters-section">
+                    <div class="row align-items-center">
+                        <div class="col-md-6 mb-3 mb-md-0">
+                            <div class="search-box">
+                                <input type="text" class="form-control" id="course-search" placeholder="Поиск курсов по названию, описанию...">
+                                <i class="fas fa-search search-icon"></i>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="d-flex justify-content-end">
+                                <button class="btn btn-outline-secondary btn-sm" onclick="clearCourseSearch()">
+                                    <i class="fas fa-times me-1"></i>Очистить
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Информация о результатах поиска -->
+                    <div class="search-info mt-3" id="search-results-info" style="display: none;">
+                        <i class="fas fa-info-circle me-2"></i>
+                        Найдено курсов: <span id="results-count">0</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
         <div class="row">
             <div class="col-lg-3">
                 <div class="sidebar">
@@ -55,12 +85,6 @@
                 </div>
             </div>
             <div class="col-lg-9">
-                <div class="courses-header mb-4">
-                    <h2>Все курсы</h2>
-                    <div class="search-box">
-                        <input type="text" class="form-control" placeholder="Поиск курсов..." id="course-search">
-                    </div>
-                </div>
                 
                 <!-- Быстрые ссылки на курсы -->
                 <div class="quick-links mb-4">
@@ -147,7 +171,7 @@
                 </div>
 
                 <!-- Список курсов -->
-                <div class="row" id="courses-list">
+                <div class="row" id="courses-container">
                     <!-- Курсы будут загружены динамически -->
                     <div class="col-12 text-center py-5">
                         <div class="spinner-border text-primary" role="status">
@@ -242,6 +266,21 @@
             .catch(error => {
                 console.error('Ошибка загрузки хедера:', error);
             });
+            
+        // Инициализация поиска курсов при загрузке страницы
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Инициализация поиска курсов');
+            
+            // Небольшая задержка для загрузки всех скриптов
+            setTimeout(() => {
+                if (typeof setupCourseSearchEventListeners === 'function') {
+                    setupCourseSearchEventListeners();
+                    console.log('Поиск курсов настроен');
+                } else {
+                    console.error('Функция setupCourseSearchEventListeners не найдена');
+                }
+            }, 1500);
+        });
     </script>
 </body>
 </html>

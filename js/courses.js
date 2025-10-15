@@ -64,20 +64,108 @@ function loadCourses() {
     // Очищаем массив курсов
     allCourses = [];
     
-    // Добавляем статичный курс "Введение"
-    const introCourse = {
-        id: 'intro-course',
-        title: 'Введение в CODENT',
-        description: 'Основы современной цифровой стоматологии, CAD/CAM системы и их применение в клинической практике.',
-        category: 'Основы',
-        level: 'Начальный',
-        duration: '1 мин 30 сек',
-        videoUrl: 'https://jumpshare.com/embed/Oujb8v8Qo5miQqg2b98m',
-        isStatic: true,
-        createdAt: new Date(),
-        studentsCount: 0
-    };
-    allCourses.push(introCourse);
+    // Добавляем статичные курсы
+    const staticCourses = [
+        {
+            id: 'intro-course',
+            title: 'Введение в CODENT',
+            description: 'Основы современной цифровой стоматологии, CAD/CAM системы и их применение в клинической практике.',
+            category: 'Основы',
+            level: 'Начальный',
+            duration: '1 мин 30 сек',
+            videoUrl: 'https://jumpshare.com/embed/Oujb8v8Qo5miQqg2b98m',
+            isStatic: true,
+            createdAt: new Date(),
+            studentsCount: 0
+        },
+        {
+            id: 'milling-machine-course',
+            title: 'Фрезерный станок',
+            description: 'Работа с фрезерными станками в стоматологии. Изучение основ фрезерования, настройки оборудования и технологических процессов.',
+            category: 'Фрезерование',
+            level: 'Средний',
+            duration: 'Практический курс',
+            link: 'frezy.html',
+            isStatic: true,
+            createdAt: new Date(),
+            studentsCount: 0
+        },
+        {
+            id: 'milling-tools-course',
+            title: 'Фрезы',
+            description: 'Типы и применение фрез в стоматологии. Выбор подходящих инструментов для различных материалов и задач.',
+            category: 'Инструменты',
+            level: 'Средний',
+            duration: 'Практический курс',
+            link: 'frezy_text.html',
+            isStatic: true,
+            createdAt: new Date(),
+            studentsCount: 0
+        },
+        {
+            id: 'scanners-course',
+            title: 'Интраоральные сканеры',
+            description: 'Современные технологии сканирования в стоматологии. Работа с интраоральными сканерами и обработка данных.',
+            category: 'Сканирование',
+            level: 'Средний',
+            duration: 'Практический курс',
+            link: 'scaners.html',
+            isStatic: true,
+            createdAt: new Date(),
+            studentsCount: 0
+        },
+        {
+            id: '3d-printing-course',
+            title: '3D печать в стоматологии',
+            description: 'Технологии 3D печати для стоматологических применений. SLA, DLP, PolyJet и другие методы печати.',
+            category: '3D печать',
+            level: 'Продвинутый',
+            duration: 'Практический курс',
+            link: '3d-printers.html',
+            isStatic: true,
+            createdAt: new Date(),
+            studentsCount: 0
+        },
+        {
+            id: 'zirconia-course',
+            title: 'Цирконий для CAD/CAM',
+            description: 'Работа с циркониевыми материалами в CAD/CAM системах. Свойства, обработка и клиническое применение.',
+            category: 'Материалы',
+            level: 'Продвинутый',
+            duration: 'Практический курс',
+            link: 'zirkon.html',
+            isStatic: true,
+            createdAt: new Date(),
+            studentsCount: 0
+        },
+        {
+            id: 'pmma-course',
+            title: 'PMMA для временных реставраций',
+            description: 'Использование PMMA материалов для создания временных реставраций. Технологии обработки и клиническое применение.',
+            category: 'Материалы',
+            level: 'Средний',
+            duration: 'Практический курс',
+            link: 'rmma.html',
+            isStatic: true,
+            createdAt: new Date(),
+            studentsCount: 0
+        },
+        {
+            id: 'composite-blocks-course',
+            title: 'Композитные блоки',
+            description: 'Современные композитные материалы для CAD/CAM систем. Свойства, обработка и клиническое применение.',
+            category: 'Материалы',
+            level: 'Средний',
+            duration: 'Практический курс',
+            link: 'composied_blocks.html',
+            isStatic: true,
+            createdAt: new Date(),
+            studentsCount: 0
+        }
+    ];
+    
+    // Добавляем все статичные курсы
+    allCourses.push(...staticCourses);
     
     // Отображаем статичные курсы напрямую
     displayCourses(allCourses);
@@ -88,19 +176,34 @@ function loadCourses() {
 
 // Отображение курсов
 function displayCourses(courses) {
-    const coursesList = document.getElementById('courses-list');
+    const coursesList = document.getElementById('courses-container');
     if (!coursesList) return;
     
     coursesList.innerHTML = '';
     
     if (courses.length === 0) {
-        coursesList.innerHTML = `
-            <div class="col-12 text-center py-5">
-                <i class="fas fa-book fa-3x text-muted mb-3"></i>
-                <h5>Курсы пока не добавлены</h5>
-                <p class="text-muted">Скоро здесь появятся новые курсы</p>
-            </div>
-        `;
+        if (currentSearchTerm && currentSearchTerm !== '') {
+            coursesList.innerHTML = `
+                <div class="col-12">
+                    <div class="alert alert-info text-center">
+                        <i class="fas fa-search fa-2x mb-3"></i>
+                        <h5>Ничего не найдено</h5>
+                        <p class="mb-0">По запросу "${currentSearchTerm}" курсы не найдены.</p>
+                        <button class="btn btn-outline-primary mt-3" onclick="clearCourseSearch()">
+                            <i class="fas fa-times me-2"></i>Очистить поиск
+                        </button>
+                    </div>
+                </div>
+            `;
+        } else {
+            coursesList.innerHTML = `
+                <div class="col-12 text-center py-5">
+                    <i class="fas fa-book fa-3x text-muted mb-3"></i>
+                    <h5>Курсы пока не добавлены</h5>
+                    <p class="text-muted">Скоро здесь появятся новые курсы</p>
+                </div>
+            `;
+        }
         return;
     }
     
@@ -122,13 +225,18 @@ function displayCourses(courses) {
                         <div class="course-meta mt-auto">
                             <div class="d-flex justify-content-between align-items-center mb-3">
                                 <small class="text-muted">
-                                    <i class="fas fa-clock me-1"></i>${course.duration} мин
+                                    <i class="fas fa-clock me-1"></i>${course.duration}
                                 </small>
-                                ${course.isStatic ? '<span class="badge bg-success">Видеокурс</span>' : ''}
+                                ${course.videoUrl ? '<span class="badge bg-success">Видеокурс</span>' : '<span class="badge bg-info">Практический</span>'}
                             </div>
-                            <button class="btn btn-primary w-100 view-course-detail" data-course-id="${course.id}">
-                                <i class="fas fa-play me-2"></i>Начать курс
-                            </button>
+                            ${course.link ? 
+                                `<a href="${course.link}" class="btn btn-primary w-100">
+                                    <i class="fas fa-external-link-alt me-2"></i>Перейти к курсу
+                                </a>` :
+                                `<button class="btn btn-primary w-100 view-course-detail" data-course-id="${course.id}">
+                                    <i class="fas fa-play me-2"></i>Начать курс
+                                </button>`
+                            }
                         </div>
                     </div>
                 </div>
@@ -546,3 +654,202 @@ function createScannersCourse() {
             alert('Ошибка создания курса');
         });
 }
+
+// Переменные для поиска курсов
+let allCoursesData = [];
+let filteredCoursesData = [];
+let currentSearchTerm = '';
+
+// Обработка поиска курсов
+function handleCourseSearch() {
+    const searchInput = document.getElementById('course-search');
+    const searchTerm = searchInput ? searchInput.value.toLowerCase().trim() : '';
+    
+    console.log(`🔍 Поиск курсов: "${searchTerm}"`);
+    currentSearchTerm = searchTerm;
+    
+    applyCourseFilters();
+}
+
+// Применение фильтров курсов
+function applyCourseFilters() {
+    let result = [...allCoursesData];
+    
+    // Применяем поиск
+    if (currentSearchTerm !== '') {
+        result = result.filter(course => {
+            const title = (course.title || course.название || '').toLowerCase();
+            const description = (course.description || course.описание || '').toLowerCase();
+            const category = (course.category || course.категория || '').toLowerCase();
+            const level = (course.level || course.уровень || '').toLowerCase();
+            const tags = (course.tags || course.теги || '').toLowerCase();
+            
+            return title.includes(currentSearchTerm) ||
+                   description.includes(currentSearchTerm) ||
+                   category.includes(currentSearchTerm) ||
+                   level.includes(currentSearchTerm) ||
+                   tags.includes(currentSearchTerm);
+        });
+    }
+    
+    filteredCoursesData = result;
+    displayCourses(result);
+    updateCourseSearchResultsInfo();
+}
+
+// Отображение отфильтрованных курсов
+function displayFilteredCourses() {
+    const coursesContainer = document.getElementById('courses-container');
+    if (!coursesContainer) return;
+    
+    if (filteredCoursesData.length === 0) {
+        if (currentSearchTerm !== '') {
+            coursesContainer.innerHTML = `
+                <div class="col-12">
+                    <div class="alert alert-info text-center">
+                        <i class="fas fa-search fa-2x mb-3"></i>
+                        <h5>Ничего не найдено</h5>
+                        <p class="mb-0">По запросу "${currentSearchTerm}" курсы не найдены.</p>
+                        <button class="btn btn-outline-primary mt-3" onclick="clearCourseSearch()">
+                            <i class="fas fa-times me-2"></i>Очистить поиск
+                        </button>
+                    </div>
+                </div>
+            `;
+        } else {
+            coursesContainer.innerHTML = `
+                <div class="col-12">
+                    <div class="alert alert-warning text-center">
+                        <i class="fas fa-graduation-cap fa-2x mb-3"></i>
+                        <h5>Курсы не найдены</h5>
+                        <p class="mb-0">Курсы пока не загружены.</p>
+                    </div>
+                </div>
+            `;
+        }
+        return;
+    }
+    
+    const coursesHTML = filteredCoursesData.map(course => createCourseCard(course)).join('');
+    coursesContainer.innerHTML = coursesHTML;
+    
+    console.log(`Отображено ${filteredCoursesData.length} курсов`);
+}
+
+
+// Очистка поиска курсов
+function clearCourseSearch() {
+    const searchInput = document.getElementById('course-search');
+    if (searchInput) {
+        searchInput.value = '';
+    }
+    
+    currentSearchTerm = '';
+    applyCourseFilters();
+}
+
+// Обновление информации о результатах поиска курсов
+function updateCourseSearchResultsInfo() {
+    const resultsInfo = document.getElementById('search-results-info');
+    const resultsCount = document.getElementById('results-count');
+    
+    if (resultsInfo && resultsCount) {
+        if (currentSearchTerm !== '') {
+            resultsInfo.style.display = 'block';
+            resultsCount.textContent = filteredCoursesData.length;
+        } else {
+            resultsInfo.style.display = 'none';
+        }
+    }
+}
+
+// Создание карточки курса для поиска
+function createCourseCard(course) {
+    const title = course.title || course.название || 'Без названия';
+    const description = course.description || course.описание || 'Описание отсутствует';
+    const category = course.category || course.категория || 'Общий';
+    const level = course.level || course.уровень || 'Начальный';
+    const duration = course.duration || course.длительность || '30';
+    
+    return `
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card course-card h-100">
+                <div class="course-image">
+                    <i class="fas fa-graduation-cap"></i>
+                </div>
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">${title}</h5>
+                    <p class="card-text flex-grow-1">${description}</p>
+                    <div class="course-badges mb-3">
+                        <span class="badge bg-primary">${category}</span>
+                        <span class="badge bg-secondary">${level}</span>
+                    </div>
+                    <div class="course-meta">
+                        <small class="text-muted">
+                            <i class="fas fa-clock me-1"></i>${duration} мин
+                        </small>
+                        <button class="btn btn-primary btn-sm" onclick="showCourseDetail('${course.id}')">
+                            Подробнее
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+// Настройка обработчиков событий для поиска курсов
+function setupCourseSearchEventListeners() {
+    const searchInput = document.getElementById('course-search');
+    if (searchInput) {
+        // Debounced поиск
+        let searchTimeout;
+        searchInput.addEventListener('input', function() {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                handleCourseSearch();
+            }, 300);
+        });
+        
+        // Поиск по Enter
+        searchInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                handleCourseSearch();
+            }
+        });
+    }
+}
+
+// Обновляем инициализацию курсов для поддержки поиска
+function initCoursesWithSearch() {
+    console.log('Инициализация курсов с поиском');
+    
+    // Настраиваем поиск курсов
+    setupCourseSearchEventListeners();
+    
+    // Инициализируем данные для поиска
+    allCoursesData = [...allCourses];
+    filteredCoursesData = [...allCourses];
+    
+    // Загружаем курсы
+    loadCourses();
+    setupCourseEventListeners();
+}
+
+// Обновляем функцию загрузки курсов для поддержки поиска
+const originalLoadCourses = loadCourses;
+loadCourses = function() {
+    originalLoadCourses();
+    
+    // Обновляем данные для поиска после загрузки
+    setTimeout(() => {
+        allCoursesData = [...allCourses];
+        filteredCoursesData = [...allCourses];
+        
+        // Если есть активный поиск, применяем его
+        if (currentSearchTerm !== '') {
+            applyCourseFilters();
+        }
+    }, 500);
+};
