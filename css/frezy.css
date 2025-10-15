@@ -136,12 +136,42 @@
     color: #856404;
     font-weight: 600;
     margin-bottom: 10px;
+    margin-top: 15px;
+}
+
+.specs-detail h6:first-child {
+    margin-top: 0;
 }
 
 .specs-detail p {
     margin-bottom: 15px;
     line-height: 1.6;
     color: #6c757d;
+}
+
+/* Форматирование характеристик */
+.specifications-content {
+    background: white;
+    padding: 12px;
+    border-radius: 6px;
+    margin-top: 10px;
+}
+
+.spec-item {
+    padding: 6px 0;
+    border-bottom: 1px solid #f0f0f0;
+    line-height: 1.5;
+    color: #495057;
+}
+
+.spec-item:last-child {
+    border-bottom: none;
+}
+
+.spec-item strong {
+    color: #856404;
+    font-weight: 600;
+    margin-right: 5px;
 }
 
 /* Адаптивность */
@@ -213,6 +243,36 @@
     border: none;
 }
 
+.alert-info {
+    background: linear-gradient(135deg, #d1ecf1, #bee5eb);
+    color: #0c5460;
+}
+
+.alert-danger {
+    background: linear-gradient(135deg, #f8d7da, #f5c6cb);
+    color: #721c24;
+}
+
+/* Иконки в алертах */
+.alert .fas {
+    opacity: 0.7;
+}
+
+/* Заголовок секции товаров */
+#frezy-products-container h3 {
+    color: #2c3e50;
+    font-weight: 700;
+}
+
+#frezy-products-container h3 .fas {
+    color: #ffc107;
+}
+
+/* Золотистая тема для фрезерных станков */
+.frezy-product-placeholder .fas,
+.frezy-modal-image-placeholder .fas {
+    text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
 .alert-info {
     background: linear-gradient(135deg, #d1ecf1, #bee5eb);
     color: #0c5460;

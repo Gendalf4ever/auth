@@ -67,13 +67,46 @@
     border-left: 4px solid #667eea;
 }
 
+.specs-detail h6 {
+    color: #495057;
+    font-weight: 600;
+    margin-bottom: 10px;
+    margin-top: 15px;
+}
+
+.specs-detail h6:first-child {
+    margin-top: 0;
+}
+
+.specs-detail p {
+    margin-bottom: 15px;
+    line-height: 1.6;
+    color: #6c757d;
+}
+
+/* Форматирование характеристик */
+.specifications-content {
+    background: white;
+    padding: 12px;
+    border-radius: 6px;
+    margin-top: 10px;
+}
+
 .spec-item {
-    padding: 5px 0;
+    padding: 6px 0;
     border-bottom: 1px solid #e9ecef;
+    line-height: 1.5;
+    color: #495057;
 }
 
 .spec-item:last-child {
     border-bottom: none;
+}
+
+.spec-item strong {
+    color: #667eea;
+    font-weight: 600;
+    margin-right: 5px;
 }
 
 .price-info {

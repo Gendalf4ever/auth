@@ -194,6 +194,86 @@ function createFrezyTextProductCard(product) {
     `;
 }
 
+// Извлечение характеристик из продукта (поиск во всех возможных полях)
+function getProductSpecifications(product) {
+    console.log('🔍 Ищем характеристики для продукта:', product.name || product.наименование);
+    
+    // Список возможных полей с характеристиками
+    const specsFields = [
+        'specifications', 'характеристики', 'specs', 'Характеристики',
+        'characteristics', 'techSpecs', 'technicalSpecs', 
+        'parameters', 'параметры', 'features', 'свойства', 'properties'
+    ];
+    
+    // Ищем характеристики в прямых полях
+    for (const field of specsFields) {
+        if (product[field]) {
+            const value = product[field];
+            if (typeof value === 'string' && value.trim()) {
+                console.log(`✅ Найдены характеристики в поле "${field}"`);
+                return value.trim();
+            }
+            if (typeof value === 'object' && value !== null) {
+                console.log(`✅ Найдены характеристики-объект в поле "${field}"`);
+                return value;
+            }
+        }
+    }
+    
+    // Поиск по ключам, содержащим ключевые слова
+    const allKeys = Object.keys(product);
+    for (const key of allKeys) {
+        const keyLower = key.toLowerCase();
+        if (keyLower.includes('характ') || keyLower.includes('spec') || 
+            keyLower.includes('параметр') || keyLower.includes('свойств')) {
+            const value = product[key];
+            if (value && (typeof value === 'string' || typeof value === 'object')) {
+                console.log(`✅ Найдены характеристики в поле "${key}"`);
+                return value;
+            }
+        }
+    }
+    
+    return 'Характеристики не указаны';
+}
+
+// Форматирование характеристик для отображения
+function formatSpecifications(specs) {
+    if (!specs || specs === 'Характеристики не указаны') {
+        return '<p class="text-muted">Характеристики не указаны</p>';
+    }
+    
+    // Если характеристики - это объект
+    if (typeof specs === 'object' && !Array.isArray(specs)) {
+        const specsList = Object.entries(specs).map(([key, value]) => {
+            return `<div class="spec-item"><strong>${key}:</strong> ${value}</div>`;
+        }).join('');
+        return specsList || '<p class="text-muted">Характеристики не указаны</p>';
+    }
+    
+    // Если это строка
+    const specsStr = String(specs);
+    const lines = specsStr.split('\n').filter(line => line.trim());
+    
+    if (lines.length === 0) {
+        return '<p class="text-muted">Характеристики не указаны</p>';
+    }
+    
+    const formattedLines = lines.map(line => {
+        line = line.trim();
+        if (line.includes(':')) {
+            const parts = line.split(':');
+            const key = parts[0].trim();
+            const value = parts.slice(1).join(':').trim();
+            return `<div class="spec-item"><strong>${key}:</strong> ${value}</div>`;
+        } else {
+            return `<div class="spec-item">${line}</div>`;
+        }
+    }).join('');
+    
+    return formattedLines;
+}
+
 // Показать детали фрезы
 function showFrezyTextProductDetails(productId) {
     const product = frezyTextData.find(p => p.id === productId);
@@ -204,7 +284,7 @@ function showFrezyTextProductDetails(productId) {
     
     const name = product.name || product.наименование || 'Без названия';
     const description = product.description || product.описание || 'Описание отсутствует';
-    const specifications = product.specifications || product.характеристики || 'Характеристики не указаны';
+    const specifications = getProductSpecifications(product);
     
     // Определяем изображение для модального окна
     let modalImageHTML = '';
@@ -239,7 +319,9 @@ function showFrezyTextProductDetails(productId) {
                             <p>${description}</p>
                             
                             <h6><i class="fas fa-cogs me-2"></i>Характеристики</h6>
-                            <p>${specifications}</p>
+                            <div class="specifications-content">
+                                ${formatSpecifications(specifications)}
+                            </div>
                         </div>
                     </div>
                     <div class="modal-footer">
