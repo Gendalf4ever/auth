@@ -43,7 +43,7 @@ async function loadFrezyFromFirebase() {
             const description = (product.description || product.описание || '').toLowerCase();
             const tags = (product.tags || product.теги || '').toLowerCase();
             
-            // Исключаем фрезы (инструменты)
+            // Исключаем фрезы (инструменты) - режущий инструмент
             const isMillingTool = 
                 // Исключаем категории инструментов
                 category === 'фрезы' ||
@@ -54,6 +54,8 @@ async function loadFrezyFromFirebase() {
                 category === 'drills' ||
                 category === 'инструменты' ||
                 category === 'инструмент' ||
+                category === 'tools' ||
+                category === 'tool' ||
                 // Исключаем теги инструментов
                 tags.includes('фреза') ||
                 tags.includes('фрезы') ||
@@ -62,18 +64,27 @@ async function loadFrezyFromFirebase() {
                 tags.includes('drill') ||
                 tags.includes('инструмент') ||
                 tags.includes('режущий') ||
+                tags.includes('tool') ||
+                tags.includes('cutting') ||
                 // Исключаем названия инструментов (но не станков)
-                (name.includes('фрез') && !name.includes('станок') && !name.includes('машин') && !name.includes('mill')) ||
+                name.startsWith('фреза ') ||
+                name.startsWith('фрез ') ||
+                (name.includes('фреза') && !name.includes('станок') && !name.includes('машин') && !name.includes('фрезерн')) ||
+                (name.includes('фрез') && !name.includes('станок') && !name.includes('машин') && !name.includes('фрезерн') && !name.includes('mill')) ||
                 name.includes('burr') ||
                 name.includes('bur ') ||
                 name.includes('drill') && !name.includes('станок') ||
                 name.includes('бор') ||
                 name.includes('сверл') && !name.includes('станок') ||
+                name.includes('x-mill') ||
+                name.includes('xtcera') ||
                 // Исключаем описания инструментов
-                (description.includes('фрез') && !description.includes('станок') && !description.includes('машин')) ||
+                (description.includes('фреза') && !description.includes('станок') && !description.includes('машин')) ||
+                (description.includes('фрез') && !description.includes('станок') && !description.includes('машин') && !description.includes('фрезерн')) ||
                 description.includes('burr') ||
                 description.includes('режущий инструмент') ||
-                description.includes('стоматологический инструмент');
+                description.includes('стоматологический инструмент') ||
+                description.includes('cutting tool');
             
             if (isMillingTool) {
                 console.log(`❌ Исключен инструмент: ${name} (фреза/бор)`);
