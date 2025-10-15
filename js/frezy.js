@@ -63,14 +63,12 @@ async function loadFrezyFromFirebase() {
                 tags.includes('инструмент') ||
                 tags.includes('режущий') ||
                 // Исключаем названия инструментов (но не станков)
-                (name.includes('фрез') && !name.includes('станок') && !name.includes('машин') && !name.includes('mill') && !name.includes('фрезерн')) ||
+                (name.includes('фрез') && !name.includes('станок') && !name.includes('машин') && !name.includes('mill')) ||
                 name.includes('burr') ||
                 name.includes('bur ') ||
                 name.includes('drill') && !name.includes('станок') ||
                 name.includes('бор') ||
                 name.includes('сверл') && !name.includes('станок') ||
-                name.toLowerCase().includes('x-mill') ||
-                name.toLowerCase().includes('xtcera') ||
                 // Исключаем описания инструментов
                 (description.includes('фрез') && !description.includes('станок') && !description.includes('машин')) ||
                 description.includes('burr') ||
@@ -177,11 +175,17 @@ function displayFrezyProducts() {
 function createFrezyProductCard(product) {
     const name = product.name || product.наименование || 'Без названия';
     const fullDescription = product.description || product.описание || 'Описание отсутствует';
+    const specifications = product.specifications || product.характеристики || '';
     
     // Сокращаем описание до первых 50 символов + "..."
     const shortDescription = fullDescription.length > 50 
         ? fullDescription.substring(0, 50) + '...' 
         : fullDescription;
+    
+    // Сокращаем характеристики до первых 80 символов + "..."
+    const shortSpecs = specifications && specifications.length > 80 
+        ? specifications.substring(0, 80) + '...' 
+        : specifications;
     
     // Определяем изображение
     let imageHTML = '';
@@ -205,98 +209,18 @@ function createFrezyProductCard(product) {
                 </div>
                 <h5 class="frezy-product-title">${name}</h5>
                 <p class="frezy-product-description">${shortDescription}</p>
+                ${shortSpecs && shortSpecs !== 'Характеристики не указаны' ? `
+                    <div class="specs-preview small mb-3">
+                        <strong>Характеристики:</strong>
+                        <p class="mb-0">${shortSpecs}</p>
+                    </div>
+                ` : ''}
                 <button class="btn btn-outline-primary frezy-details-btn" onclick="showFrezyProductDetails('${product.id}')">
                     <i class="fas fa-info-circle me-2"></i>Подробнее
                 </button>
             </div>
         </div>
     `;
-}
-
-// Извлечение характеристик из продукта (поиск во всех возможных полях)
-function getProductSpecifications(product) {
-    console.log('🔍 Ищем характеристики для продукта:', product.name || product.наименование);
-    console.log('📦 Доступные поля продукта:', Object.keys(product));
-    
-    // Список возможных полей с характеристиками
-    const specsFields = [
-        'specifications', 'характеристики', 'specs', 'Характеристики',
-        'characteristics', 'techSpecs', 'technicalSpecs', 
-        'parameters', 'параметры', 'features', 'свойства', 'properties'
-    ];
-    
-    // Ищем характеристики в прямых полях
-    for (const field of specsFields) {
-        if (product[field]) {
-            const value = product[field];
-            // Если это строка и не пустая
-            if (typeof value === 'string' && value.trim() && value.trim() !== '') {
-                console.log(`✅ Найдены характеристики в поле "${field}":`, value);
-                return value.trim();
-            }
-            // Если это объект
-            if (typeof value === 'object' && value !== null) {
-                console.log(`✅ Найдены характеристики-объект в поле "${field}"`);
-                return value;
-            }
-        }
-    }
-    
-    // Поиск по ключам, содержащим ключевые слова (независимо от регистра)
-    const allKeys = Object.keys(product);
-    for (const key of allKeys) {
-        const keyLower = key.toLowerCase();
-        if (keyLower.includes('характ') || keyLower.includes('spec') || 
-            keyLower.includes('параметр') || keyLower.includes('свойств')) {
-            const value = product[key];
-            if (value && (typeof value === 'string' || typeof value === 'object')) {
-                console.log(`✅ Найдены характеристики в поле "${key}":`, value);
-                return value;
-            }
-        }
-    }
-    
-    console.log('❌ Характеристики не найдены, доступные поля:', allKeys);
-    return 'Характеристики не указаны';
-}
-
-// Форматирование характеристик для отображения
-function formatSpecifications(specs) {
-    if (!specs || specs === 'Характеристики не указаны') {
-        return '<p class="text-muted">Характеристики не указаны</p>';
-    }
-    
-    // Если характеристики - это объект, преобразуем в список
-    if (typeof specs === 'object' && !Array.isArray(specs)) {
-        const specsList = Object.entries(specs).map(([key, value]) => {
-            return `<div class="spec-item"><strong>${key}:</strong> ${value}</div>`;
-        }).join('');
-        return specsList || '<p class="text-muted">Характеристики не указаны</p>';
-    }
-    
-    // Если это строка, разбиваем по переносам строк
-    const specsStr = String(specs);
-    const lines = specsStr.split('\n').filter(line => line.trim());
-    
-    if (lines.length === 0) {
-        return '<p class="text-muted">Характеристики не указаны</p>';
-    }
-    
-    // Форматируем каждую строку
-    const formattedLines = lines.map(line => {
-        line = line.trim();
-        // Если строка уже содержит двоеточие, выделяем ключ жирным
-        if (line.includes(':')) {
-            const parts = line.split(':');
-            const key = parts[0].trim();
-            const value = parts.slice(1).join(':').trim();
-            return `<div class="spec-item"><strong>${key}:</strong> ${value}</div>`;
-        } else {
-            return `<div class="spec-item">${line}</div>`;
-        }
-    }).join('');
-    
-    return formattedLines;
 }
 
 // Показать детали фрезерного станка
@@ -307,11 +231,9 @@ function showFrezyProductDetails(productId) {
         return;
     }
     
-    console.log('📋 Показываем детали продукта:', product);
-    
     const name = product.name || product.наименование || 'Без названия';
     const description = product.description || product.описание || 'Описание отсутствует';
-    const specifications = getProductSpecifications(product);
+    const specifications = product.specifications || product.характеристики || 'Характеристики не указаны';
     
     // Определяем изображение для модального окна
     let modalImageHTML = '';
@@ -346,9 +268,7 @@ function showFrezyProductDetails(productId) {
                             <p>${description}</p>
                             
                             <h6><i class="fas fa-cogs me-2"></i>Характеристики</h6>
-                            <div class="specifications-content">
-                                ${formatSpecifications(specifications)}
-                            </div>
+                            <p>${specifications}</p>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -356,47 +276,6 @@ function showFrezyProductDetails(productId) {
                     </div>
                 </div>
             </div>
-        </div>
-    `;
-    
-    // Удаляем предыдущее модальное окно, если есть
-    const existingModal = document.getElementById('frezyProductModal');
-    if (existingModal) {
-        existingModal.remove();
-    }
-    
-    // Добавляем новое модальное окно
-    document.body.insertAdjacentHTML('beforeend', modalHTML);
-    
-    // Показываем модальное окно
-    const modal = new bootstrap.Modal(document.getElementById('frezyProductModal'));
-    modal.show();
-}
-
-// Показать ошибку
-function showError(message) {
-    const container = document.getElementById('frezy-products-container');
-    if (container) {
-        container.innerHTML = `
-            <div class="alert alert-danger text-center">
-                <i class="fas fa-exclamation-triangle fa-2x mb-3"></i>
-                <h5>Ошибка загрузки</h5>
-                <p class="mb-0">${message}</p>
-            </div>
-        `;
-    }
-}
-
-// Инициализация при загрузке страницы
-document.addEventListener('DOMContentLoaded', () => {
-    console.log('DOM загружен, инициализируем страницу фрезерных станков');
-    
-    // Небольшая задержка для загрузки Firebase
-    setTimeout(() => {
-        initializeFrezy();
-    }, 1000);
-});
-
         </div>
     `;
     

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PMMA для временных реставраций - CODENT Обучение</title>
+    <link rel="icon" type="image/png" href="src/img/logo.png">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/header.css">
+    <link rel="stylesheet" href="css/rmma.css">
+</head>
+<body>
+    <!-- Подключаем единый хедер -->
+    <div id="header-placeholder"></div>
+
+    <div class="container py-5 mt-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-9">
+                <div class="card">
+                    <div class="card-body">
+                        <!-- Кнопка назад -->
+                        <div class="mb-3">
+                            <a href="courses.html" class="btn btn-outline-primary">
+                                <i class="fas fa-arrow-left me-2"></i>Назад к курсам
+                            </a>
+                        </div>
+                        
+                        <h1 class="mb-4">PMMA для временных реставраций</h1>
+                        <p>PMMA широко используется в цифровой стоматологии для изготовления временных конструкций. Этот материал помогает быстро восстановить эстетику и функцию зубного ряда, пока пациент ожидает постоянную работу из циркония или керамики. Благодаря доступности и простоте обработки PMMA остаётся одним из наиболее востребованных решений.</p>
+
+                        <!-- Каталог прочих расходных материалов Upcera -->
+
+                        <h3 class="mt-4">Что такое PMMA</h3>
+                        <p>Полиметилметакрилат представляет собой акриловый пластик с хорошей стабильностью формы. В CAD/CAM стоматологии материалы на основе PMMA применяются для фрезеровки протезов, временных коронок и различных шаблонов. Его физические свойства обеспечивают достаточную прочность для краткосрочного использования и приемлемую эстетику.</p>
+
+                        <h3 class="mt-4">Преимущества применения</h3>
+                        <p>PMMA ценится за ряд особенностей, которые делают его удобным как для лабораторий, так и для клиник. Среди ключевых плюсов:</p>
+                        <ul>
+                            <li>доступность материала по цене;</li>
+                            <li>скорость изготовления конструкций на фрезерных системах;</li>
+                            <li>лёгкость обработки, которая позволяет быстро корректировать форму или прикус.</li>
+                        </ul>
+
+                        <h3 class="mt-4">Ограничения материала</h3>
+                        <p>При выборе CAD/CAM материалов важно учитывать и минусы. PMMA не рассчитан на длительный срок службы, подвержен стиранию и со временем теряет блеск. Его механическая прочность ниже по сравнению с цирконием или композитами, поэтому конструкции из PMMA используются ограниченное время.</p>
+
+                        <h3 class="mt-4">Примеры применения</h3>
+                        <p>Область использования PMMA охватывает ситуации, когда нужна временная реставрация. В клинической практике материал применяют для:</p>
+                        <ul>
+                            <li>временных коронок и мостов, устанавливаемых на период до изготовления постоянной конструкции;</li>
+                            <li>хирургических и диагностических шаблонов;</li>
+                            <li>тренировочных моделей, позволяющих проверить эстетику и функциональность до финального протеза.</li>
+                        </ul>
+
+                        <p class="mt-4">PMMA для временных коронок – это проверенное решение, которое даёт пациенту комфорт на переходном этапе лечения.</p>
+                        
+                        <!-- Раздел с товарами из Firebase -->
+                        <div class="mt-5">
+                            <h3 class="mb-4">
+                                <i class="fas fa-shopping-bag me-2"></i>Диски PMMA и WAX Upcera
+                            </h3>
+                            <div id="rmma-products-container">
+                                <div class="loading-spinner">
+                                    <div class="spinner-border" role="status">
+                                        <span class="visually-hidden">Загрузка...</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="bg-dark text-white py-4">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>CODENT Обучение</h5>
+                    <p>Современное обучение</p>
+                </div>
+                <div class="col-md-6 text-end">
+                    <p>&copy; 2024 Все права защищены</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    
+    <!-- Firebase Configuration -->
+    <script src="js/firebase-config.js"></script>
+    
+    <!-- Header Script -->
+    <script src="js/header.js"></script>
+    
+    <!-- RMMA Page Script -->
+    <script src="js/rmma.js"></script>
+    
+    <!-- Загружаем хедер -->
+    <script>
+        // Загружаем хедер из компонента
+        fetch('components/header.html')
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('header-placeholder').innerHTML = html;
+            })
+            .catch(error => {
+                console.error('Ошибка загрузки хедера:', error);
+            });
+    </script>
+</body>
+</html>
+

@@ -137,11 +137,17 @@ function displayRmmaProducts() {
 function createRmmaProductCard(product) {
     const name = product.name || product.наименование || 'Без названия';
     const fullDescription = product.description || product.описание || 'Описание отсутствует';
+    const specifications = product.specifications || product.характеристики || '';
     
     // Сокращаем описание до первых 50 символов + "..."
     const shortDescription = fullDescription.length > 50 
         ? fullDescription.substring(0, 50) + '...' 
         : fullDescription;
+    
+    // Сокращаем характеристики до первых 80 символов + "..."
+    const shortSpecs = specifications && specifications.length > 80 
+        ? specifications.substring(0, 80) + '...' 
+        : specifications;
     
     // Определяем тип диска
     const isWax = name.toLowerCase().includes('wax') || name.toLowerCase().includes('воск');
@@ -174,82 +180,18 @@ function createRmmaProductCard(product) {
                 </div>
                 <h5 class="rmma-product-title">${name}</h5>
                 <p class="rmma-product-description">${shortDescription}</p>
+                ${shortSpecs && shortSpecs !== 'Характеристики не указаны' ? `
+                    <div class="specs-preview small mb-3">
+                        <strong>Характеристики:</strong>
+                        <p class="mb-0">${shortSpecs}</p>
+                    </div>
+                ` : ''}
                 <button class="btn btn-outline-primary rmma-details-btn" onclick="showRmmaProductDetails('${product.id}')">
                     <i class="fas fa-info-circle me-2"></i>Подробнее
                 </button>
             </div>
         </div>
     `;
-}
-
-// Извлечение характеристик из продукта
-function getProductSpecifications(product) {
-    const specsFields = [
-        'specifications', 'характеристики', 'specs', 'Характеристики',
-        'characteristics', 'techSpecs', 'technicalSpecs', 
-        'parameters', 'параметры', 'features', 'свойства', 'properties'
-    ];
-    
-    for (const field of specsFields) {
-        if (product[field]) {
-            const value = product[field];
-            if (typeof value === 'string' && value.trim()) {
-                return value.trim();
-            }
-            if (typeof value === 'object' && value !== null) {
-                return value;
-            }
-        }
-    }
-    
-    const allKeys = Object.keys(product);
-    for (const key of allKeys) {
-        const keyLower = key.toLowerCase();
-        if (keyLower.includes('характ') || keyLower.includes('spec') || 
-            keyLower.includes('параметр') || keyLower.includes('свойств')) {
-            const value = product[key];
-            if (value && (typeof value === 'string' || typeof value === 'object')) {
-                return value;
-            }
-        }
-    }
-    
-    return 'Характеристики не указаны';
-}
-
-// Форматирование характеристик
-function formatSpecifications(specs) {
-    if (!specs || specs === 'Характеристики не указаны') {
-        return '<p class="text-muted">Характеристики не указаны</p>';
-    }
-    
-    if (typeof specs === 'object' && !Array.isArray(specs)) {
-        const specsList = Object.entries(specs).map(([key, value]) => {
-            return `<div class="spec-item"><strong>${key}:</strong> ${value}</div>`;
-        }).join('');
-        return specsList || '<p class="text-muted">Характеристики не указаны</p>';
-    }
-    
-    const specsStr = String(specs);
-    const lines = specsStr.split('\n').filter(line => line.trim());
-    
-    if (lines.length === 0) {
-        return '<p class="text-muted">Характеристики не указаны</p>';
-    }
-    
-    const formattedLines = lines.map(line => {
-        line = line.trim();
-        if (line.includes(':')) {
-            const parts = line.split(':');
-            const key = parts[0].trim();
-            const value = parts.slice(1).join(':').trim();
-            return `<div class="spec-item"><strong>${key}:</strong> ${value}</div>`;
-        } else {
-            return `<div class="spec-item">${line}</div>`;
-        }
-    }).join('');
-    
-    return formattedLines;
 }
 
 // Показать детали диска PMMA
@@ -262,7 +204,7 @@ function showRmmaProductDetails(productId) {
     
     const name = product.name || product.наименование || 'Без названия';
     const description = product.description || product.описание || 'Описание отсутствует';
-    const specifications = getProductSpecifications(product);
+    const specifications = product.specifications || product.характеристики || 'Характеристики не указаны';
     const price = product.price || product.цена || '';
     
     // Определяем тип диска
@@ -307,9 +249,7 @@ function showRmmaProductDetails(productId) {
                             <p>${description}</p>
                             
                             <h6><i class="fas fa-cogs me-2"></i>Характеристики</h6>
-                            <div class="specifications-content">
-                                ${formatSpecifications(specifications)}
-                            </div>
+                            <p>${specifications}</p>
                             
                             ${price ? `
                                 <h6><i class="fas fa-tag me-2"></i>Цена</h6>

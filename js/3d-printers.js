@@ -36,12 +36,100 @@ async function loadPrintersFromFirebase() {
             });
         });
         
-        // Фильтруем только 3D принтеры
+        // Фильтруем только 3D принтеры, исключаем камеры полимеризации, ультразвуковые ванны и прочее оборудование
         printersData = allProducts.filter(product => {
             const name = (product.name || product.наименование || '').toLowerCase();
             const category = (product.category || product.категория || '').toLowerCase();
             const description = (product.description || product.описание || '').toLowerCase();
             const tags = (product.tags || product.теги || '').toLowerCase();
+            
+            // Исключаем камеры полимеризации, ультразвуковые ванны, материалы, запчасти и прочее оборудование
+            const isExcluded = 
+                // Камеры полимеризации
+                name.includes('камера') ||
+                name.includes('полимериз') ||
+                name.includes('cure') ||
+                name.includes('curing') ||
+                category.includes('камера') ||
+                category.includes('полимериз') ||
+                category.includes('cure') ||
+                category.includes('curing') ||
+                tags.includes('камера') ||
+                tags.includes('полимериз') ||
+                tags.includes('cure') ||
+                tags.includes('curing') ||
+                // Ультразвуковые ванны
+                name.includes('ультразвук') ||
+                name.includes('ванна') ||
+                name.includes('ultrasonic') ||
+                name.includes('wash') ||
+                name.includes('cleaning') ||
+                category.includes('ультразвук') ||
+                category.includes('ванна') ||
+                category.includes('ultrasonic') ||
+                tags.includes('ультразвук') ||
+                tags.includes('ванна') ||
+                tags.includes('ultrasonic') ||
+                // Прочее оборудование
+                name.includes('печь') ||
+                name.includes('sinter') ||
+                name.includes('furnace') ||
+                name.includes('oven') ||
+                category.includes('печь') ||
+                category.includes('sinter') ||
+                category.includes('furnace') ||
+                tags.includes('печь') ||
+                tags.includes('sinter') ||
+                tags.includes('furnace') ||
+                // Материалы для печати (фотополимеры, смолы)
+                name.includes('фотополимер') ||
+                name.includes('photopolymer') ||
+                name.includes('смола') ||
+                name.includes('resin') ||
+                name.includes('полимер') ||
+                category.includes('фотополимер') ||
+                category.includes('photopolymer') ||
+                category.includes('смола') ||
+                category.includes('resin') ||
+                category.includes('материал') ||
+                category.includes('material') ||
+                tags.includes('фотополимер') ||
+                tags.includes('photopolymer') ||
+                tags.includes('смола') ||
+                tags.includes('resin') ||
+                tags.includes('материал') ||
+                tags.includes('material') ||
+                // Запчасти и расходники
+                name.includes('lcd матрица') ||
+                name.includes('lcd') ||
+                name.includes('матрица') ||
+                name.includes('экран') ||
+                name.includes('screen') ||
+                name.includes('пленк') ||
+                name.includes('film') ||
+                name.includes('fep') ||
+                name.includes('nfep') ||
+                name.includes('acf') ||
+                name.includes('комплект') ||
+                category.includes('запчасти') ||
+                category.includes('расходник') ||
+                category.includes('spare') ||
+                category.includes('parts') ||
+                category.includes('consumable') ||
+                tags.includes('запчасти') ||
+                tags.includes('расходник') ||
+                tags.includes('spare') ||
+                tags.includes('parts') ||
+                tags.includes('lcd') ||
+                tags.includes('fep') ||
+                tags.includes('пленка') ||
+                description.includes('lcd матрица') ||
+                description.includes('пленка для');
+            
+            if (isExcluded) {
+                console.log(`❌ Исключено оборудование: ${name} (не принтер)`);
+                return false;
+            }
             
             // Логика фильтрации для 3D принтеров
             const isPrinter = 
@@ -71,20 +159,17 @@ async function loadPrintersFromFirebase() {
                 // Проверяем название
                 name.includes('3d принтер') ||
                 name.includes('3d-принтер') ||
-                name.includes('принтер') ||
+                name.includes('принтер') && !name.includes('камера') ||
                 name.includes('3d printer') ||
-                name.includes('printer') ||
+                name.includes('printer') && !name.includes('cure') ||
                 name.includes('форм') ||  // Form labs
                 name.includes('formlabs') ||
                 name.includes('nextdent') ||
                 name.includes('asiga') ||
-                name.includes('dental') ||
                 // Проверяем описание
                 description.includes('3d принтер') ||
                 description.includes('3d печать') ||
-                description.includes('принтер') ||
-                description.includes('стереолитография') ||
-                description.includes('фотополимер');
+                description.includes('стереолитография');
             
             if (isPrinter) {
                 console.log(`✅ Найден 3D принтер: ${name}`);
@@ -143,131 +228,56 @@ function displayPrintersProducts() {
     console.log(`Отображено ${printersData.length} 3D принтеров`);
 }
 
-// Создание карточки 3D принтера
+// Создание карточки 3D принтера (в стиле циркониевых материалов)
 function createPrinterProductCard(product) {
     const name = product.name || product.наименование || 'Без названия';
-    const description = product.description || product.описание || 'Описание отсутствует';
+    const fullDescription = product.description || product.описание || 'Описание отсутствует';
     const specifications = product.specifications || product.характеристики || '';
-    const price = product.price || product.цена || '';
+    
+    // Сокращаем описание до первых 50 символов + "..."
+    const shortDescription = fullDescription.length > 50 
+        ? fullDescription.substring(0, 50) + '...' 
+        : fullDescription;
+    
+    // Сокращаем характеристики до первых 80 символов + "..."
+    const shortSpecs = specifications && specifications.length > 80 
+        ? specifications.substring(0, 80) + '...' 
+        : specifications;
     
     // Определяем изображение
     let imageHTML = '';
     const imageUrl = product.img_url || product.image_url || product.изображение || product.картинка;
     
     if (imageUrl) {
-        imageHTML = `<img src="${imageUrl}" class="printer-image" alt="${name}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">`;
+        imageHTML = `<img src="${imageUrl}" class="printer-product-image" alt="${name}">`;
+    } else {
+        imageHTML = `
+            <div class="printer-product-placeholder">
+                <i class="fas fa-print"></i>
+            </div>
+        `;
     }
-    
-    const placeholderHTML = `
-        <div class="printer-image-placeholder" ${imageUrl ? 'style="display: none;"' : ''}>
-            <i class="fas fa-cube"></i>
-        </div>
-    `;
     
     return `
         <div class="col-md-6 col-lg-4 mb-4">
-            <div class="card printer-card h-100 shadow-sm">
-                <div class="card-body d-flex flex-column">
-                    <div class="text-center mb-3">
-                        ${imageHTML}
-                        ${placeholderHTML}
-                    </div>
-                    <h5 class="card-title text-center">${name}</h5>
-                    <p class="card-text flex-grow-1">${description}</p>
-                    ${specifications ? `
-                        <div class="specs-preview mb-3">
-                            <small class="text-muted">
-                                <i class="fas fa-list me-1"></i>
-                                ${specifications.substring(0, 100)}${specifications.length > 100 ? '...' : ''}
-                            </small>
-                        </div>
-                    ` : ''}
-                    ${price ? `
-                        <div class="price-info mb-3 text-center">
-                            <span class="badge bg-success fs-6">
-                                <i class="fas fa-tag me-1"></i>${price}
-                            </span>
-                        </div>
-                    ` : ''}
-                    <div class="mt-auto">
-                        <button class="btn btn-primary w-100" onclick="showPrinterProductDetails('${product.id}')">
-                            <i class="fas fa-info-circle me-2"></i>Подробнее
-                        </button>
-                    </div>
+            <div class="printer-product-card">
+                <div class="printer-image-container">
+                    ${imageHTML}
                 </div>
+                <h5 class="printer-product-title">${name}</h5>
+                <p class="printer-product-description">${shortDescription}</p>
+                ${shortSpecs && shortSpecs !== 'Характеристики не указаны' ? `
+                    <div class="specs-preview small mb-3">
+                        <strong>Характеристики:</strong>
+                        <p class="mb-0">${shortSpecs}</p>
+                    </div>
+                ` : ''}
+                <button class="btn btn-outline-primary printer-details-btn" onclick="showPrinterProductDetails('${product.id}')">
+                    <i class="fas fa-info-circle me-2"></i>Подробнее
+                </button>
             </div>
         </div>
     `;
-}
-
-// Извлечение характеристик из продукта
-function getProductSpecifications(product) {
-    const specsFields = [
-        'specifications', 'характеристики', 'specs', 'Характеристики',
-        'characteristics', 'techSpecs', 'technicalSpecs', 
-        'parameters', 'параметры', 'features', 'свойства', 'properties'
-    ];
-    
-    for (const field of specsFields) {
-        if (product[field]) {
-            const value = product[field];
-            if (typeof value === 'string' && value.trim()) {
-                return value.trim();
-            }
-            if (typeof value === 'object' && value !== null) {
-                return value;
-            }
-        }
-    }
-    
-    const allKeys = Object.keys(product);
-    for (const key of allKeys) {
-        const keyLower = key.toLowerCase();
-        if (keyLower.includes('характ') || keyLower.includes('spec') || 
-            keyLower.includes('параметр') || keyLower.includes('свойств')) {
-            const value = product[key];
-            if (value && (typeof value === 'string' || typeof value === 'object')) {
-                return value;
-            }
-        }
-    }
-    
-    return 'Характеристики не указаны';
-}
-
-// Форматирование характеристик
-function formatSpecifications(specs) {
-    if (!specs || specs === 'Характеристики не указаны') {
-        return '<p class="text-muted">Характеристики не указаны</p>';
-    }
-    
-    if (typeof specs === 'object' && !Array.isArray(specs)) {
-        const specsList = Object.entries(specs).map(([key, value]) => {
-            return `<div class="spec-item"><strong>${key}:</strong> ${value}</div>`;
-        }).join('');
-        return specsList || '<p class="text-muted">Характеристики не указаны</p>';
-    }
-    
-    const specsStr = String(specs);
-    const lines = specsStr.split('\n').filter(line => line.trim());
-    
-    if (lines.length === 0) {
-        return '<p class="text-muted">Характеристики не указаны</p>';
-    }
-    
-    const formattedLines = lines.map(line => {
-        line = line.trim();
-        if (line.includes(':')) {
-            const parts = line.split(':');
-            const key = parts[0].trim();
-            const value = parts.slice(1).join(':').trim();
-            return `<div class="spec-item"><strong>${key}:</strong> ${value}</div>`;
-        } else {
-            return `<div class="spec-item">${line}</div>`;
-        }
-    }).join('');
-    
-    return formattedLines;
 }
 
 // Показать детали 3D принтера
@@ -280,8 +290,7 @@ function showPrinterProductDetails(productId) {
     
     const name = product.name || product.наименование || 'Без названия';
     const description = product.description || product.описание || 'Описание отсутствует';
-    const specifications = getProductSpecifications(product);
-    const price = product.price || product.цена || '';
+    const specifications = product.specifications || product.характеристики || 'Характеристики не указаны';
     
     // Определяем изображение для модального окна
     let modalImageHTML = '';
@@ -293,7 +302,7 @@ function showPrinterProductDetails(productId) {
     
     const modalPlaceholderHTML = `
         <div class="printer-modal-image-placeholder mb-3" ${imageUrl ? 'style="display: none;"' : ''}>
-            <i class="fas fa-cube"></i>
+            <i class="fas fa-print"></i>
         </div>
     `;
     
@@ -316,16 +325,7 @@ function showPrinterProductDetails(productId) {
                             <p>${description}</p>
                             
                             <h6><i class="fas fa-cogs me-2"></i>Характеристики</h6>
-                            <div class="specifications-content">
-                                ${formatSpecifications(specifications)}
-                            </div>
-                            
-                            ${price ? `
-                                <h6><i class="fas fa-tag me-2"></i>Цена</h6>
-                                <p class="price-info fs-5">
-                                    <span class="badge bg-success">${price}</span>
-                                </p>
-                            ` : ''}
+                            <p>${specifications}</p>
                         </div>
                     </div>
                     <div class="modal-footer">

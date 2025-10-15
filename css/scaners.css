@@ -86,6 +86,22 @@
     text-align: center;
 }
 
+/* Превью характеристик */
+.specs-preview {
+    background: #f8f9fa;
+    padding: 10px;
+    border-radius: 6px;
+    border-left: 3px solid #667eea;
+    margin-top: 10px;
+    text-align: left;
+}
+
+.specs-preview p {
+    margin-bottom: 0;
+    font-size: 0.8rem;
+    color: #495057;
+}
+
 /* Кнопка подробнее */
 .scaner-details-btn {
     border-radius: 6px;
@@ -136,42 +152,12 @@
     color: #1565c0;
     font-weight: 600;
     margin-bottom: 10px;
-    margin-top: 15px;
-}
-
-.specs-detail h6:first-child {
-    margin-top: 0;
 }
 
 .specs-detail p {
     margin-bottom: 15px;
     line-height: 1.6;
     color: #6c757d;
-}
-
-/* Форматирование характеристик */
-.specifications-content {
-    background: white;
-    padding: 12px;
-    border-radius: 6px;
-    margin-top: 10px;
-}
-
-.spec-item {
-    padding: 6px 0;
-    border-bottom: 1px solid #f0f0f0;
-    line-height: 1.5;
-    color: #495057;
-}
-
-.spec-item:last-child {
-    border-bottom: none;
-}
-
-.spec-item strong {
-    color: #1565c0;
-    font-weight: 600;
-    margin-right: 5px;
 }
 
 /* Адаптивность */
