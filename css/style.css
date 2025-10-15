@@ -51,6 +51,22 @@ html, body {
 body {
     display: flex;
     flex-direction: column;
+    min-height: 100vh;
+}
+
+/* Основной контент должен занимать всё доступное пространство */
+#home-page,
+#courses-page,
+#admin-page,
+#create-course-page,
+#course-detail-page {
+    flex: 1 0 auto;
+}
+
+/* Футер всегда внизу */
+footer {
+    flex-shrink: 0;
+    margin-top: auto;
 }
 
 #home-page {
@@ -154,11 +170,11 @@ footer {
     background-color: var(--dark-color);
     color: var(--light-color);
     padding: 20px 0;
-    width: 100vw;
+    width: 100%;
     margin: 0;
-    margin-left: calc(-50vw + 50%);
     flex-shrink: 0;
     text-align: center;
+    position: relative;
 }
 
 footer .container {
@@ -185,6 +201,26 @@ footer .row {
 
 footer .col-md-6 {
     text-align: center;
+}
+
+/* Мобильные устройства */
+@media (max-width: 768px) {
+    footer {
+        padding: 30px 15px;
+    }
+    
+    footer h5 {
+        font-size: 1rem;
+        margin-bottom: 8px;
+    }
+    
+    footer p {
+        font-size: 0.85rem;
+    }
+    
+    footer .col-md-6:first-child {
+        margin-bottom: 15px;
+    }
 }
 
 /* Стили для PDF каталогов */
@@ -1348,12 +1384,12 @@ footer .col-md-6 {
     }
     
     .features-section {
-        min-height: 100vh;
+        min-height: auto;
         padding: 60px 20px;
     }
     
     .courses-preview {
-        min-height: 100vh;
+        min-height: auto;
         padding: 60px 20px;
     }
     
@@ -1384,12 +1420,12 @@ footer .col-md-6 {
     }
     
     .features-section {
-        min-height: 100vh;
+        min-height: auto;
         padding: 50px 15px;
     }
     
     .courses-preview {
-        min-height: 100vh;
+        min-height: auto;
         padding: 50px 15px;
     }
     
@@ -1437,12 +1473,12 @@ footer .col-md-6 {
     }
     
     .features-section {
-        min-height: 100vh;
+        min-height: auto;
         padding: 40px 10px;
     }
     
     .courses-preview {
-        min-height: 100vh;
+        min-height: auto;
         padding: 40px 10px;
     }
     
@@ -1489,6 +1525,12 @@ footer .col-md-6 {
     /* Адаптация блока введения для мобильных */
     .introduction-wrapper {
         padding: 60px 15px;
+        margin-top: 300px;
+        margin-bottom: 30px;
+    }
+    
+    .introduction-section {
+        padding-bottom: 30px;
     }
     
     .introduction-section h2 {
