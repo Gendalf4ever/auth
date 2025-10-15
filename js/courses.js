@@ -56,7 +56,7 @@ function setupCourseEventListeners() {
 
 // Загрузка курсов из Firebase
 function loadCourses() {
-    const coursesList = document.getElementById('courses-list');
+    const coursesList = document.getElementById('courses-container');
     if (!coursesList) return;
     
     coursesList.innerHTML = '<div class="text-center"><div class="spinner-border" role="status"></div></div>';
@@ -77,95 +77,17 @@ function loadCourses() {
             isStatic: true,
             createdAt: new Date(),
             studentsCount: 0
-        },
-        {
-            id: 'milling-machine-course',
-            title: 'Фрезерный станок',
-            description: 'Работа с фрезерными станками в стоматологии. Изучение основ фрезерования, настройки оборудования и технологических процессов.',
-            category: 'Фрезерование',
-            level: 'Средний',
-            duration: 'Практический курс',
-            link: 'frezy.html',
-            isStatic: true,
-            createdAt: new Date(),
-            studentsCount: 0
-        },
-        {
-            id: 'milling-tools-course',
-            title: 'Фрезы',
-            description: 'Типы и применение фрез в стоматологии. Выбор подходящих инструментов для различных материалов и задач.',
-            category: 'Инструменты',
-            level: 'Средний',
-            duration: 'Практический курс',
-            link: 'frezy_text.html',
-            isStatic: true,
-            createdAt: new Date(),
-            studentsCount: 0
-        },
-        {
-            id: 'scanners-course',
-            title: 'Интраоральные сканеры',
-            description: 'Современные технологии сканирования в стоматологии. Работа с интраоральными сканерами и обработка данных.',
-            category: 'Сканирование',
-            level: 'Средний',
-            duration: 'Практический курс',
-            link: 'scaners.html',
-            isStatic: true,
-            createdAt: new Date(),
-            studentsCount: 0
-        },
-        {
-            id: '3d-printing-course',
-            title: '3D печать в стоматологии',
-            description: 'Технологии 3D печати для стоматологических применений. SLA, DLP, PolyJet и другие методы печати.',
-            category: '3D печать',
-            level: 'Продвинутый',
-            duration: 'Практический курс',
-            link: '3d-printers.html',
-            isStatic: true,
-            createdAt: new Date(),
-            studentsCount: 0
-        },
-        {
-            id: 'zirconia-course',
-            title: 'Цирконий для CAD/CAM',
-            description: 'Работа с циркониевыми материалами в CAD/CAM системах. Свойства, обработка и клиническое применение.',
-            category: 'Материалы',
-            level: 'Продвинутый',
-            duration: 'Практический курс',
-            link: 'zirkon.html',
-            isStatic: true,
-            createdAt: new Date(),
-            studentsCount: 0
-        },
-        {
-            id: 'pmma-course',
-            title: 'PMMA для временных реставраций',
-            description: 'Использование PMMA материалов для создания временных реставраций. Технологии обработки и клиническое применение.',
-            category: 'Материалы',
-            level: 'Средний',
-            duration: 'Практический курс',
-            link: 'rmma.html',
-            isStatic: true,
-            createdAt: new Date(),
-            studentsCount: 0
-        },
-        {
-            id: 'composite-blocks-course',
-            title: 'Композитные блоки',
-            description: 'Современные композитные материалы для CAD/CAM систем. Свойства, обработка и клиническое применение.',
-            category: 'Материалы',
-            level: 'Средний',
-            duration: 'Практический курс',
-            link: 'composied_blocks.html',
-            isStatic: true,
-            createdAt: new Date(),
-            studentsCount: 0
         }
     ];
     
     // Добавляем все статичные курсы
     allCourses.push(...staticCourses);
+    
+    // Обновляем данные для поиска
+    if (typeof allCoursesData !== 'undefined') {
+        allCoursesData = [...allCourses];
+        filteredCoursesData = [...allCourses];
+    }
     
     // Отображаем статичные курсы напрямую
     displayCourses(allCourses);

@@ -271,6 +271,12 @@
         document.addEventListener('DOMContentLoaded', function() {
             console.log('Инициализация поиска курсов');
             
+            // Загружаем курсы
+            if (typeof loadCourses === 'function') {
+                loadCourses();
+                console.log('Курсы загружены');
+            }
+            
             // Небольшая задержка для загрузки всех скриптов
             setTimeout(() => {
                 if (typeof setupCourseSearchEventListeners === 'function') {
