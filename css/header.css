@@ -205,13 +205,13 @@ body {
 
 /* Минимальный отступ для главной страницы - только высота хедера */
 body.home-page {
-    padding-top: 70px;
+    padding-top: 60px;
 }
 
 /* Адаптивные отступы для главной страницы */
 @media (max-width: 768px) {
     body.home-page {
-        padding-top: 65px;
+        padding-top: 60px;
     }
 }
 
