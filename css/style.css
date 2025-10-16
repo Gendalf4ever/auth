@@ -788,7 +788,7 @@ footer .col-md-6 {
 /* ==================== Стили для карточек введения ==================== */
 /* Объединенный контейнер с перетекающим градиентом */
 .unified-gradient-container {
-    margin-top: 600px;
+    margin-top: 900px;
     margin-bottom: 50px;
     background: linear-gradient(180deg, 
         #8b5cf6 0%,      /* Фиолетовый верх */
@@ -808,7 +808,7 @@ footer .col-md-6 {
 .introduction-wrapper {
     margin-top: 0;
     margin-bottom: 0;
-    padding: 60px 20px 40px 20px;
+    padding: 60px 20px 60px 20px;
     background: transparent;
     position: relative;
     border-radius: 0;
