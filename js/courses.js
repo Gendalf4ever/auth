@@ -77,6 +77,66 @@ function loadCourses() {
             isStatic: true,
             createdAt: new Date(),
             studentsCount: 0
+        },
+        {
+            id: 'scanners-course',
+            title: 'Интраоральные сканеры',
+            description: 'Изучение современных интраоральных сканеров, их принципов работы и применения в различных областях стоматологии.',
+            category: 'Сканирование',
+            level: 'Средний',
+            duration: '2 часа',
+            videoUrl: 'https://jumpshare.com/embed/scanner-video',
+            isStatic: true,
+            createdAt: new Date(),
+            studentsCount: 0
+        },
+        {
+            id: 'cadcam-course',
+            title: 'CAD/CAM системы',
+            description: 'Компьютерное проектирование и автоматизированное производство в стоматологии.',
+            category: 'CAD/CAM',
+            level: 'Продвинутый',
+            duration: '3 часа',
+            videoUrl: 'https://jumpshare.com/embed/cadcam-video',
+            isStatic: true,
+            createdAt: new Date(),
+            studentsCount: 0
+        },
+        {
+            id: '3d-printing-course',
+            title: '3D печать в стоматологии',
+            description: 'Послойное воссоздание физических объектов на основе цифровой 3D-модели.',
+            category: '3D печать',
+            level: 'Средний',
+            duration: '2.5 часа',
+            videoUrl: 'https://jumpshare.com/embed/3d-printing-video',
+            isStatic: true,
+            createdAt: new Date(),
+            studentsCount: 0
+        },
+        {
+            id: 'milling-course',
+            title: 'Фрезерные станки',
+            description: 'Работа с фрезерными станками с ЧПУ для изготовления стоматологических конструкций.',
+            category: 'Фрезерование',
+            level: 'Продвинутый',
+            duration: '4 часа',
+            videoUrl: 'https://jumpshare.com/embed/milling-video',
+            isStatic: true,
+            createdAt: new Date(),
+            studentsCount: 0
+        },
+        {
+            id: 'materials-course',
+            title: 'Материалы для CAD/CAM',
+            description: 'Цирконий, PMMA, композитные блоки и другие материалы для цифровой стоматологии.',
+            category: 'Материалы',
+            level: 'Средний',
+            duration: '2 часа',
+            videoUrl: 'https://jumpshare.com/embed/materials-video',
+            isStatic: true,
+            createdAt: new Date(),
+            studentsCount: 0
         }
     ];
     
@@ -130,18 +190,25 @@ function displayCourses(courses) {
     }
     
     courses.forEach(course => {
+        // Определяем иконку в зависимости от категории
+        let categoryIcon = 'fas fa-graduation-cap';
+        if (course.category === 'Сканирование') categoryIcon = 'fas fa-tooth';
+        else if (course.category === 'CAD/CAM') categoryIcon = 'fas fa-cube';
+        else if (course.category === '3D печать') categoryIcon = 'fas fa-print';
+        else if (course.category === 'Фрезерование') categoryIcon = 'fas fa-cogs';
+        else if (course.category === 'Материалы') categoryIcon = 'fas fa-gem';
+        
         const courseCard = `
             <div class="col-md-6 col-lg-4 mb-4">
                 <div class="card course-card h-100 shadow-sm">
-                    <div class="card-header bg-primary text-white">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <h6 class="mb-0">
-                                <i class="fas fa-graduation-cap me-2"></i>${course.category}
-                            </h6>
-                            <span class="badge bg-light text-primary">${course.level}</span>
-                        </div>
+                    <div class="course-image">
+                        <i class="${categoryIcon}"></i>
                     </div>
                     <div class="card-body d-flex flex-column">
+                        <div class="course-badges mb-2">
+                            <span class="badge bg-primary">${course.category}</span>
+                            <span class="badge bg-secondary">${course.level}</span>
+                        </div>
                         <h5 class="card-title">${course.title}</h5>
                         <p class="card-text flex-grow-1">${course.description}</p>
                         <div class="course-meta mt-auto">
@@ -151,14 +218,9 @@ function displayCourses(courses) {
                                 </small>
                                 ${course.videoUrl ? '<span class="badge bg-success">Видеокурс</span>' : '<span class="badge bg-info">Практический</span>'}
                             </div>
-                            ${course.link ? 
-                                `<a href="${course.link}" class="btn btn-primary w-100">
-                                    <i class="fas fa-external-link-alt me-2"></i>Перейти к курсу
-                                </a>` :
-                                `<button class="btn btn-primary w-100 view-course-detail" data-course-id="${course.id}">
-                                    <i class="fas fa-play me-2"></i>Начать курс
-                                </button>`
-                            }
+                            <button class="btn btn-primary w-100 view-course-detail" data-course-id="${course.id}">
+                                <i class="fas fa-play me-2"></i>Начать курс
+                            </button>
                         </div>
                     </div>
                 </div>
