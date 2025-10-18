@@ -5,13 +5,16 @@ body.courses-page {
     overflow-y: auto;
     min-height: 100vh;
     scroll-behavior: smooth;
+    padding-top: 0;
+    margin-top: 0;
+    height: auto;
 }
 
 /* Улучшаем прокрутку для контейнера */
 .unified-gradient-container {
-    min-height: 150vh;
+    min-height: 70vh;
     overflow-y: auto;
-    padding-bottom: 100px;
+    padding-bottom: 40px;
 }
 
 /* Плавная прокрутка для всех элементов */
@@ -38,13 +41,29 @@ body.courses-page {
     padding-right: 20px;
 }
 
+/* Адаптивные отступы для колонок */
+@media (max-width: 991.98px) {
+    .col-lg-9, .col-lg-3 {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .col-lg-9, .col-lg-3 {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+}
+
 /* Hero секция */
 .hero-section {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
-    padding: 80px 0 60px 0;
+    padding: 40px 0 25px 0;
     position: relative;
     overflow: hidden;
+    margin-top: 0;
 }
 
 .hero-section::before {
@@ -59,14 +78,14 @@ body.courses-page {
 }
 
 .hero-section h1 {
-    font-size: 3rem;
+    font-size: 2rem;
     font-weight: 700;
     text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-    margin-bottom: 1rem;
+    margin-bottom: 0.8rem;
 }
 
 .hero-section p {
-    font-size: 1.25rem;
+    font-size: 1rem;
     opacity: 0.9;
     text-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
 }
@@ -85,10 +104,12 @@ body.courses-page {
     position: relative;
     border-radius: 0;
     overflow: hidden;
-    padding-bottom: 120px;
-    margin-top: 0;
+    padding: 10px 0 30px 0;
+    margin: 0 auto;
     margin-bottom: 0;
-    min-height: 150vh;
+    min-height: 60vh;
+    max-width: 100%;
+    width: 100%;
 }
 
 .unified-gradient-container::before {
@@ -108,28 +129,28 @@ body.courses-page {
     backdrop-filter: blur(10px);
     border: none;
     border-radius: 0;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-    transition: all 0.4s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
     overflow: hidden;
-    border: 2px solid rgba(255, 255, 255, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.2);
     height: 100%;
 }
 
 .course-card:hover {
-    transform: translateY(-15px) scale(1.02);
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
-    border-color: rgba(255, 255, 255, 0.8);
+    transform: translateY(-8px) scale(1.01);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+    border-color: rgba(255, 255, 255, 0.6);
     background: rgba(255, 255, 255, 1);
 }
 
 .course-image {
-    height: 120px;
+    height: 100px;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     display: flex;
     align-items: center;
     justify-content: center;
     color: white;
-    font-size: 3rem;
+    font-size: 2.5rem;
     border-radius: 0;
     position: relative;
     overflow: hidden;
@@ -398,11 +419,11 @@ body.courses-page {
 .search-filters-section {
     background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(10px);
-    padding: 30px;
+    padding: 25px;
     border-radius: 0;
-    border: 2px solid rgba(255, 255, 255, 0.3);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-    margin-bottom: 40px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
 }
 
 .search-box {
@@ -482,11 +503,11 @@ body.courses-page {
 .sidebar {
     background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(10px);
-    padding: 25px;
+    padding: 20px;
     border-radius: 0;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-    border: 2px solid rgba(255, 255, 255, 0.3);
-    margin-bottom: 30px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    margin-bottom: 25px;
 }
 
 .sidebar h5 {
@@ -550,7 +571,7 @@ body.courses-page {
 }
 
 .quick-link-card .card-body {
-    padding: 25px 20px;
+    padding: 20px 15px;
 }
 
 .quick-link-card .card-title {
@@ -565,12 +586,412 @@ body.courses-page {
     line-height: 1.5;
 }
 
-/* Адаптивность для поиска курсов */
-@media (max-width: 768px) {
+/* ==================== АДАПТИВНЫЙ ДИЗАЙН ==================== */
+
+/* Мобильные устройства (до 576px) */
+@media (max-width: 575.98px) {
+    /* Hero секция для мобильных */
+    .hero-section {
+        padding: 50px 0 30px 0;
+        text-align: center;
+    }
+    
+    .hero-section h1 {
+        font-size: 1.8rem;
+        margin-bottom: 15px;
+        line-height: 1.2;
+    }
+    
+    .hero-section p {
+        font-size: 1rem;
+        margin-bottom: 20px;
+        padding: 0 10px;
+    }
+    
+    /* Контейнер для мобильных */
+    .unified-gradient-container {
+        padding: 5px 0 20px 0;
+        min-height: 50vh;
+        margin: 0 auto;
+        max-width: 100%;
+    }
+    
+    .container {
+        max-width: 100%;
+        padding: 0 10px;
+    }
+    
+    /* Поиск и фильтры для мобильных */
     .search-filters-section {
+        padding: 15px;
+        margin-bottom: 20px;
+    }
+    
+    .search-box .form-control {
+        font-size: 0.9rem;
+        padding: 12px 15px;
+        border-radius: 0;
+    }
+    
+    /* Сетка курсов для мобильных */
+    .row {
+        margin: 0 -5px;
+    }
+    
+    .col-md-6, .col-lg-4 {
+        padding: 0 5px;
+        margin-bottom: 15px;
+    }
+    
+    /* Карточки курсов для мобильных */
+    .course-card {
+        margin-bottom: 15px;
+        border-radius: 0;
+    }
+    
+    .course-image {
+        height: 100px;
+        font-size: 2.5rem;
+    }
+    
+    .card-body {
         padding: 15px;
     }
     
+    .card-title {
+        font-size: 1.1rem;
+        margin-bottom: 10px;
+    }
+    
+    .card-text {
+        font-size: 0.9rem;
+        margin-bottom: 15px;
+    }
+    
+    .course-badges {
+        margin-bottom: 10px;
+    }
+    
+    .badge {
+        font-size: 0.7rem;
+        padding: 4px 8px;
+    }
+    
+    .btn {
+        padding: 10px 15px;
+        font-size: 0.9rem;
+    }
+    
+    /* Quick-links для мобильных */
+    .quick-links {
+        margin-bottom: 30px;
+        padding: 15px 0;
+    }
+    
+    .quick-links h5 {
+        font-size: 1.2rem;
+        margin-bottom: 20px;
+    }
+    
+    .quick-link-card .card-body {
+        padding: 20px 15px;
+    }
+    
+    .quick-link-card .card-title {
+        font-size: 1rem;
+    }
+    
+    .quick-link-card .card-text {
+        font-size: 0.85rem;
+    }
+    
+    /* Sidebar для мобильных */
+    .sidebar {
+        padding: 20px 15px;
+        margin-bottom: 20px;
+    }
+    
+    .sidebar h5 {
+        font-size: 1.1rem;
+        margin-bottom: 15px;
+    }
+    
+    /* Модальные окна для мобильных */
+    .modal-dialog {
+        margin: 10px;
+        max-width: calc(100% - 20px);
+    }
+    
+    .modal-body {
+        padding: 20px 15px;
+    }
+    
+    .video-container {
+        padding-bottom: 56.25% !important;
+    }
+}
+
+/* Планшеты (576px - 991px) */
+@media (min-width: 576px) and (max-width: 991.98px) {
+    /* Hero секция для планшетов */
+    .hero-section {
+        padding: 60px 0 40px 0;
+    }
+    
+    .hero-section h1 {
+        font-size: 2.2rem;
+        margin-bottom: 20px;
+    }
+    
+    .hero-section p {
+        font-size: 1.15rem;
+        margin-bottom: 25px;
+    }
+    
+    /* Контейнер для планшетов */
+    .unified-gradient-container {
+        padding: 8px 0 25px 0;
+        min-height: 55vh;
+        max-width: 95%;
+        margin: 0 auto;
+    }
+    
+    .container {
+        max-width: 100%;
+        padding: 0 20px;
+    }
+    
+    /* Поиск и фильтры для планшетов */
+    .search-filters-section {
+        padding: 25px 20px;
+        margin-bottom: 30px;
+    }
+    
+    .search-box .form-control {
+        font-size: 1rem;
+        padding: 12px 15px;
+    }
+    
+    /* Сетка курсов для планшетов */
+    .col-md-6 {
+        margin-bottom: 20px;
+    }
+    
+    /* Карточки курсов для планшетов */
+    .course-card {
+        margin-bottom: 20px;
+    }
+    
+    .course-image {
+        height: 110px;
+        font-size: 2.8rem;
+    }
+    
+    .card-body {
+        padding: 20px;
+    }
+    
+    .card-title {
+        font-size: 1.2rem;
+        margin-bottom: 12px;
+    }
+    
+    .card-text {
+        font-size: 0.95rem;
+        margin-bottom: 18px;
+    }
+    
+    .course-badges {
+        margin-bottom: 12px;
+    }
+    
+    .badge {
+        font-size: 0.8rem;
+        padding: 5px 10px;
+    }
+    
+    .btn {
+        padding: 12px 20px;
+        font-size: 0.95rem;
+    }
+    
+    /* Quick-links для планшетов */
+    .quick-links {
+        margin-bottom: 40px;
+        padding: 20px 0;
+    }
+    
+    .quick-links h5 {
+        font-size: 1.4rem;
+        margin-bottom: 25px;
+    }
+    
+    .quick-link-card .card-body {
+        padding: 25px 20px;
+    }
+    
+    .quick-link-card .card-title {
+        font-size: 1.1rem;
+    }
+    
+    .quick-link-card .card-text {
+        font-size: 0.9rem;
+    }
+    
+    /* Sidebar для планшетов */
+    .sidebar {
+        padding: 25px 20px;
+        margin-bottom: 25px;
+    }
+    
+    .sidebar h5 {
+        font-size: 1.2rem;
+        margin-bottom: 18px;
+    }
+    
+    /* Модальные окна для планшетов */
+    .modal-dialog {
+        margin: 20px;
+        max-width: calc(100% - 40px);
+    }
+    
+    .modal-body {
+        padding: 25px 20px;
+    }
+}
+
+/* Десктоп (992px и выше) */
+@media (min-width: 992px) {
+    /* Hero секция для десктопа */
+    .hero-section {
+        padding: 60px 0 40px 0;
+    }
+    
+    .hero-section h1 {
+        font-size: 3rem;
+        margin-bottom: 25px;
+    }
+    
+    .hero-section p {
+        font-size: 1.25rem;
+        margin-bottom: 30px;
+    }
+    
+    /* Контейнер для десктопа */
+    .unified-gradient-container {
+        padding: 10px 0 30px 0;
+        min-height: 60vh;
+        max-width: 90%;
+        margin: 0 auto;
+    }
+    
+    .container {
+        max-width: 1400px;
+        padding: 0 20px;
+    }
+    
+    /* Поиск и фильтры для десктопа */
+    .search-filters-section {
+        padding: 30px;
+        margin-bottom: 40px;
+    }
+    
+    .search-box .form-control {
+        font-size: 1rem;
+        padding: 12px 15px;
+    }
+    
+    /* Сетка курсов для десктопа */
+    .col-lg-4 {
+        margin-bottom: 30px;
+    }
+    
+    /* Карточки курсов для десктопа */
+    .course-card {
+        margin-bottom: 30px;
+    }
+    
+    .course-image {
+        height: 120px;
+        font-size: 3rem;
+    }
+    
+.card-body {
+    padding: 20px;
+}
+    
+    .card-title {
+        font-size: 1.3rem;
+        margin-bottom: 15px;
+    }
+    
+    .card-text {
+        font-size: 1rem;
+        margin-bottom: 20px;
+    }
+    
+    .course-badges {
+        margin-bottom: 15px;
+    }
+    
+    .badge {
+        font-size: 0.85rem;
+        padding: 6px 12px;
+    }
+    
+    .btn {
+        padding: 12px 25px;
+        font-size: 1rem;
+    }
+    
+    /* Quick-links для десктопа */
+    .quick-links {
+        margin-bottom: 60px;
+        padding: 20px 0;
+    }
+    
+    .quick-links h5 {
+        font-size: 1.5rem;
+        margin-bottom: 25px;
+    }
+    
+    .quick-link-card .card-body {
+        padding: 25px 20px;
+    }
+    
+    .quick-link-card .card-title {
+        font-size: 1.1rem;
+    }
+    
+    .quick-link-card .card-text {
+        font-size: 0.9rem;
+    }
+    
+    /* Sidebar для десктопа */
+    .sidebar {
+        padding: 25px;
+        margin-bottom: 30px;
+    }
+    
+    .sidebar h5 {
+        font-size: 1.25rem;
+        margin-bottom: 20px;
+    }
+    
+    /* Модальные окна для десктопа */
+    .modal-dialog {
+        margin: 30px auto;
+        max-width: 800px;
+    }
+    
+    .modal-body {
+        padding: 30px;
+    }
+}
+
+/* Дополнительные адаптивные стили */
+@media (max-width: 768px) {
+    /* Скрываем некоторые элементы на мобильных */
     .quick-filters {
         justify-content: center;
         margin-top: 15px;
@@ -582,36 +1003,172 @@ body.courses-page {
         margin-bottom: 8px;
     }
     
-    .search-box .form-control {
-        font-size: 0.9rem;
-        padding: 10px 12px;
-    }
-    
-    .hero-section {
-        padding: 60px 0 40px 0;
-    }
-    
-    .hero-section h1 {
-        font-size: 2.5rem;
-    }
-    
-    .hero-section p {
-        font-size: 1.1rem;
-    }
-    
-    .unified-gradient-container {
-        border-radius: 0;
-        padding-bottom: 60px;
-        min-height: 120vh;
-    }
-    
-    .container {
-        max-width: 100%;
-        padding: 0 15px;
+    /* Улучшаем отступы */
+    .row {
+        margin-bottom: 20px;
     }
     
     .col-lg-9, .col-lg-3 {
-        padding-left: 15px;
-        padding-right: 15px;
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+    
+    /* Адаптируем кнопки */
+    .btn-sm {
+        padding: 8px 12px;
+        font-size: 0.8rem;
+    }
+    
+    /* Адаптируем формы */
+    .form-control, .form-select {
+        font-size: 0.9rem;
+    }
+    
+    .unified-gradient-container {
+        padding: 8px 0 25px 0;
+        min-height: 60vh;
+        max-width: 100%;
+        margin: 0 auto;
+    }
+}
+
+/* Средние экраны (768px - 991px) */
+@media (min-width: 768px) and (max-width: 991.98px) {
+    .unified-gradient-container {
+        padding: 12px 0 35px 0;
+        min-height: 65vh;
+        max-width: 92%;
+        margin: 0 auto;
+    }
+}
+
+/* Очень маленькие экраны (до 400px) */
+@media (max-width: 400px) {
+    .hero-section h1 {
+        font-size: 1.5rem;
+    }
+    
+    .hero-section p {
+        font-size: 0.9rem;
+    }
+    
+    .container {
+        padding: 0 5px;
+    }
+    
+    .search-filters-section {
+        padding: 10px;
+    }
+    
+    .course-image {
+        height: 80px;
+        font-size: 2rem;
+    }
+    
+    .card-body {
+        padding: 12px;
+    }
+    
+    .card-title {
+        font-size: 1rem;
+    }
+    
+    .card-text {
+        font-size: 0.85rem;
+    }
+    
+    .btn {
+        padding: 8px 12px;
+        font-size: 0.85rem;
+    }
+    
+    .badge {
+        font-size: 0.65rem;
+        padding: 3px 6px;
+    }
+    
+    .unified-gradient-container {
+        padding: 5px 0 20px 0;
+        min-height: 50vh;
+        max-width: 100%;
+        margin: 0 auto;
+    }
+}
+
+/* Ландшафтная ориентация мобильных */
+@media (max-width: 768px) and (orientation: landscape) {
+    .hero-section {
+        padding: 60px 0 30px 0;
+    }
+    
+    .hero-section h1 {
+        font-size: 1.8rem;
+        margin-bottom: 10px;
+    }
+    
+    .hero-section p {
+        font-size: 1rem;
+        margin-bottom: 15px;
+    }
+    
+    .unified-gradient-container {
+        padding: 10px 0 25px 0;
+        min-height: 60vh;
+        max-width: 100%;
+        margin: 0 auto;
+    }
+}
+
+/* Большие экраны (1200px и выше) */
+@media (min-width: 1200px) {
+    .container {
+        max-width: 1600px;
+    }
+    
+    .hero-section h1 {
+        font-size: 3rem;
+    }
+    
+    .hero-section p {
+        font-size: 1.2rem;
+    }
+    
+    .course-image {
+        height: 120px;
+        font-size: 3rem;
+    }
+    
+.card-body {
+    padding: 20px;
+}
+    
+    .card-title {
+        font-size: 1.3rem;
+    }
+    
+    .card-text {
+        font-size: 1rem;
+    }
+}
+
+/* Очень большие экраны (1400px и выше) */
+@media (min-width: 1400px) {
+    .container {
+        max-width: 1800px;
+    }
+    
+    .hero-section h1 {
+        font-size: 3.2rem;
+    }
+    
+    .hero-section p {
+        font-size: 1.3rem;
+    }
+    
+    .unified-gradient-container {
+        padding: 15px 0 50px 0;
+        min-height: 75vh;
+        max-width: 85%;
+        margin: 0 auto;
     }
 }

@@ -77,66 +77,6 @@ function loadCourses() {
             isStatic: true,
             createdAt: new Date(),
             studentsCount: 0
-        },
-        {
-            id: 'scanners-course',
-            title: 'Интраоральные сканеры',
-            description: 'Изучение современных интраоральных сканеров, их принципов работы и применения в различных областях стоматологии.',
-            category: 'Сканирование',
-            level: 'Средний',
-            duration: '2 часа',
-            videoUrl: 'https://jumpshare.com/embed/scanner-video',
-            isStatic: true,
-            createdAt: new Date(),
-            studentsCount: 0
-        },
-        {
-            id: 'cadcam-course',
-            title: 'CAD/CAM системы',
-            description: 'Компьютерное проектирование и автоматизированное производство в стоматологии.',
-            category: 'CAD/CAM',
-            level: 'Продвинутый',
-            duration: '3 часа',
-            videoUrl: 'https://jumpshare.com/embed/cadcam-video',
-            isStatic: true,
-            createdAt: new Date(),
-            studentsCount: 0
-        },
-        {
-            id: '3d-printing-course',
-            title: '3D печать в стоматологии',
-            description: 'Послойное воссоздание физических объектов на основе цифровой 3D-модели.',
-            category: '3D печать',
-            level: 'Средний',
-            duration: '2.5 часа',
-            videoUrl: 'https://jumpshare.com/embed/3d-printing-video',
-            isStatic: true,
-            createdAt: new Date(),
-            studentsCount: 0
-        },
-        {
-            id: 'milling-course',
-            title: 'Фрезерные станки',
-            description: 'Работа с фрезерными станками с ЧПУ для изготовления стоматологических конструкций.',
-            category: 'Фрезерование',
-            level: 'Продвинутый',
-            duration: '4 часа',
-            videoUrl: 'https://jumpshare.com/embed/milling-video',
-            isStatic: true,
-            createdAt: new Date(),
-            studentsCount: 0
-        },
-        {
-            id: 'materials-course',
-            title: 'Материалы для CAD/CAM',
-            description: 'Цирконий, PMMA, композитные блоки и другие материалы для цифровой стоматологии.',
-            category: 'Материалы',
-            level: 'Средний',
-            duration: '2 часа',
-            videoUrl: 'https://jumpshare.com/embed/materials-video',
-            isStatic: true,
-            createdAt: new Date(),
-            studentsCount: 0
         }
     ];
     

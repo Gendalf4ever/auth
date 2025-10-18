@@ -69,6 +69,28 @@ footer {
     margin-top: auto;
 }
 
+/* Сокращаем отступы между блоками в 3 раза */
+.mb-4 {
+    margin-bottom: 0.1rem !important;
+}
+
+.mb-5 {
+    margin-bottom: 0.15rem !important;
+}
+
+.py-5 {
+    padding-top: 0.15rem !important;
+    padding-bottom: 0.15rem !important;
+}
+
+.mt-4 {
+    margin-top: 0.1rem !important;
+}
+
+.mt-5 {
+    margin-top: 0.15rem !important;
+}
+
 #home-page {
     flex: 1;
     display: flex;
@@ -98,7 +120,7 @@ footer {
     border-radius: 10px;
     box-shadow: 0 4px 6px rgba(0,0,0,0.1);
     transition: transform 0.3s;
-    margin-bottom: 20px;
+    margin-bottom: 7px;
 }
 
 .card:hover {
@@ -158,8 +180,8 @@ footer {
 .admin-panel {
     background-color: #f8f9fa;
     border-radius: 10px;
-    padding: 20px;
-    margin-bottom: 30px;
+    padding: 7px;
+    margin-bottom: 3px;
 }
 
 .hidden {
@@ -183,7 +205,7 @@ footer .container {
 
 footer h5 {
     font-weight: 700;
-    margin-bottom: 10px;
+    margin-bottom: 3px;
     color: white;
     font-size: 1.1rem;
 }
@@ -219,7 +241,7 @@ footer .col-md-6 {
     }
     
     footer .col-md-6:first-child {
-        margin-bottom: 15px;
+        margin-bottom: 5px;
     }
 }
 
@@ -261,12 +283,12 @@ footer .col-md-6 {
 /* Стили для обучающих страниц */
 .learning-page {
     min-height: 80vh;
-    padding: 40px 0;
+    padding: 13px 0;
 }
 
 .content-section {
     margin-bottom: 2rem;
-    padding: 20px;
+    padding: 7px;
     border-radius: 10px;
     background-color: white;
     box-shadow: 0 2px 4px rgba(0,0,0,0.05);
@@ -278,8 +300,8 @@ footer .col-md-6 {
 }
 
 .feature-list li {
-    padding: 15px;
-    margin-bottom: 15px;
+    padding: 5px;
+    margin-bottom: 5px;
     background-color: #f8f9fa;
     border-left: 4px solid var(--primary-color);
     border-radius: 0 8px 8px 0;
@@ -298,7 +320,7 @@ footer .col-md-6 {
 .tech-card {
     background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 50%, #6d28d9 100%);
     color: white;
-    padding: 25px;
+    padding: 8px;
     border-radius: 15px;
     height: 100%;
     text-align: center;
@@ -321,7 +343,7 @@ footer .col-md-6 {
 .tech-subtitle {
     font-size: 0.9rem;
     opacity: 0.9;
-    margin-bottom: 15px;
+    margin-bottom: 5px;
 }
 
 .tech-description {
@@ -331,26 +353,26 @@ footer .col-md-6 {
 
 .lab-card {
     background-color: #e8f4f8;
-    padding: 25px;
+    padding: 8px;
     border-radius: 10px;
     border-left: 5px solid #17a2b8;
 }
 
 .lab-card h4 {
     color: #138496;
-    margin-bottom: 15px;
+    margin-bottom: 5px;
 }
 
 .principle-card {
     background-color: #f8f9fa;
-    padding: 25px;
+    padding: 8px;
     border-radius: 10px;
     border: 2px solid #e9ecef;
 }
 
 .principle-card h4 {
     color: var(--dark-color);
-    margin-bottom: 20px;
+    margin-bottom: 7px;
     text-align: center;
 }
 
@@ -410,7 +432,7 @@ footer .col-md-6 {
 /* Адаптивность для планшетов */
 @media (max-width: 992px) {
     .hero-section {
-        padding: 60px 0;
+        padding: 20px 0;
         text-align: center;
     }
     
@@ -434,17 +456,17 @@ footer .col-md-6 {
 /* Адаптивность для мобильных устройств */
 @media (max-width: 768px) {
     .hero-section {
-        padding: 40px 0;
+        padding: 13px 0;
     }
     
     .hero-section h1 {
         font-size: 2rem;
-        margin-bottom: 15px;
+        margin-bottom: 5px;
     }
     
     .hero-section p {
         font-size: 1rem;
-        margin-bottom: 20px;
+        margin-bottom: 7px;
     }
     
     .principle-steps {
@@ -457,16 +479,16 @@ footer .col-md-6 {
     }
     
     .tech-card {
-        margin-bottom: 20px;
+        margin-bottom: 7px;
     }
     
     .btn-success {
         width: 100%;
-        padding: 15px;
+        padding: 5px;
     }
     
     .card {
-        margin-bottom: 15px;
+        margin-bottom: 5px;
     }
     
     .video-thumbnail {
@@ -494,7 +516,7 @@ footer .col-md-6 {
 /* Адаптивность для маленьких мобильных устройств */
 @media (max-width: 576px) {
     .hero-section {
-        padding: 30px 0;
+        padding: 10px 0;
     }
     
     .hero-section h1 {
@@ -511,7 +533,7 @@ footer .col-md-6 {
     }
     
     .card-body {
-        padding: 15px;
+        padding: 5px;
     }
     
     .video-thumbnail {
@@ -549,7 +571,7 @@ footer .col-md-6 {
     }
     
     footer .col-md-6 {
-        margin-bottom: 15px;
+        margin-bottom: 5px;
     }
 }
 
@@ -557,8 +579,8 @@ footer .col-md-6 {
 .stage-card {
     background: white;
     border-radius: 15px;
-    padding: 25px;
-    margin-bottom: 25px;
+    padding: 8px;
+    margin-bottom: 8px;
     box-shadow: 0 4px 15px rgba(0,0,0,0.1);
     border-left: 5px solid var(--primary-color);
     transition: transform 0.3s, box-shadow 0.3s;
@@ -572,7 +594,7 @@ footer .col-md-6 {
 .stage-header {
     display: flex;
     align-items: center;
-    margin-bottom: 20px;
+    margin-bottom: 7px;
     padding-bottom: 15px;
     border-bottom: 2px solid #f0f0f0;
 }
@@ -603,7 +625,7 @@ footer .col-md-6 {
 
 .stage-content p {
     font-size: 1.1rem;
-    margin-bottom: 15px;
+    margin-bottom: 5px;
     color: #555;
 }
 
@@ -626,14 +648,14 @@ footer .col-md-6 {
 /* Стили для секции материалов */
 .materials-section {
     background: #f8f9fa;
-    padding: 20px;
+    padding: 7px;
     border-radius: 10px;
     margin-top: 15px;
 }
 
 .materials-section h5 {
     color: var(--dark-color);
-    margin-bottom: 15px;
+    margin-bottom: 5px;
     text-align: center;
 }
 
@@ -645,7 +667,7 @@ footer .col-md-6 {
 
 .material-item {
     background: white;
-    padding: 15px;
+    padding: 5px;
     border-radius: 8px;
     text-align: center;
     border-left: 4px solid var(--primary-color);
@@ -672,7 +694,7 @@ footer .col-md-6 {
 
 .comparison-item {
     background: #f8f9fa;
-    padding: 15px;
+    padding: 5px;
     border-radius: 8px;
     text-align: center;
 }
@@ -684,7 +706,7 @@ footer .col-md-6 {
 
 .comparison-item h6 {
     color: var(--dark-color);
-    margin-bottom: 10px;
+    margin-bottom: 3px;
 }
 
 /* Стили для пост-обработки */
@@ -697,7 +719,7 @@ footer .col-md-6 {
 
 .processing-step {
     background: white;
-    padding: 15px;
+    padding: 5px;
     border-radius: 10px;
     text-align: center;
     border: 2px solid #e0e0e0;
@@ -712,7 +734,7 @@ footer .col-md-6 {
 .processing-step i {
     font-size: 2rem;
     color: var(--primary-color);
-    margin-bottom: 10px;
+    margin-bottom: 3px;
     display: block;
 }
 
@@ -755,7 +777,7 @@ footer .col-md-6 {
     
     .stage-number {
         margin-right: 0;
-        margin-bottom: 10px;
+        margin-bottom: 3px;
     }
     
     .comparison {
@@ -781,7 +803,7 @@ footer .col-md-6 {
     }
     
     .stage-card {
-        padding: 15px;
+        padding: 5px;
     }
 }
 
@@ -789,7 +811,7 @@ footer .col-md-6 {
 /* Объединенный контейнер с перетекающим градиентом */
 .unified-gradient-container {
     margin-top: 900px;
-    margin-bottom: 50px;
+    margin-bottom: 10px;
     background: linear-gradient(180deg, 
         #8b5cf6 0%,      /* Фиолетовый верх */
         #7c3aed 15%,
@@ -802,13 +824,13 @@ footer .col-md-6 {
     position: relative;
     border-radius: 30px;
     overflow: hidden;
-    padding-bottom: 60px;
+    padding-bottom: 10px;
 }
 
 .introduction-wrapper {
     margin-top: 0;
     margin-bottom: 0;
-    padding: 60px 20px 60px 20px;
+    padding: 10px 20px 10px 20px;
     background: transparent;
     position: relative;
     border-radius: 0;
@@ -844,14 +866,14 @@ footer .col-md-6 {
     font-weight: 700;
     font-size: 3rem;
     text-align: center;
-    margin-bottom: 4rem;
+    margin-bottom: 0.5rem;
     text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
 }
 
 .intro-section-card {
     background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(10px);
-    padding: 40px 30px;
+    padding: 15px 10px;
     border-radius: 20px;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
     text-align: center;
@@ -869,9 +891,9 @@ footer .col-md-6 {
 }
 
 .intro-section-card .section-icon {
-    width: 90px;
-    height: 90px;
-    margin: 0 auto 20px;
+    width: 60px;
+    height: 60px;
+    margin: 0 auto 5px;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     border-radius: 50%;
     display: flex;
@@ -886,15 +908,15 @@ footer .col-md-6 {
 }
 
 .intro-section-card .section-icon i {
-    font-size: 3rem;
+    font-size: 2rem;
     color: white;
 }
 
 .intro-section-card h4 {
-    font-size: 1.75rem;
+    font-size: 1.3rem;
     font-weight: 700;
     color: var(--dark-color);
-    margin-bottom: 20px;
+    margin-bottom: 3px;
 }
 
 .intro-section-card p {
@@ -998,7 +1020,7 @@ footer .col-md-6 {
     align-items: flex-start;
     position: relative;
     padding-left: 80px;
-    margin-bottom: 20px;
+    margin-bottom: 7px;
 }
 
 .step-number {
@@ -1027,7 +1049,7 @@ footer .col-md-6 {
 .step-content h6 {
     color: #1e293b;
     font-weight: 700;
-    margin-bottom: 10px;
+    margin-bottom: 3px;
     font-size: 1.2rem;
 }
 
@@ -1080,9 +1102,9 @@ footer .col-md-6 {
 .filter-section {
     background: white;
     border-radius: 15px;
-    padding: 25px;
+    padding: 8px;
     box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-    margin-bottom: 30px;
+    margin-bottom: 3px;
 }
 
 .equipment-grid {
@@ -1113,7 +1135,7 @@ footer .col-md-6 {
 }
 
 .equipment-card .card-body {
-    padding: 20px;
+    padding: 7px;
 }
 
 .equipment-card .badge {
@@ -1205,7 +1227,7 @@ footer .col-md-6 {
 .features-section {
     background: transparent;
     position: relative;
-    padding: 60px 20px 40px 20px !important;
+    padding: 10px 20px 10px 20px !important;
     margin-top: 0 !important;
 }
 
@@ -1216,17 +1238,17 @@ footer .col-md-6 {
 }
 
 .features-section h2 {
-    font-size: 3rem;
+    font-size: 2.5rem;
     font-weight: 700;
     color: white;
-    margin-bottom: 4rem;
+    margin-bottom: 0.2rem;
     text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
 }
 
 .feature-card {
     background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(10px);
-    padding: 40px 30px;
+    padding: 15px 10px;
     border-radius: 20px;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
     text-align: center;
@@ -1243,9 +1265,9 @@ footer .col-md-6 {
 }
 
 .feature-icon {
-    width: 90px;
-    height: 90px;
-    margin: 0 auto 20px;
+    width: 60px;
+    height: 60px;
+    margin: 0 auto 5px;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     border-radius: 50%;
     display: flex;
@@ -1265,10 +1287,10 @@ footer .col-md-6 {
 }
 
 .feature-card h4 {
-    font-size: 1.75rem;
+    font-size: 1.3rem;
     font-weight: 700;
     color: var(--dark-color);
-    margin-bottom: 20px;
+    margin-bottom: 3px;
 }
 
 .feature-card p {
@@ -1333,7 +1355,7 @@ footer .col-md-6 {
     }
     
     .feature-card {
-        margin-bottom: 30px;
+        margin-bottom: 3px;
         padding: 35px 25px;
     }
     
@@ -1370,7 +1392,7 @@ footer .col-md-6 {
     
     .feature-card {
         padding: 30px 25px;
-        margin-bottom: 25px;
+        margin-bottom: 8px;
     }
     
     .feature-card h4 {
@@ -1423,7 +1445,7 @@ footer .col-md-6 {
     
     .feature-card {
         padding: 25px 20px;
-        margin-bottom: 20px;
+        margin-bottom: 7px;
     }
     
     .feature-icon {
@@ -1458,7 +1480,7 @@ footer .col-md-6 {
     /* Адаптация блока введения для мобильных */
     .unified-gradient-container {
         margin-top: 300px;
-        margin-bottom: 30px;
+        margin-bottom: 3px;
         border-radius: 20px;
         padding-bottom: 40px;
     }
@@ -1475,12 +1497,12 @@ footer .col-md-6 {
     
     .introduction-section h2 {
         font-size: 1.75rem;
-        margin-bottom: 30px;
+        margin-bottom: 3px;
     }
     
     .intro-section-card {
         padding: 25px 15px;
-        margin-bottom: 20px;
+        margin-bottom: 7px;
     }
     
     .intro-section-card .section-icon {
@@ -1519,7 +1541,7 @@ footer .col-md-6 {
     
     .intro-section-card {
         padding: 35px 25px;
-        margin-bottom: 30px;
+        margin-bottom: 3px;
     }
     
     .intro-section-card .section-icon {
